@@ -8,6 +8,8 @@
 #include "includes.h"
 #include "camera.h"
 #include "utils.h"
+#include "stage.h"
+#include "world.h"
 
 class Game
 {
@@ -27,8 +29,9 @@ public:
 	bool must_exit;
 
 	//some vars
-	Camera* camera; //our global camera
-	bool mouse_locked; //tells if the mouse is locked (not seen)
+	World world;
+	eStageID idCS; //la id del actual estat
+	std::vector<Stage *> stages; //llista de estats
 
 	Game( int window_width, int window_height, SDL_Window* window );
 
