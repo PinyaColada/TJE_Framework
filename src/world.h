@@ -3,6 +3,16 @@
 
 #include "entity.h"
 
+// ----------------------------------------- class: Scene -----------------------------------------
+class Scene
+{
+public:
+
+    Scene();
+    std::vector<EntityLight*> lights;
+    //std::vector<EntityMesh*> objects; aixo es per fer sa llista des objectes
+
+};
 // ----------------------------------------- class: World -----------------------------------------
 class World
 {
@@ -11,11 +21,14 @@ public:
 
     //----------------------crear cubo--------------------------
     Prueva* cubo = NULL;
+    //EntityLight* lusesita = nullptr;
 
     World();
     World( int window_width, int window_height );
 
     void setCamera( int window_width, int window_height );
 };
+
+
 
 #endif 

@@ -14,7 +14,7 @@ void Stage::updateMouse()
 //------------------------------------ class: PlayStage  ------------------------------------
 PlayStage::PlayStage()
 {
-    idSatge = eStageID::PLAY;
+    idSatge = PLAY;
 
     //hide the cursor
     mouse_locked = false;
@@ -57,6 +57,8 @@ void PlayStage::Update(double elapsed_time)
 	if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) camera->move(Vector3(0.0f, 0.0f,-1.0f) * speed);
 	if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) camera->move(Vector3(1.0f, 0.0f, 0.0f) * speed);
 	if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f,0.0f, 0.0f) * speed);
+	if (Input::isKeyPressed(SDL_SCANCODE_Q)) camera->moveGlobal(Vector3(0.0f,-1.0f, 0.0f) * speed);
+	if (Input::isKeyPressed(SDL_SCANCODE_E)) camera->moveGlobal(Vector3(0.0f,1.0f, 0.0f) * speed);
 
 	//to navigate with the mouse fixed in the middle
 	if (mouse_locked)
