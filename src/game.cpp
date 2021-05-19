@@ -38,15 +38,24 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	glEnable( GL_CULL_FACE ); //render both sides of every triangle
 	glEnable( GL_DEPTH_TEST ); //check the occlusions using the Z buffer
 
+<<<<<<< Updated upstream
 	//create our camera
 	camera = new Camera();
 	camera->lookAt(Vector3(0.f,100.f, 100.f),Vector3(0.f,0.f,0.f), Vector3(0.f,1.f,0.f)); //position the camera and point to 0,0,0
 	camera->setPerspective(70.f,window_width/(float)window_height,0.1f,10000.f); //set the projection, we want to be perspective
+=======
+	//crear World
+	world = new World(window_width,window_height);
+	
+	//Create Stages
+	idCS = eStageID::PLAY;
+>>>>>>> Stashed changes
 
 	//load one texture without using the Texture Manager (Texture::Get would use the manager)
 	texture = new Texture();
  	texture->load("data/texture.tga");
 
+<<<<<<< Updated upstream
 	// example of loading Mesh from Mesh Manager
 	mesh = Mesh::Get("data/box.ASE");
 
@@ -55,6 +64,9 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 
 	//hide the cursor
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
+=======
+	stages[eStageID::PLAY]->setWorld(world);
+>>>>>>> Stashed changes
 }
 
 //what to do when the image has to be draw
@@ -140,6 +152,13 @@ void Game::onKeyDown( SDL_KeyboardEvent event )
 	{
 		case SDLK_ESCAPE: must_exit = true; break; //ESC key, kill the app
 		case SDLK_F1: Shader::ReloadAll(); break; 
+		case SDLK_1:
+		{
+			if(idCS != PLAY) break;
+
+			((PlayStage*) stages[idCS])->AddCuboInFront(); 
+			break;
+		} 
 	}
 }
 
@@ -179,8 +198,14 @@ void Game::onResize(int width, int height)
 {
     std::cout << "window resized: " << width << "," << height << std::endl;
 	glViewport( 0,0, width, height );
+<<<<<<< Updated upstream
 	camera->aspect =  width / (float)height;
+=======
+>>>>>>> Stashed changes
 	window_width = width;
 	window_height = height;
+	world->camera->aspect =  width / (float)height;
+	world->window_width = window_width;
+	world->window_height = window_height;
 }
 

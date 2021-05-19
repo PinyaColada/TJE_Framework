@@ -27,8 +27,14 @@ public:
 	bool must_exit;
 
 	//some vars
+<<<<<<< Updated upstream
 	Camera* camera; //our global camera
 	bool mouse_locked; //tells if the mouse is locked (not seen)
+=======
+	World* world;
+	eStageID idCS; //la id del actual estat
+	std::vector<Stage *> stages; //llista de estats
+>>>>>>> Stashed changes
 
 	Game( int window_width, int window_height, SDL_Window* window );
 
