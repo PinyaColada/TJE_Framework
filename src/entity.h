@@ -42,8 +42,9 @@ public:
     Texture* texture = NULL;
     Shader* shader = NULL;
     Vector4 color;
+    eEntityName object; 
 
-    EntityMesh(); //constructor
+    EntityMesh( eEntityName obj ); //constructor
 
     //methods overwritten 
     void render(Camera* camera);
@@ -70,7 +71,7 @@ class Cubo : public Object
 public:
 
     //methods overwritten 
-    Cubo(); //constructor
+    Cubo(EntityMesh* m); //constructor
 
 };
 

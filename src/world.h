@@ -21,6 +21,7 @@ public:
     std::vector<Scene*> scenes;
     int window_width;
     int window_height;
+    std::vector<EntityMesh*> meshs;
 
     //EntityLight* lusesita = nullptr;
 
@@ -28,6 +29,8 @@ public:
     World( int window_width, int window_height );
 
     void setCamera( int window_width, int window_height );
+
+    EntityMesh* searchMesh( eEntityName obj );
 };
 
 

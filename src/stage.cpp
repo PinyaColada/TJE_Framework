@@ -4,6 +4,7 @@
 #include "entity.h"
 
 float mouse_speed = 100.0f;
+Object* selectedObject;
 
 //------------------------------------ class: Stage  ----------------------------------------
 void Stage::updateMouse()
@@ -35,17 +36,14 @@ void PlayStage::Render()
    
 	//create model matrix for cube
 	Scene* scene = world->scenes[0];
-	//printf("size: %d\n",scene->objects.size());
 	for (int id=0; id < scene->objects.size(); id++)
 	{
-		//printf("id: %d\n",id);
 		Object* object = scene->objects[id];
 		object->render(camera);
-		//printf("%d\n",object->getPosition());
 	}
 
 	//Draw the floor grid
-	drawGrid();
+	//drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 
@@ -69,6 +67,9 @@ void PlayStage::Update(double elapsed_time)
 	if (Input::isKeyPressed(SDL_SCANCODE_Q)) camera->moveGlobal(Vector3(0.0f,-1.0f, 0.0f) * speed);
 	if (Input::isKeyPressed(SDL_SCANCODE_E)) camera->moveGlobal(Vector3(0.0f,1.0f, 0.0f) * speed);
 
+	if (Input::isKeyPressed(SDL_SCANCODE_8)) selectedObject->model.rotate(50.0f * elapsed_time * DEG2RAD, Vector3(1,1,1));
+	if (Input::isKeyPressed(SDL_SCANCODE_9)) selectedObject->model.rotate(-50.0f * elapsed_time * DEG2RAD, Vector3(1,1,1));
+
 	//añadir, mover, seleccionar objetos
 
 	//to navigate with the mouse fixed in the middle
@@ -83,11 +84,41 @@ void PlayStage::AddCuboInFront()
 
 	Vector3 origin = camera->eye;
 	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, world->window_width, world->window_height);
-	Vector3 pos = RayPlaneCollision(Vector3(), Vector3(0, 1, 0), origin, dir);
+	Vector3 up = Vector3(0, 1, 0);
+	Vector3 pos = RayPlaneCollision(Vector3(), up, origin, dir);
 
-	Cubo* cubo = new Cubo();
+	EntityMesh* mesh = world->searchMesh( eEntityName::CUBO );
+
+	Cubo* cubo = new Cubo( mesh );
+	if( mesh == NULL ){
+		world->meshs.push_back(cubo->mesh);
+	}
 	cubo->model.setTranslation(pos.x, pos.y, pos.z);
     scene->objects.push_back(cubo);
-	//pq el punt 0,0,0!!! pq dir = 0!!!! 
-	//video: Colisiones 2, time: 24:41
+}
+
+void PlayStage::SelectObject()
+{
+    Camera* camera = world->camera;
+	Scene* scene = world->scenes[0];
+
+	Vector3 origin = camera->eye;
+	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, world->window_width, world->window_height);
+
+	for (int id=0; id < scene->objects.size(); id++)
+	{
+		Object* object = scene->objects[id];
+
+		Vector3 col;
+		Vector3 normal;
+
+		if(object->mesh == NULL) continue;
+		Mesh* mesh = object->mesh->mesh;
+		if (!mesh->testRayCollision(object->model,origin,dir,col,normal)) continue;
+		//testRayCollision( Matrix44 model, Vector3 ray_origin, Vector3 ray_direction, Vector3& collision, Vector3& normal, float max_ray_dist = 3.4e+38F, bool in_object_space = false );
+
+		selectedObject = object;
+		// hay que implemontar para q se quede la mas cerca, con el col probablemente
+		break;
+	}
 }

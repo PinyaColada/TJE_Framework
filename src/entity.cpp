@@ -11,16 +11,14 @@ Entity::Entity(){}
 Vector3 Entity::getPosition() { return Vector3(1,1,1); } 
 
 // ----------------------------------------- class: EntityMesh -------------------------------------
-EntityMesh::EntityMesh()
+EntityMesh::EntityMesh( eEntityName obj )
 {
     name = eEntityName::MESH;
+    object = obj;
 }
 
 void EntityMesh::render(Camera* camera)
 {
-    //get the last camera that was activated
-    Matrix44 model = this->model;
-
     //enable shader and pass uniforms
     shader->enable();
     shader->setUniform("u_color", color);
@@ -45,14 +43,23 @@ void EntityMesh::update(float dt)
 void Object::render(Camera* camera)
 {
     if(mesh == NULL) return;
+    mesh->model = this->model;
     mesh->render(camera);
 }
 
 // ----------------------------------------- objeto de prueva -------------------------------
-Cubo::Cubo()
+Cubo::Cubo(EntityMesh* m)
 {
     name = eEntityName::CUBO;
-    mesh = new EntityMesh();
+
+    //si existeix la mesh
+    if( m != NULL ){
+        mesh = m;
+        return;
+    }
+
+    //si no existeix la mesh
+    mesh = new EntityMesh( eEntityName::CUBO );
 
 	mesh->texture = new Texture();
  	mesh->texture->load("data/texture.tga");

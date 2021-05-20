@@ -30,3 +30,13 @@ void World::setCamera( int window_width, int window_height )
 	camera->lookAt(Vector3(0.f,100.f, 100.f),Vector3(0.f,0.f,0.f), Vector3(0.f,1.f,0.f)); //position the camera and point to 0,0,0
 	camera->setPerspective(70.f,window_width/(float)window_height,0.1f,10000.f); //set the projection, we want to be perspective
 }
+
+EntityMesh* World::searchMesh( eEntityName obj )
+{
+    for (int id=0; id < meshs.size(); id++)
+    {
+        EntityMesh* mesh = meshs[id];
+        if( mesh->object == obj ) return mesh;
+    }
+    return NULL;
+}
