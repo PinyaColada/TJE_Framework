@@ -1,6 +1,7 @@
 #include "stage.h"
 #include "input.h"
 #include "world.h"
+#include "entity.h"
 
 float mouse_speed = 100.0f;
 
@@ -33,7 +34,15 @@ void PlayStage::Render()
 	glDisable(GL_CULL_FACE);
    
 	//create model matrix for cube
-	world->cubo->renderprueva(camera);
+	Scene* scene = world->scenes[0];
+	//printf("size: %d\n",scene->objects.size());
+	for (int id=0; id < scene->objects.size(); id++)
+	{
+		//printf("id: %d\n",id);
+		Object* object = scene->objects[id];
+		object->render(camera);
+		//printf("%d\n",object->getPosition());
+	}
 
 	//Draw the floor grid
 	drawGrid();
@@ -60,7 +69,25 @@ void PlayStage::Update(double elapsed_time)
 	if (Input::isKeyPressed(SDL_SCANCODE_Q)) camera->moveGlobal(Vector3(0.0f,-1.0f, 0.0f) * speed);
 	if (Input::isKeyPressed(SDL_SCANCODE_E)) camera->moveGlobal(Vector3(0.0f,1.0f, 0.0f) * speed);
 
+	//añadir, mover, seleccionar objetos
+
 	//to navigate with the mouse fixed in the middle
 	if (mouse_locked)
 		Input::centerMouse();
+}
+
+void PlayStage::AddCuboInFront()
+{
+    Camera* camera = world->camera;
+	Scene* scene = world->scenes[0];
+
+	Vector3 origin = camera->eye;
+	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, world->window_width, world->window_height);
+	Vector3 pos = RayPlaneCollision(Vector3(), Vector3(0, 1, 0), origin, dir);
+
+	Cubo* cubo = new Cubo();
+	cubo->model.setTranslation(pos.x, pos.y, pos.z);
+    scene->objects.push_back(cubo);
+	//pq el punt 0,0,0!!! pq dir = 0!!!! 
+	//video: Colisiones 2, time: 24:41
 }

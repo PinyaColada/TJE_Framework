@@ -5,18 +5,21 @@
 #include "shader.h"
 #include "camera.h"
 
-Camera* c;
-
 // ----------------------------------------- class: Entity -----------------------------------------
 Entity::Entity(){}
 
 Vector3 Entity::getPosition() { return Vector3(1,1,1); } 
 
 // ----------------------------------------- class: EntityMesh -------------------------------------
-void EntityMesh::render()
+EntityMesh::EntityMesh()
+{
+    name = eEntityName::MESH;
+}
+
+void EntityMesh::render(Camera* camera)
 {
     //get the last camera that was activated
-    Camera* camera = c;
+    Matrix44 model = this->model;
 
     //enable shader and pass uniforms
     shader->enable();
@@ -38,20 +41,22 @@ void EntityMesh::update(float dt)
 
 }
 
-// ----------------------------------------- objeto de prueva -------------------------------
-Prueva::Prueva()
+// ----------------------------------------- class: Object -------------------------------------
+void Object::render(Camera* camera)
 {
-	texture = new Texture();
- 	texture->load("data/texture.tga");
-	mesh = Mesh::Get("data/box.ASE");
-	shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-    color = Vector4(1,1,1,1);
-    
+    if(mesh == NULL) return;
+    mesh->render(camera);
 }
-void Prueva::renderprueva(Camera* camera)
-{
-    if(!shader) return;
-    c = camera;
 
-    render();
+// ----------------------------------------- objeto de prueva -------------------------------
+Cubo::Cubo()
+{
+    name = eEntityName::CUBO;
+    mesh = new EntityMesh();
+
+	mesh->texture = new Texture();
+ 	mesh->texture->load("data/texture.tga");
+	mesh->mesh = Mesh::Get("data/box.ASE");
+	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+    mesh->color = Vector4(1,1,1,1);
 }

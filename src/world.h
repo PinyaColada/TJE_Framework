@@ -10,7 +10,7 @@ public:
 
     Scene();
     std::vector<EntityLight*> lights;
-    //std::vector<EntityMesh*> objects; aixo es per fer sa llista des objectes
+    std::vector<Object*> objects;
 
 };
 // ----------------------------------------- class: World -----------------------------------------
@@ -18,12 +18,13 @@ class World
 {
 public:
     Camera* camera = NULL; //our global camera
+    std::vector<Scene*> scenes;
+    int window_width;
+    int window_height;
 
-    //----------------------crear cubo--------------------------
-    Prueva* cubo = NULL;
     //EntityLight* lusesita = nullptr;
 
-    World();
+    // World();
     World( int window_width, int window_height );
 
     void setCamera( int window_width, int window_height );

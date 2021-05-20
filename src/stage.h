@@ -37,6 +37,7 @@ public:
 
     void Update(double elapsed_time);
 
+    void AddCuboInFront();
 };
 
 #endif 
