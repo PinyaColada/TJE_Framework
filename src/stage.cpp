@@ -77,7 +77,7 @@ void PlayStage::Update(double elapsed_time)
 		Input::centerMouse();
 }
 
-void PlayStage::AddCuboInFront()
+void PlayStage::AddBoxInFront()
 {
     Camera* camera = world->camera;
 	Scene* scene = world->scenes[0];
@@ -87,14 +87,14 @@ void PlayStage::AddCuboInFront()
 	Vector3 up = Vector3(0, 1, 0);
 	Vector3 pos = RayPlaneCollision(Vector3(), up, origin, dir);
 
-	EntityMesh* mesh = world->searchMesh( eEntityName::CUBO );
+	EntityMesh* mesh = world->searchMesh( eEntityName::BOX );
 
-	Cubo* cubo = new Cubo( mesh );
+	Box* box = new Box( mesh );
 	if( mesh == NULL ){
-		world->meshs.push_back(cubo->mesh);
+		world->meshs.push_back(box->mesh);
 	}
-	cubo->model.setTranslation(pos.x, pos.y, pos.z);
-    scene->objects.push_back(cubo);
+	box->model.setTranslation(pos.x, pos.y, pos.z);
+    scene->objects.push_back(box);
 }
 
 void PlayStage::SelectObject()

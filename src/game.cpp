@@ -80,7 +80,7 @@ void Game::onKeyDown( SDL_KeyboardEvent event )
 		case SDLK_1:
 		{
 			if(idCS != PLAY) break;
-			((PlayStage*) stages[idCS])->AddCuboInFront(); 
+			((PlayStage*) stages[idCS])->AddBoxInFront(); 
 		} 
 		break;
 		case SDLK_2:

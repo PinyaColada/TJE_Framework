@@ -22,15 +22,18 @@ public:
     int window_width;
     int window_height;
     std::vector<EntityMesh*> meshs;
+    Player* player;
 
     //EntityLight* lusesita = nullptr;
 
-    // World();
     World( int window_width, int window_height );
 
     void setCamera( int window_width, int window_height );
 
     EntityMesh* searchMesh( eEntityName obj );
+
+    void SelectBox();
+    void dejarBox();
 };
 
 

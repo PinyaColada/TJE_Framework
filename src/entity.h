@@ -11,7 +11,8 @@ enum eEntityName {
     ENTITY,
     MESH,
     LIGHT,
-    CUBO
+    PLAYER,
+    BOX
 };
 
 // ----------------------------------------- class: Entity -----------------------------------------
@@ -31,6 +32,7 @@ public:
 
     //some useful methods...
     Vector3 getPosition(); 
+    Vector3 getDir(); 
 };
 
 // ----------------------------------------- class: EntityMesh -------------------------------------
@@ -65,16 +67,27 @@ class Object : public Entity
     void update(float dt){};
 };
 
-// ----------------------------------------- objeto de prueva: Cubo -------------------------------
-class Cubo : public Object
+// ----------------------------------------- class: Box -------------------------------
+class Box : public Object
 {
 public:
 
     //methods overwritten 
-    Cubo(EntityMesh* m); //constructor
+    Box(EntityMesh* m); //constructor
 
 };
 
+// ----------------------------------------- class: Player -------------------------------
+class Player : public Object
+{
+public:
+
+    Player(); //constructor
+
+    Object* boxPicked;
+};
+
+// ----------------------------------------- class: EntityLight -------------------------------
 class EntityLight {};
 
 #endif 

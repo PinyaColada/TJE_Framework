@@ -9,6 +9,7 @@
 Entity::Entity(){}
 
 Vector3 Entity::getPosition() { return Vector3(1,1,1); } 
+Vector3 Entity::getDir() { return model.frontVector(); }
 
 // ----------------------------------------- class: EntityMesh -------------------------------------
 EntityMesh::EntityMesh( eEntityName obj )
@@ -47,10 +48,10 @@ void Object::render(Camera* camera)
     mesh->render(camera);
 }
 
-// ----------------------------------------- objeto de prueva -------------------------------
-Cubo::Cubo(EntityMesh* m)
+// ----------------------------------------- class: Box -------------------------------
+Box::Box(EntityMesh* m)
 {
-    name = eEntityName::CUBO;
+    name = eEntityName::BOX;
 
     //si existeix la mesh
     if( m != NULL ){
@@ -59,11 +60,17 @@ Cubo::Cubo(EntityMesh* m)
     }
 
     //si no existeix la mesh
-    mesh = new EntityMesh( eEntityName::CUBO );
+    mesh = new EntityMesh( eEntityName::BOX );
 
 	mesh->texture = new Texture();
- 	mesh->texture->load("data/texture.tga");
-	mesh->mesh = Mesh::Get("data/box.ASE");
+ 	mesh->texture->load("data/MetalBoxTexture.png");
+	mesh->mesh = Mesh::Get("data/MetalBox.obj");
 	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
     mesh->color = Vector4(1,1,1,1);
+}
+
+// ----------------------------------------- class: Player -------------------------------
+Player::Player()
+{
+    name = eEntityName::PLAYER;
 }
