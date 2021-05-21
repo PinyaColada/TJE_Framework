@@ -63,8 +63,8 @@ Box::Box(EntityMesh* m)
     mesh = new EntityMesh( eEntityName::BOX );
 
 	mesh->texture = new Texture();
- 	mesh->texture->load("data/MetalBoxTexture.png");
-	mesh->mesh = Mesh::Get("data/MetalBox.obj");
+ 	mesh->texture->load("data/Box/MetalBox.png");
+	mesh->mesh = Mesh::Get("data/Box/MetalBox.obj");
 	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
     mesh->color = Vector4(1,1,1,1);
 }
