@@ -17,7 +17,7 @@ World::World( int window_width, int window_height )
     Scene* scene = new Scene();
     scenes.push_back(scene);
 
-    player = new Player();
+    player = new Player(camera);
 }
 
 void World::setCamera( int window_width, int window_height )
@@ -47,22 +47,28 @@ void World::SelectBox()
 	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, window_width, window_height);
     Object* boxPicked = NULL;
 
+    Vector3 col, normal;
+    float distPicked, distObject;
+
 	for (int id=0; id < scene->objects.size(); id++)
 	{
 		Object* object = scene->objects[id];
 
-		Vector3 col;
-		Vector3 normal;
-
 		if (object->mesh == NULL) continue;
-        if (object->name != eEntityName::BOX) continue;
+        if (object->name != BOX) continue;
 		Mesh* mesh = object->mesh->mesh;
 		if (!mesh->testRayCollision(object->model,origin,dir,col,normal)) continue;
 
-		if (boxPicked == NULL) boxPicked = object;
-
-		// hay que implemontar para q se quede la mas cerca, con el col probablemente
-		break;
+		if (boxPicked == NULL){
+            boxPicked = object;
+            continue;
+        }
+        // LLeva coses que se creen aqui
+        distPicked = boxPicked->getPosition().distance(origin);
+        distObject = object->getPosition().distance(origin);
+        
+        if (distPicked > distObject)
+            boxPicked = object;
 	}
     player->boxPicked = boxPicked;
 }
