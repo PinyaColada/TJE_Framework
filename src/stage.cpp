@@ -36,16 +36,18 @@ void PlayStage::Render()
    
 	Scene* scene = world->scenes[world->current_scene];
 	
+	Object* object;
+
 	for (int id = 0; id < scene->static_objects.size(); id++)
 	{
-		Object* object = scene->static_objects[id];
+		object = scene->static_objects[id];
 		object->render(camera);
 		object->mesh->mesh->renderBounding(object->model);
 	}
 
 	for (int id = 0; id < scene->dinamic_objects.size(); id++)
 	{
-		Object* object = scene->dinamic_objects[id];
+		object = scene->dinamic_objects[id];
 		object->render(camera);
 		object->mesh->mesh->renderBounding(object->model);
 	}
@@ -63,9 +65,11 @@ void PlayStage::Update(double elapsed_time)
 	Player* player = world->player;
 	Scene* scene = world->scenes[world->current_scene];
 
+	Object* object;
+
 	for (int i = 0; i < scene->dinamic_objects.size(); i++)
 	{ 
-		Object* object = scene->dinamic_objects[i];
+		object = scene->dinamic_objects[i];
 		object->physic->updateModel(elapsed_time, &object->model);
 	}
 
@@ -93,10 +97,15 @@ void PlayStage::Update(double elapsed_time)
 			camera->fov = clamp(camera->fov, 70, 80);
 			speed = clamp(speed, 1, 40);
 
-			if (Input::isKeyPressed(SDL_SCANCODE_W)) player->move(aux * speed);
-			if (Input::isKeyPressed(SDL_SCANCODE_S)) player->move(-1 * aux * speed);
-			if (Input::isKeyPressed(SDL_SCANCODE_A)) player->move(-1 * aux.perpendicular() * speed);
-			if (Input::isKeyPressed(SDL_SCANCODE_D)) player->move(aux.perpendicular() * speed);
+			// if (Input::isKeyPressed(SDL_SCANCODE_W)) player->move(aux * speed);
+			// if (Input::isKeyPressed(SDL_SCANCODE_S)) player->move(-1 * aux * speed);
+			// if (Input::isKeyPressed(SDL_SCANCODE_A)) player->move(-1 * aux.perpendicular() * speed);
+			// if (Input::isKeyPressed(SDL_SCANCODE_D)) player->move(aux.perpendicular() * speed);
+
+			if (Input::isKeyPressed(SDL_SCANCODE_W)) player->move(aux, speed, scene->static_objects, scene->dinamic_objects);
+			if (Input::isKeyPressed(SDL_SCANCODE_S)) player->move(aux, -1 * speed, scene->static_objects, scene->dinamic_objects);
+			if (Input::isKeyPressed(SDL_SCANCODE_A)) player->move(aux.perpendicular(), -1 * speed, scene->static_objects, scene->dinamic_objects);
+			if (Input::isKeyPressed(SDL_SCANCODE_D)) player->move(aux.perpendicular(), speed, scene->static_objects, scene->dinamic_objects);
 
 			// 1,2,3 accion!
 			camera->lookAt(player->model.getTranslation() +  player->altura, player->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));

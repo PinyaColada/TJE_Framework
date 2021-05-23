@@ -103,26 +103,54 @@ void Player::move(Vector3 dir)
     model.setTranslation(target.x, target.y, target.z);
 }
 
-void Player::trueTarget(std::vector<Object*> objects, double elapsed_time, Vector3& target)
+void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects)
 {
-    //calculamos el centro de la esfera de colisión del player elevandola hasta la cintura
-    Vector3 character_center = model.getTranslation();
+    //calculamos el target idial
+    Vector3 position = model.getTranslation();
+    Vector3 target = position + dir * speed;
+    Vector3 centreplayer = position;
 
-    //para cada objecto de la escena...
-    Vector3 coll;
-    Vector3 collnorm;
+    //calculamos las coliciones
+    Vector3 coll, norm;
+    Object* object;
 
-    for (int i = 0; i < objects.size(); i++){
-        //comprobamos si colisiona el objeto con la esfera (radio 3)
-        if (!objects[i]->mesh->mesh->testSphereCollision( objects[i]->model, character_center, 3, coll, collnorm)){
-            std::cout<<"Aqui no hay suelo"<<std::endl;
-            continue; //si no colisiona, pasamos al siguiente objeto
-        }
+    //for para static_objects
+    // for (int i = 0; i < static_objects.size(); i++)
+    // {
+    //     object = static_objects[i];
+    //     if(!onCollision(object, centreplayer, position, speed, target))
+    //         continue;
+    //     //comprovamos si el eje y es correcto
+    //     target.y = position.y;
+    // }
 
-
-        //si la esfera está colisionando muevela a su posicion anterior alejandola del objeto
-        // Vector3 push_away = normalize(coll - character_center) * elapsed_time;
-        // position = previous_pos - push_away; //move to previous pos but a little bit further
-        std::cout<<"Aqui hay suelo"<<std::endl;
+    //for para dinamic_objects
+    for (int i = 0; i < dinamic_objects.size(); i++)
+    {
+        object = dinamic_objects[i];
+        if(!onCollision(object, centreplayer, position, speed, target))
+            continue;
+        //comprovamos si el eje y es correcto
+        target.y = position.y;
     }
+
+    //calculamos la pos final
+
+    //aplicamos el movimiento
+    model.setTranslation(target.x, target.y, target.z);
+}
+
+bool Player::onCollision(Object* object, Vector3 centre, Vector3 position, float speed, Vector3& target)
+{
+    //calculamos la colision de 1 objeto
+    Vector3 coll, norm;
+    if (object->mesh == NULL)
+        return false;
+    if (!object->mesh->mesh->testSphereCollision( object->model, centre, 3, coll, norm))
+        return false;
+    
+    //actualizamos el objetivo
+    Vector3 push_away = normalize(coll - position) * speed;
+    target = position - push_away;
+    return true;
 }

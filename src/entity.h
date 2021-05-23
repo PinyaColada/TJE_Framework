@@ -78,7 +78,6 @@ class Box : public Object
 public:
 
     Box(EntityMesh* m); //constructor
-
 };
 
 // ----------------------------------------- class: Box -------------------------------
@@ -87,7 +86,6 @@ class Floor : public Object
 public:
 
     Floor(); //constructor
-
 };
 
 // ----------------------------------------- class: Player -------------------------------
@@ -106,7 +104,9 @@ public:
 
     void move(Vector3 dir);
 
-    void trueTarget(std::vector<Object*> objects, double elapsed_time, Vector3& target);
+    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects);
+
+    bool onCollision(Object* object, Vector3 centre, Vector3 position, float speed, Vector3& target);
 };
 
 // ----------------------------------------- class: EntityLight -------------------------------

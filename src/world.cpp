@@ -37,9 +37,11 @@ void World::setCamera( int window_width, int window_height )
 
 EntityMesh* World::searchMesh( eEntityName obj )
 {
+    EntityMesh* mesh;
+    
     for (int id=0; id < meshs.size(); id++)
     {
-        EntityMesh* mesh = meshs[id];
+        mesh = meshs[id];
         if( mesh->object == obj ) return mesh;
     }
     return NULL;
@@ -54,16 +56,16 @@ void World::SelectBox()
     Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, window_width, window_height);
     Object* boxPicked = NULL;
 
-    Vector3 col, normal;
+    Vector3 col, normal, pos;
     float distPicked, distObject;
     Object* object;
     Mesh* mesh; 
-
+    
     for (int id=0; id < scene->dinamic_objects.size(); id++)
     {
         object = scene->dinamic_objects[id];
 
-        Vector3 pos = object->getPosition();
+        pos = object->getPosition();
 
         if (object->mesh == NULL) continue;
         if (object->name != BOX) continue;
