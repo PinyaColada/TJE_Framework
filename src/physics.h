@@ -3,13 +3,13 @@
 
 #include "framework.h"
 
-#define g 10
+#define g 1000
 
 class Physics
 {
 public:
     // Atributs
-    Vector3 vel = Vector3();
+    Vector3 vel = Vector3(0, 500, 0);
 
     // Metodes
     Physics();

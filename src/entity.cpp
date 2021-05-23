@@ -41,13 +41,17 @@ void EntityMesh::update(float dt)
 }
 
 // ----------------------------------------- class: Object -------------------------------------
+// bool Object::onColission(Object* target)
+// {
+
+// }
+
 void Object::render(Camera* camera)
 {
     if(mesh == NULL) return;
     mesh->model = this->model;
     mesh->render(camera);
 }
-
 // ----------------------------------------- class: Box -------------------------------
 Box::Box(EntityMesh* m)
 {
@@ -95,7 +99,30 @@ Player::Player(Camera* camera)
 
 void Player::move(Vector3 dir)
 {
-    // std::cout<<"donde esta"<<std::endl;
     Vector3 target = model.getTranslation() + dir;
     model.setTranslation(target.x, target.y, target.z);
+}
+
+void Player::trueTarget(std::vector<Object*> objects, double elapsed_time, Vector3& target)
+{
+    //calculamos el centro de la esfera de colisión del player elevandola hasta la cintura
+    Vector3 character_center = model.getTranslation();
+
+    //para cada objecto de la escena...
+    Vector3 coll;
+    Vector3 collnorm;
+
+    for (int i = 0; i < objects.size(); i++){
+        //comprobamos si colisiona el objeto con la esfera (radio 3)
+        if (!objects[i]->mesh->mesh->testSphereCollision( objects[i]->model, character_center, 3, coll, collnorm)){
+            std::cout<<"Aqui no hay suelo"<<std::endl;
+            continue; //si no colisiona, pasamos al siguiente objeto
+        }
+
+
+        //si la esfera está colisionando muevela a su posicion anterior alejandola del objeto
+        // Vector3 push_away = normalize(coll - character_center) * elapsed_time;
+        // position = previous_pos - push_away; //move to previous pos but a little bit further
+        std::cout<<"Aqui hay suelo"<<std::endl;
+    }
 }

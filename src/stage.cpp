@@ -78,7 +78,10 @@ void PlayStage::Update(double elapsed_time)
 			// Con este vector calculamos segun el frontvector hacia donde se tiene que pirar el player
 			Vector3 aux(player->model.frontVector().x, 0, player->model.frontVector().z);
 			aux = aux.normalize();
-
+			Vector3 tmp;
+			//On colisdaiownd(dawd,awda,aux)
+			// player->trueTarget(scene->static_objects, elapsed_time, tmp);
+			// player->trueTarget(scene->dinamic_objects, elapsed_time, tmp);
 			// ido se mou un poquet 
 			if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT) ){
 				speed += 5; //move faster with left shift

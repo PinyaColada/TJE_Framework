@@ -66,6 +66,8 @@ class Object : public Entity
     Object(EntityMesh* m) { mesh = m; };
 
     //methods overwritten 
+    bool onColission(Object* target);
+
     void render(Camera* camera);
     void update(float dt){};
 };
@@ -92,13 +94,19 @@ public:
 class Player : public Object
 {
 public:
-
-    Player(Camera* camera); //constructor
+    // Atributos
     Vector3 altura = Vector3(0, 70, 0);
-    void move(Vector3 dir);
 
     Camera* camera;
+
     Object* boxPicked;
+
+    // Metodos
+    Player(Camera* camera); 
+
+    void move(Vector3 dir);
+
+    void trueTarget(std::vector<Object*> objects, double elapsed_time, Vector3& target);
 };
 
 // ----------------------------------------- class: EntityLight -------------------------------
