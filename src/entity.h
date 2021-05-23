@@ -6,13 +6,15 @@
 #include "texture.h"
 #include "shader.h"
 #include "camera.h"
+#include "physics.h"
 
 enum eEntityName {
     ENTITY,
     MESH,
     LIGHT,
     PLAYER,
-    BOX
+    BOX,
+    FLOOR
 };
 
 // ----------------------------------------- class: Entity -----------------------------------------
@@ -58,6 +60,7 @@ class Object : public Entity
 {
  public:
     EntityMesh* mesh;
+    Physics* physic;
 
     Object(){}; //constructor
     Object(EntityMesh* m) { mesh = m; };
@@ -72,8 +75,16 @@ class Box : public Object
 {
 public:
 
-    //methods overwritten 
     Box(EntityMesh* m); //constructor
+
+};
+
+// ----------------------------------------- class: Box -------------------------------
+class Floor : public Object
+{
+public:
+
+    Floor(); //constructor
 
 };
 
