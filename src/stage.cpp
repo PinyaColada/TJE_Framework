@@ -43,38 +43,81 @@ void PlayStage::Render()
 	}
 
 	//Draw the floor grid
-	//drawGrid();
+	drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 
 {
     Camera* camera = world->camera;
 	float speed = elapsed_time * mouse_speed; //the speed is defined by the elapsed_time so it goes constant
+	Player* player = world->player;
 
-	//mouse input to rotate the cam
-	if ((Input::mouse_state & SDL_BUTTON_LEFT) || mouse_locked ) //is left button pressed?
-	{
-		camera->rotate(Input::mouse_delta.x * 0.005f, Vector3(0.0f,-1.0f,0.0f));
-		camera->rotate(Input::mouse_delta.y * 0.005f, camera->getLocalVector( Vector3(-1.0f,0.0f,0.0f)));
+	switch(idmode){
+		case GAMEPLAY: {
+			// pues rotamos un poquito 
+			player->model.rotate(Input::mouse_delta.x * 0.005f, Vector3(0.0f,-1.0f,0.0f));
+			player->model.rotate(Input::mouse_delta.y * 0.005f, Vector3(1.0f,0.0f,0.0f));
+
+			// Con este vector calculamos segun el frontvector hacia donde se tiene que pirar el player
+			Vector3 aux(player->model.frontVector().x, 0, player->model.frontVector().z);
+			aux = aux.normalize();
+
+			// ido se mou un poquet 
+			if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT) ){
+				speed += 5; //move faster with left shift
+				camera->fov += 1; // fer una transicio
+			} else{
+				speed -= 5;
+				camera->fov -= .5; // fer una transicio
+			} 
+			camera->fov = clamp(camera->fov, 70, 80);
+			speed = clamp(speed, 1, 40);
+
+			if (Input::isKeyPressed(SDL_SCANCODE_W)) player->move(aux * speed);
+			if (Input::isKeyPressed(SDL_SCANCODE_S)) player->move(-1 * aux * speed);
+			if (Input::isKeyPressed(SDL_SCANCODE_A)) player->move(-1 * aux.perpendicular() * speed);
+			if (Input::isKeyPressed(SDL_SCANCODE_D)) player->move(aux.perpendicular() * speed);
+
+			// 1,2,3 accion!
+			camera->lookAt(player->model.getTranslation() +  player->altura, player->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
+
+			// Ho posam lo mes guapo que podem :)
+			Input::centerMouse();
+			SDL_ShowCursor(false);
+			break;
+		}
+		case EDIT: {
+			if ((Input::mouse_state & SDL_BUTTON_LEFT) || mouse_locked ) {
+				camera->rotate(Input::mouse_delta.x * 0.005f, Vector3(0.0f,-1.0f,0.0f));
+				camera->rotate(Input::mouse_delta.y * 0.005f, camera->getLocalVector( Vector3(-1.0f,0.0f,0.0f)));
+			}
+
+			if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT) ) speed *= 10; //move faster with left shift
+			if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) camera->move(Vector3(0.0f, 0.0f, 1.0f) * speed);
+			if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) camera->move(Vector3(0.0f, 0.0f,-1.0f) * speed);
+			if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) camera->move(Vector3(1.0f, 0.0f, 0.0f) * speed);
+			if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f,0.0f, 0.0f) * speed);
+			if (Input::isKeyPressed(SDL_SCANCODE_Q)) camera->moveGlobal(Vector3(0.0f,-1.0f, 0.0f) * speed);
+			if (Input::isKeyPressed(SDL_SCANCODE_E)) camera->moveGlobal(Vector3(0.0f,1.0f, 0.0f) * speed);
+
+			Object* boxPicked = world->player->boxPicked;
+
+			if (boxPicked != NULL){
+				if (Input::isKeyPressed(SDL_SCANCODE_U)) boxPicked->model.rotate(50.0f * elapsed_time * DEG2RAD, Vector3(1,0,0));
+				if (Input::isKeyPressed(SDL_SCANCODE_I)) boxPicked->model.rotate(50.0f * elapsed_time * DEG2RAD, Vector3(0,1,0));
+				if (Input::isKeyPressed(SDL_SCANCODE_O)) boxPicked->model.rotate(50.0f * elapsed_time * DEG2RAD, Vector3(0,0,1));
+				if (Input::isKeyPressed(SDL_SCANCODE_J)) boxPicked->model.rotate(-50.0f * elapsed_time * DEG2RAD, Vector3(1,0,0));
+				if (Input::isKeyPressed(SDL_SCANCODE_K)) boxPicked->model.rotate(-50.0f * elapsed_time * DEG2RAD, Vector3(0,1,0));
+				if (Input::isKeyPressed(SDL_SCANCODE_L)) boxPicked->model.rotate(-50.0f * elapsed_time * DEG2RAD, Vector3(0,0,1));
+			}
+
+			if (mouse_locked)
+				Input::centerMouse();
+				SDL_ShowCursor(true);
+
+			break;
+		}
 	}
-
-	//async input to move the camera around
-	if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT) ) speed *= 10; //move faster with left shift
-	if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) camera->move(Vector3(0.0f, 0.0f, 1.0f) * speed);
-	if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) camera->move(Vector3(0.0f, 0.0f,-1.0f) * speed);
-	if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) camera->move(Vector3(1.0f, 0.0f, 0.0f) * speed);
-	if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f,0.0f, 0.0f) * speed);
-	if (Input::isKeyPressed(SDL_SCANCODE_Q)) camera->moveGlobal(Vector3(0.0f,-1.0f, 0.0f) * speed);
-	if (Input::isKeyPressed(SDL_SCANCODE_E)) camera->moveGlobal(Vector3(0.0f,1.0f, 0.0f) * speed);
-
-	if (Input::isKeyPressed(SDL_SCANCODE_8)) selectedObject->model.rotate(50.0f * elapsed_time * DEG2RAD, Vector3(1,1,1));
-	if (Input::isKeyPressed(SDL_SCANCODE_9)) selectedObject->model.rotate(-50.0f * elapsed_time * DEG2RAD, Vector3(1,1,1));
-
-	//añadir, mover, seleccionar objetos
-
-	//to navigate with the mouse fixed in the middle
-	if (mouse_locked)
-		Input::centerMouse();
 }
 
 void PlayStage::AddBoxInFront()

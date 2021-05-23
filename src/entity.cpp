@@ -70,7 +70,15 @@ Box::Box(EntityMesh* m)
 }
 
 // ----------------------------------------- class: Player -------------------------------
-Player::Player()
+Player::Player(Camera* camera)
 {
     name = eEntityName::PLAYER;
+    this->camera = camera;
+}
+
+void Player::move(Vector3 dir)
+{
+    // std::cout<<"donde esta"<<std::endl;
+    Vector3 target = model.getTranslation() + dir;
+    model.setTranslation(target.x, target.y, target.z);
 }

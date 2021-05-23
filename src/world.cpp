@@ -24,7 +24,7 @@ void World::setCamera( int window_width, int window_height )
 {
     //create our camera
 	camera = new Camera();
-	camera->lookAt(Vector3(0.f,100.f, 100.f),Vector3(0.f,0.f,0.f), Vector3(0.f,1.f,0.f)); //position the camera and point to 0,0,0
+	camera->lookAt(Vector3(0.f,100.f, 100.f),Vector3(1.f,0.f,0.f), Vector3(0.f,1.f,0.f)); //position the camera and point to 0,0,0
 	camera->setPerspective(70.f,window_width/(float)window_height,0.1f,10000.f); //set the projection, we want to be perspective
 }
 
@@ -41,25 +41,31 @@ EntityMesh* World::searchMesh( eEntityName obj )
 void World::SelectBox()
 {
     if (player->boxPicked != NULL) return;
-	Scene* scene = scenes[0];
+    Scene* scene = scenes[0];
 
-	Vector3 origin = camera->eye;
-	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, window_width, window_height);
+    Vector3 origin = camera->eye;
+    Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, window_width, window_height);
     Object* boxPicked = NULL;
 
     Vector3 col, normal;
     float distPicked, distObject;
+    Object* object;
+    Mesh* mesh;
 
-	for (int id=0; id < scene->objects.size(); id++)
-	{
-		Object* object = scene->objects[id];
+    for (int id=0; id < scene->objects.size(); id++)
+    {
+        object = scene->objects[id];
 
-		if (object->mesh == NULL) continue;
+        Vector3 pos = object->getPosition();
+        
+        if (object->mesh == NULL) continue;
         if (object->name != BOX) continue;
-		Mesh* mesh = object->mesh->mesh;
-		if (!mesh->testRayCollision(object->model,origin,dir,col,normal)) continue;
 
-		if (boxPicked == NULL){
+        mesh = object->mesh->mesh;
+
+        if (!mesh->testRayCollision(object->model,origin,dir,col,normal)) continue;
+
+        if (boxPicked == NULL){
             boxPicked = object;
             continue;
         }
@@ -67,15 +73,16 @@ void World::SelectBox()
         distPicked = boxPicked->getPosition().distance(origin);
         distObject = object->getPosition().distance(origin);
         
-        if (distPicked > distObject)
+        if (distPicked > distObject){
             boxPicked = object;
-	}
+        }
+    }
     player->boxPicked = boxPicked;
 }
 
 void World::dejarBox()
 {
-    if (player->boxPicked != NULL) return;
+    if (player->boxPicked == NULL) return;
 
     //codigo de soltar Box
 

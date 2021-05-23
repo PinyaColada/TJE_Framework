@@ -82,8 +82,11 @@ class Player : public Object
 {
 public:
 
-    Player(); //constructor
+    Player(Camera* camera); //constructor
+    Vector3 altura = Vector3(0, 70, 0);
+    void move(Vector3 dir);
 
+    Camera* camera;
     Object* boxPicked;
 };
 

@@ -8,6 +8,8 @@
 #include <vector>
 #include <cmath>
 #include <stdlib.h>
+#include <iostream>
+#include <string>
 
 #ifndef PI
 	#define PI 3.14159265359
@@ -105,6 +107,10 @@ public:
 	Vector3& normalize();
 	void random(float range);
 	void random(Vector3 range);
+
+	Vector3 perpendicular() { return Vector3(-z, 0, x);}
+
+	void debugVector() { std::cout<<"["<<x<<", "<<y<<", "<<z<<"]"<<std::endl; }
 
 	float distance(const Vector3& v) const;
 

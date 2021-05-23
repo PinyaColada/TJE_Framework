@@ -73,22 +73,34 @@ void Game::update(double seconds_elapsed)
 //Keyboard event handler (sync input)
 void Game::onKeyDown( SDL_KeyboardEvent event )
 {
+	PlayStage* pstage = (PlayStage*) stages[idCS];
 	switch(event.keysym.sym)
 	{
 		case SDLK_ESCAPE: must_exit = true; break; //ESC key, kill the app
 		case SDLK_F1: Shader::ReloadAll(); break; 
 		case SDLK_1:
-		{
-			if(idCS != PLAY) break;
-			((PlayStage*) stages[idCS])->AddBoxInFront(); 
-		} 
-		break;
+			if (idCS != PLAY) break;
+			if (pstage->idmode == GAMEPLAY) break;
+
+			pstage->AddBoxInFront(); 
+			break;
 		case SDLK_2:
-		{
+			if (idCS != PLAY) break;
+			if (pstage->idmode == GAMEPLAY) break;
+            if(world->player->boxPicked == NULL){
+                world->SelectBox();
+            } else {
+                world->dejarBox();
+            }
+			break;
+		case SDLK_3:
+			if (idCS != PLAY) break;
+			pstage->idmode = GAMEPLAY;
+			break;
+		case SDLK_4:
 			if(idCS != PLAY) break;
-			((PlayStage*) stages[idCS])->SelectObject(); 
-		}
-		break;
+			pstage->idmode = EDIT;	
+			break;
 	}
 }
 

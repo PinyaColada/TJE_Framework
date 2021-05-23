@@ -7,12 +7,18 @@ enum eStageID {
     PLAY
 };
 
+enum eModeID{
+    EDIT,
+    GAMEPLAY,
+};
+
 extern float mouse_speed;
 
 //------------------------------------ class: Stage  --------------------------------------
 class Stage 
 {
 public:
+    eModeID idmode = EDIT;
     eStageID idSatge;
     World* world = NULL;
     bool mouse_locked = true; //tells if the mouse is locked (not seen)
