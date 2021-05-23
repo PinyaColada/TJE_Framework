@@ -51,7 +51,7 @@ void Object::render(Camera* camera)
 // ----------------------------------------- class: Box -------------------------------
 Box::Box(EntityMesh* m)
 {
-    name = eEntityName::BOX;
+    name = BOX;
 
     //si existeix la mesh
     if( m != NULL ){
@@ -60,14 +60,32 @@ Box::Box(EntityMesh* m)
     }
 
     //si no existeix la mesh
-    mesh = new EntityMesh( eEntityName::BOX );
+    mesh = new EntityMesh( BOX );
 
 	mesh->texture = new Texture();
  	mesh->texture->load("data/Box/MetalBox.png");
 	mesh->mesh = Mesh::Get("data/Box/MetalBox.obj");
 	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
     mesh->color = Vector4(1,1,1,1);
+
+    physic = new Physics();
 }
+
+// ----------------------------------------- class: Floor -------------------------------
+Floor::Floor()
+{
+    name = FLOOR;
+
+    //si no existeix la mesh
+    mesh = new EntityMesh( FLOOR );
+
+	mesh->texture = new Texture();
+ 	mesh->texture->load("data/Floor/Floor.png");
+	mesh->mesh = Mesh::Get("data/Floor/Floor.obj");
+	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+    mesh->color = Vector4(1,1,1,1);
+}
+
 
 // ----------------------------------------- class: Player -------------------------------
 Player::Player(Camera* camera)

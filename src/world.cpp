@@ -13,9 +13,16 @@ World::World( int window_width, int window_height )
 { 
     this->window_width = window_width;
 	this->window_height = window_height;
+
     setCamera(window_width, window_height); 
+
     Scene* scene = new Scene();
     scenes.push_back(scene);
+
+    current_scene = DEMO;
+    // A partir de aqui empezamos a cargar el mapa.
+    Object* floor = new Floor();
+    scenes[current_scene]->dinamic_objects.push_back(floor);
 
     player = new Player(camera);
 }
@@ -50,14 +57,14 @@ void World::SelectBox()
     Vector3 col, normal;
     float distPicked, distObject;
     Object* object;
-    Mesh* mesh;
+    Mesh* mesh; 
 
-    for (int id=0; id < scene->objects.size(); id++)
+    for (int id=0; id < scene->dinamic_objects.size(); id++)
     {
-        object = scene->objects[id];
+        object = scene->dinamic_objects[id];
 
         Vector3 pos = object->getPosition();
-        
+
         if (object->mesh == NULL) continue;
         if (object->name != BOX) continue;
 
@@ -80,7 +87,7 @@ void World::SelectBox()
     player->boxPicked = boxPicked;
 }
 
-void World::dejarBox()
+void World::LeaveBox()
 {
     if (player->boxPicked == NULL) return;
 

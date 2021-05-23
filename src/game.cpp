@@ -87,11 +87,11 @@ void Game::onKeyDown( SDL_KeyboardEvent event )
 		case SDLK_2:
 			if (idCS != PLAY) break;
 			if (pstage->idmode == GAMEPLAY) break;
-            if(world->player->boxPicked == NULL){
+            if(world->player->boxPicked == NULL)
                 world->SelectBox();
-            } else {
-                world->dejarBox();
-            }
+			else 
+                world->LeaveBox();
+
 			break;
 		case SDLK_3:
 			if (idCS != PLAY) break;

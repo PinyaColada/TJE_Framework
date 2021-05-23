@@ -34,13 +34,23 @@ void PlayStage::Render()
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
    
-	//create model matrix for cube
-	Scene* scene = world->scenes[0];
-	for (int id=0; id < scene->objects.size(); id++)
+	Scene* scene = world->scenes[world->current_scene];
+	
+	for (int id = 0; id < scene->static_objects.size(); id++)
 	{
-		Object* object = scene->objects[id];
+		Object* object = scene->static_objects[id];
 		object->render(camera);
+		object->mesh->mesh->renderBounding(object->model);
 	}
+
+	for (int id = 0; id < scene->dinamic_objects.size(); id++)
+	{
+		Object* object = scene->dinamic_objects[id];
+		object->render(camera);
+		object->mesh->mesh->renderBounding(object->model);
+	}
+
+
 
 	//Draw the floor grid
 	drawGrid();
@@ -51,6 +61,13 @@ void PlayStage::Update(double elapsed_time)
     Camera* camera = world->camera;
 	float speed = elapsed_time * mouse_speed; //the speed is defined by the elapsed_time so it goes constant
 	Player* player = world->player;
+	Scene* scene = world->scenes[world->current_scene];
+
+	for (int i = 0; i < scene->dinamic_objects.size(); i++)
+	{
+		Object* object = scene->dinamic_objects[i];
+		object->physic->updateModel(elapsed_time, &object->model);
+	}
 
 	switch(idmode){
 		case GAMEPLAY: {
@@ -123,7 +140,7 @@ void PlayStage::Update(double elapsed_time)
 void PlayStage::AddBoxInFront()
 {
     Camera* camera = world->camera;
-	Scene* scene = world->scenes[0];
+	Scene* scene = world->scenes[world->current_scene];
 
 	Vector3 origin = camera->eye;
 	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, world->window_width, world->window_height);
@@ -137,20 +154,20 @@ void PlayStage::AddBoxInFront()
 		world->meshs.push_back(box->mesh);
 	}
 	box->model.setTranslation(pos.x, pos.y, pos.z);
-    scene->objects.push_back(box);
+    scene->dinamic_objects.push_back(box);
 }
 
 void PlayStage::SelectObject()
 {
     Camera* camera = world->camera;
-	Scene* scene = world->scenes[0];
+	Scene* scene = world->scenes[world->current_scene];
 
 	Vector3 origin = camera->eye;
 	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, world->window_width, world->window_height);
 
-	for (int id=0; id < scene->objects.size(); id++)
+	for (int id = 0; id < scene->dinamic_objects.size(); id++)
 	{
-		Object* object = scene->objects[id];
+		Object* object = scene->dinamic_objects[id];
 
 		Vector3 col;
 		Vector3 normal;
