@@ -9,11 +9,11 @@ class Physics
 {
 public:
     // Atributs
-    Vector3 vel;
+    Vector3 vel = Vector3();
 
     // Metodes
     Physics();
-    
+
     void updateModel(double elapsed_time, Matrix44* model);
     // bool isColiding();
 };

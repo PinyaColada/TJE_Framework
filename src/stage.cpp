@@ -64,7 +64,7 @@ void PlayStage::Update(double elapsed_time)
 	Scene* scene = world->scenes[world->current_scene];
 
 	for (int i = 0; i < scene->dinamic_objects.size(); i++)
-	{
+	{ 
 		Object* object = scene->dinamic_objects[i];
 		object->physic->updateModel(elapsed_time, &object->model);
 	}
@@ -153,32 +153,7 @@ void PlayStage::AddBoxInFront()
 	if( mesh == NULL ){
 		world->meshs.push_back(box->mesh);
 	}
+
 	box->model.setTranslation(pos.x, pos.y, pos.z);
     scene->dinamic_objects.push_back(box);
-}
-
-void PlayStage::SelectObject()
-{
-    Camera* camera = world->camera;
-	Scene* scene = world->scenes[world->current_scene];
-
-	Vector3 origin = camera->eye;
-	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, world->window_width, world->window_height);
-
-	for (int id = 0; id < scene->dinamic_objects.size(); id++)
-	{
-		Object* object = scene->dinamic_objects[id];
-
-		Vector3 col;
-		Vector3 normal;
-
-		if(object->mesh == NULL) continue;
-		Mesh* mesh = object->mesh->mesh;
-		if (!mesh->testRayCollision(object->model,origin,dir,col,normal)) continue;
-		//testRayCollision( Matrix44 model, Vector3 ray_origin, Vector3 ray_direction, Vector3& collision, Vector3& normal, float max_ray_dist = 3.4e+38F, bool in_object_space = false );
-
-		selectedObject = object;
-		// hay que implemontar para q se quede la mas cerca, con el col probablemente
-		break;
-	}
 }

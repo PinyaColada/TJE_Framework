@@ -52,6 +52,7 @@ void Object::render(Camera* camera)
 Box::Box(EntityMesh* m)
 {
     name = BOX;
+    physic = new Physics();
 
     //si existeix la mesh
     if( m != NULL ){
@@ -67,8 +68,6 @@ Box::Box(EntityMesh* m)
 	mesh->mesh = Mesh::Get("data/Box/MetalBox.obj");
 	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
     mesh->color = Vector4(1,1,1,1);
-
-    physic = new Physics();
 }
 
 // ----------------------------------------- class: Floor -------------------------------

@@ -22,7 +22,7 @@ World::World( int window_width, int window_height )
     current_scene = DEMO;
     // A partir de aqui empezamos a cargar el mapa.
     Object* floor = new Floor();
-    scenes[current_scene]->dinamic_objects.push_back(floor);
+    scenes[current_scene]->static_objects.push_back(floor);
 
     player = new Player(camera);
 }
