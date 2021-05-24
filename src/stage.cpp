@@ -55,7 +55,7 @@ void PlayStage::Render()
 
 
 	//Draw the floor grid
-	drawGrid();
+	//drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 
@@ -77,7 +77,7 @@ void PlayStage::Update(double elapsed_time)
 		case GAMEPLAY: {
 			// pues rotamos un poquito 
 			player->model.rotate(Input::mouse_delta.x * 0.002f, Vector3(0.0f,-1.0f,0.0f));
-			//player->model.rotate(Input::mouse_delta.y * 0.002f, Vector3(1.0f,0.0f,0.0f));
+			player->model.rotate(Input::mouse_delta.y * 0.002f, Vector3(1.0f,0.0f,0.0f));
 
 			// Con este vector calculamos segun el frontvector hacia donde se tiene que pirar el player
 			Vector3 aux(player->model.frontVector().x, 0, player->model.frontVector().z);
@@ -99,6 +99,7 @@ void PlayStage::Update(double elapsed_time)
 			if (Input::isKeyPressed(SDL_SCANCODE_S)) dir = dir + -1 * aux;
 			if (Input::isKeyPressed(SDL_SCANCODE_A)) dir = dir + -1 * aux.perpendicular();
 			if (Input::isKeyPressed(SDL_SCANCODE_D)) dir = dir + aux.perpendicular();
+			if (Input::isKeyPressed(SDL_SCANCODE_SPACE)) dir = dir + Vector3(0,10,0);
 
 			player->move(dir, speed, scene->static_objects, scene->dinamic_objects, elapsed_time);
 
