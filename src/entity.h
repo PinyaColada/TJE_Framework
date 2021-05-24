@@ -104,9 +104,10 @@ public:
 
     void move(Vector3 dir);
 
-    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects);
+    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects, double elapsed_time);
 
     bool onCollision(Object* object, Vector3 centre, Vector3 position, float speed, Vector3& target, bool& isFalling);
+    bool hasGround();
 };
 
 // ----------------------------------------- class: EntityLight -------------------------------
