@@ -108,30 +108,31 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
     //calculamos el target idial
     Vector3 position = model.getTranslation();
     Vector3 target = position + dir * speed;
-    Vector3 centreplayer = position;
+    float target_y = target.y;
+    Vector3 centreplayer = position + Vector3(0,3,0);
 
     //calculamos las coliciones
-    Vector3 coll, norm;
     Object* object;
+    bool isFalling = true;
 
     //for para static_objects
-    // for (int i = 0; i < static_objects.size(); i++)
-    // {
-    //     object = static_objects[i];
-    //     if(!onCollision(object, centreplayer, position, speed, target))
-    //         continue;
-    //     //comprovamos si el eje y es correcto
-    //     target.y = position.y;
-    // }
+    for (int i = 0; i < static_objects.size(); i++)
+    {
+        object = static_objects[i];
+        if(!onCollision(object, centreplayer, position, speed, target, isFalling))
+            continue;
+        //comprovamos si el eje y es correcto
+        target.y = target_y;
+    }
 
     //for para dinamic_objects
     for (int i = 0; i < dinamic_objects.size(); i++)
     {
         object = dinamic_objects[i];
-        if(!onCollision(object, centreplayer, position, speed, target))
+        if(!onCollision(object, centreplayer, position, speed, target, isFalling))
             continue;
         //comprovamos si el eje y es correcto
-        target.y = position.y;
+        target.y = target_y;
     }
 
     //calculamos la pos final
@@ -140,7 +141,7 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
     model.setTranslation(target.x, target.y, target.z);
 }
 
-bool Player::onCollision(Object* object, Vector3 centre, Vector3 position, float speed, Vector3& target)
+bool Player::onCollision(Object* object, Vector3 centre, Vector3 position, float speed, Vector3& target, bool& isFalling)
 {
     //calculamos la colision de 1 objeto
     Vector3 coll, norm;
@@ -151,6 +152,7 @@ bool Player::onCollision(Object* object, Vector3 centre, Vector3 position, float
     
     //actualizamos el objetivo
     Vector3 push_away = normalize(coll - position) * speed;
+
     target = position - push_away;
     return true;
 }

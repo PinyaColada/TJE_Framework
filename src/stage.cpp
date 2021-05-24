@@ -102,10 +102,19 @@ void PlayStage::Update(double elapsed_time)
 			// if (Input::isKeyPressed(SDL_SCANCODE_A)) player->move(-1 * aux.perpendicular() * speed);
 			// if (Input::isKeyPressed(SDL_SCANCODE_D)) player->move(aux.perpendicular() * speed);
 
-			if (Input::isKeyPressed(SDL_SCANCODE_W)) player->move(aux, speed, scene->static_objects, scene->dinamic_objects);
-			if (Input::isKeyPressed(SDL_SCANCODE_S)) player->move(aux, -1 * speed, scene->static_objects, scene->dinamic_objects);
-			if (Input::isKeyPressed(SDL_SCANCODE_A)) player->move(aux.perpendicular(), -1 * speed, scene->static_objects, scene->dinamic_objects);
-			if (Input::isKeyPressed(SDL_SCANCODE_D)) player->move(aux.perpendicular(), speed, scene->static_objects, scene->dinamic_objects);
+			// if (Input::isKeyPressed(SDL_SCANCODE_W)) player->move(aux, speed, scene->static_objects, scene->dinamic_objects);
+			// if (Input::isKeyPressed(SDL_SCANCODE_S)) player->move(-1 * aux, speed, scene->static_objects, scene->dinamic_objects);
+			// if (Input::isKeyPressed(SDL_SCANCODE_A)) player->move(-1 * aux.perpendicular(), speed, scene->static_objects, scene->dinamic_objects);
+			// if (Input::isKeyPressed(SDL_SCANCODE_D)) player->move(aux.perpendicular(), speed, scene->static_objects, scene->dinamic_objects);
+
+			Vector3 dir;
+
+			if (Input::isKeyPressed(SDL_SCANCODE_W)) dir = dir + aux;
+			if (Input::isKeyPressed(SDL_SCANCODE_S)) dir = dir + -1 * aux;
+			if (Input::isKeyPressed(SDL_SCANCODE_A)) dir = dir + -1 *aux.perpendicular();
+			if (Input::isKeyPressed(SDL_SCANCODE_D)) dir = dir + aux.perpendicular();
+
+			player->move(dir, speed, scene->static_objects, scene->dinamic_objects);
 
 			// 1,2,3 accion!
 			camera->lookAt(player->model.getTranslation() +  player->altura, player->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
