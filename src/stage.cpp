@@ -4,6 +4,10 @@
 #include "entity.h"
 
 float mouse_speed = 100.0f;
+float acc;
+float force;
+float ja;
+float y_rotation;
 Object* selectedObject;
 
 //------------------------------------ class: Stage  ----------------------------------------
@@ -55,7 +59,7 @@ void PlayStage::Render()
 
 
 	//Draw the floor grid
-	//drawGrid();
+	drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 
@@ -76,8 +80,8 @@ void PlayStage::Update(double elapsed_time)
 	switch(idmode){
 		case GAMEPLAY: {
 			// pues rotamos un poquito 
-			player->model.rotate(Input::mouse_delta.x * 0.002f, Vector3(0.0f,-1.0f,0.0f));
-			player->model.rotate(Input::mouse_delta.y * 0.002f, Vector3(1.0f,0.0f,0.0f));
+			player->model.rotate(Input::mouse_delta.x * 0.05f * DEG2RAD, Vector3(0.0f,-1.0f,0.0f));
+			player->model.rotate(Input::mouse_delta.y * 0.05f * DEG2RAD, player->model.rightVector());
 
 			// Con este vector calculamos segun el frontvector hacia donde se tiene que pirar el player
 			Vector3 aux(player->model.frontVector().x, 0, player->model.frontVector().z);
@@ -99,12 +103,31 @@ void PlayStage::Update(double elapsed_time)
 			if (Input::isKeyPressed(SDL_SCANCODE_S)) dir = dir + -1 * aux;
 			if (Input::isKeyPressed(SDL_SCANCODE_A)) dir = dir + -1 * aux.perpendicular();
 			if (Input::isKeyPressed(SDL_SCANCODE_D)) dir = dir + aux.perpendicular();
-			if (Input::isKeyPressed(SDL_SCANCODE_SPACE)) dir = dir + Vector3(0,10,0);
+			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && !player->isFalling) {
+				ja = 15;
+			} 
 
 			player->move(dir, speed, scene->static_objects, scene->dinamic_objects, elapsed_time);
 
+			if (ja > 0){
+				ja--;
+				player->model.setTranslationY(player->model.getTranslation().y + force);
+				force -= .5;
+			} else if (ja == 0){
+				force = 10;
+			}
+
+			if (player->isFalling){
+				acc += .03f;
+				acc = clamp(acc, -5, 3);
+				player->model.setTranslationY(player->model.getTranslation().y - acc);
+			} else {
+				acc = 0;
+			}
+
 			// 1,2,3 accion!
 			camera->lookAt(player->model.getTranslation() +  player->altura, player->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
+
 
 			// Ho posam lo mes guapo que podem :)
 			Input::centerMouse();

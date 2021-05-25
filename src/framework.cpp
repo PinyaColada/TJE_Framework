@@ -254,7 +254,6 @@ void Matrix44::rotate( float angle_in_rad, const Vector3& axis )
 	*this = R * *this;
 }
 
-
 void Matrix44::scale(float x, float y, float z)
 {
 	Matrix44 S;
@@ -277,6 +276,11 @@ void Matrix44::setTranslation(float x, float y, float z)
 	m[12] = x;
 	m[13] = y;
 	m[14] = z;
+}
+
+void Matrix44::setTranslationY(float y)
+{
+	m[13] = y;
 }
 
 void Matrix44::setTranslation(Vector3 pos)

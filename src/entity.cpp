@@ -130,7 +130,6 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
             continue;
         }
         minim_y = minimHeight(object, position, minim_y);
-        //onCollision(object, centreplayer, position, speed, target);
     }
 
     //for para dinamic_objects
@@ -144,13 +143,6 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
             continue;
         }
         minim_y = minimHeight(object, position, minim_y);
-        //onCollision(object, centreplayer, position, speed, target, isFalling);
-    }
-
-    //calculamos la pos final
-    if (isFalling){
-        target.y -= 1;
-        target.y = clamp(target.y, minim_y, 10000);
     }
 
     //aplicamos el movimiento

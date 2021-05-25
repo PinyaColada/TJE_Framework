@@ -50,6 +50,7 @@ public:
 	float perpdot( const Vector2& v );
 
 	void set(float x, float y) { this->x = x; this->y = y; }
+	void setY(float y) { this->y = y; }
 
 	Vector2& normalize() { *this *= (float)length(); return *this; }
 
@@ -246,6 +247,7 @@ class Matrix44
 		//create a transformation matrix from scratch
 		void setTranslation(float x, float y, float z);
 		void setTranslation(Vector3 pos);
+		void setTranslationY(float y);
 		void setRotation( float angle_in_rad, const Vector3& axis );
 		void setScale(float x, float y, float z);
 
