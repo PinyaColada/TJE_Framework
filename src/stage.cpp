@@ -7,6 +7,7 @@ float mouse_speed = 100.0f;
 float acc;
 float force;
 float ja;
+float x_rotation;
 float y_rotation;
 Object* selectedObject;
 
@@ -80,8 +81,16 @@ void PlayStage::Update(double elapsed_time)
 	switch(idmode){
 		case GAMEPLAY: {
 			// pues rotamos un poquito 
-			player->model.rotate(Input::mouse_delta.x * 0.05f * DEG2RAD, Vector3(0.0f,-1.0f,0.0f));
-			player->model.rotate(Input::mouse_delta.y * 0.05f * DEG2RAD, player->model.rightVector());
+			x_rotation += Input::mouse_delta.x * 0.05f * DEG2RAD;
+			y_rotation += Input::mouse_delta.y * 0.05f * DEG2RAD;
+
+			y_rotation = clamp(y_rotation, -80 * DEG2RAD, 80 * DEG2RAD);
+
+			Vector3 direction = Vector3(sin(x_rotation),
+										sin(y_rotation), 
+										cos(x_rotation) * cos(y_rotation));
+
+			player->model.setFrontAndOrthonormalize(direction);
 
 			// Con este vector calculamos segun el frontvector hacia donde se tiene que pirar el player
 			Vector3 aux(player->model.frontVector().x, 0, player->model.frontVector().z);
