@@ -87,6 +87,7 @@ void World::SelectBox()
         }
     }
     player->boxPicked = boxPicked;
+    boxPicked->isCatch = true;
 }
 
 void World::LeaveBox()
@@ -94,6 +95,6 @@ void World::LeaveBox()
     if (player->boxPicked == NULL) return;
 
     //codigo de soltar Box
-
+    player->boxPicked->isCatch = false;
     player->boxPicked = NULL;
 }

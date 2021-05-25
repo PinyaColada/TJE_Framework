@@ -62,6 +62,8 @@ class Object : public Entity
     EntityMesh* mesh;
     Physics* physic;
 
+    bool isCatch = false;
+
     Object(){}; //constructor
     Object(EntityMesh* m) { mesh = m; };
 

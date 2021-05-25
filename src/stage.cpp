@@ -30,7 +30,13 @@ PlayStage::PlayStage()
 
 void PlayStage::Render() 
 {
-    Camera* camera = world->camera;
+	Camera* camera = world->camera;
+	Player* player = world->player;
+
+	// 1,2,3 accion!
+	if(idmode == GAMEPLAY)
+		camera->lookAt(player->model.getTranslation() +  player->altura, player->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
+    
     //set the camera as default
 	camera->enable();
 
@@ -43,6 +49,7 @@ void PlayStage::Render()
 	
 	Object* object;
 
+	//for para static_objects
 	for (int id = 0; id < scene->static_objects.size(); id++)
 	{
 		object = scene->static_objects[id];
@@ -50,6 +57,7 @@ void PlayStage::Render()
 		object->mesh->mesh->renderBounding(object->model);
 	}
 
+	//for para dinamic_objects
 	for (int id = 0; id < scene->dinamic_objects.size(); id++)
 	{
 		object = scene->dinamic_objects[id];
@@ -84,13 +92,13 @@ void PlayStage::Update(double elapsed_time)
 			x_rotation += Input::mouse_delta.x * 0.05f * DEG2RAD;
 			y_rotation += Input::mouse_delta.y * 0.05f * DEG2RAD;
 
-			y_rotation = clamp(y_rotation, -80 * DEG2RAD, 80 * DEG2RAD);
+			y_rotation = clamp(y_rotation, -70 * DEG2RAD, 70 * DEG2RAD);
 
-			Vector3 direction = Vector3(sin(x_rotation),
-										sin(y_rotation), 
-										cos(x_rotation) * cos(y_rotation));
+			Vector3 dir = Vector3(	sin(x_rotation),
+									sin(y_rotation), 
+									cos(x_rotation) * cos(y_rotation));
 
-			player->model.setFrontAndOrthonormalize(direction);
+			player->model.setFrontAndOrthonormalize(dir);
 
 			// Con este vector calculamos segun el frontvector hacia donde se tiene que pirar el player
 			Vector3 aux(player->model.frontVector().x, 0, player->model.frontVector().z);
@@ -106,7 +114,7 @@ void PlayStage::Update(double elapsed_time)
 			camera->fov = clamp(camera->fov, 70, 80);
 			speed = clamp(speed, 1, 2);
 
-			Vector3 dir;
+			dir = Vector3();
 
 			if (Input::isKeyPressed(SDL_SCANCODE_W)) dir = dir + aux;
 			if (Input::isKeyPressed(SDL_SCANCODE_S)) dir = dir + -1 * aux;
@@ -134,13 +142,19 @@ void PlayStage::Update(double elapsed_time)
 				acc = 0;
 			}
 
-			// 1,2,3 accion!
-			camera->lookAt(player->model.getTranslation() +  player->altura, player->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
-
-
 			// Ho posam lo mes guapo que podem :)
 			Input::centerMouse();
 			SDL_ShowCursor(false);
+
+			//cubo movil
+			if(player->boxPicked == NULL)
+				break;
+			Object* boxPicked = player->boxPicked;
+			dir = player->model.frontVector();
+			dir = 50 * Vector3(dir.x, 0, dir.z).normalize();
+			Vector3 pos = player->model.getTranslation() + Vector3(0,10,0) + dir;
+			boxPicked->model.setTranslation(pos);
+
 			break;
 		}
 		case EDIT: {
