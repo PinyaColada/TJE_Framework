@@ -67,14 +67,21 @@ void PlayStage::Render()
 	{
 		object = scene->dinamic_objects[id];
 		object->render(camera);
-		object->mesh->mesh->renderBounding(object->model);
-		object->mesh->mesh->bounding->renderBounding(object->model);
+		//object->mesh->mesh->renderBounding(object->model);
+		Matrix44 copymodel = object->model;
+		Mesh* mesh = object->mesh->mesh;
+		// copymodel.translate(mesh->box.center.x, mesh->box.center.y, mesh->box.center.z);
+		// copymodel.scale(mesh->box.halfsize.x, mesh->box.halfsize.y, mesh->box.halfsize.z);
+		copymodel.setTranslation(Vector3());
+		copymodel = copymodel * mesh->model_bounding;
+
+		object->mesh->mesh->bounding->renderBounding(copymodel);
 	}
 
 
 
 	//Draw the floor grid
-	//drawGrid();
+	drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 

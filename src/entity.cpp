@@ -110,9 +110,9 @@ void Player::move(Vector3 dir)
 }
 
 float minim_y;
-float radius = 1;
+float radius = 3;
 float margen = 0.1;
-Vector3 centreplayer = Vector3(0,1,0);
+Vector3 centreplayer = Vector3(0,radius,0);
 
 void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects)
 {
@@ -151,6 +151,10 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
         minim_y = minimHeight(object, position, minim_y);
     }
 
+    target.clampY(minim_y, 10000);
+    std::cout<<"target.y: "<<target.y<<std::endl;
+    std::cout<<"minim_y: "<<minim_y<<std::endl;
+
     //aplicamos el movimiento
     model.setTranslation(target.x, target.y, target.z);
 }
@@ -168,8 +172,6 @@ bool Player::onCollision(Object* object, Vector3 position, float speed, Vector3&
     //actualizamos el objetivo
     Vector3 push_away = normalize(coll - position) * speed;
     target = position - push_away;
-    // Vector3 normal = normalize(coll - centre - position);
-    // target = target - dot(target - position, normal) * normal;
     
     //comprovamos si el eje y es correcto
     target.y = target_y;
@@ -193,16 +195,17 @@ float Player::minimHeight(Object* object, Vector3 position, float lastMin)
     float minim = lastMin;
 
     if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm)){
-        if (!(coll.y + margen > minim)) // no se si coll s'actualizaria be
-        if(object->name == BOX){
-            printf("minim: %f\n", minim);
-            printf("coll.y: %f\n", coll.y);
-        }
-        minim = coll.y + margen;
-        if(object->name == BOX){
-            printf("caixa\n");
-            printf("minim: %f\n", minim);
-        }
+        if (!(coll.y + margen > minim)){
+            // if(object->name == BOX){
+            //     printf("caixa\n");
+            //     // printf("minim: %f\n", minim);
+            // }
+            minim = coll.y + margen;
+            // if(object->name == BOX){
+            //     printf("minim: %f\n", minim);
+            //     printf("coll.y: %f\n", coll.y);
+            // }
+        } // no se si coll s'actualizaria be
     }
     
     return minim;

@@ -108,6 +108,10 @@ public:
 	Vector3& normalize();
 	void random(float range);
 	void random(Vector3 range);
+	
+	void clampY(float min, float max){
+			y = clamp(y, min, max);
+	}
 
 	Vector3 perpendicular() { return Vector3(-z, 0, x);}
 

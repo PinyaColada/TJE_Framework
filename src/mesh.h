@@ -81,6 +81,8 @@ public:
 	unsigned int uvs1_vbo_id;
 
 	Mesh* bounding = NULL;
+	Matrix44 model_bounding;
+	Matrix44 inv_model_bounding;
 
 	Mesh();
 	~Mesh();
