@@ -106,9 +106,9 @@ public:
 
     void move(Vector3 dir);
 
-    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects, double elapsed_time);
+    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects);
 
-    bool onCollision(Object* object, Vector3 centre, Vector3 position, float speed, Vector3& target);
+    bool onCollision(Object* object, Vector3 position, float speed, Vector3& target);
     bool hasGround(Object* object, Vector3 position);
     float minimHeight(Object* object, Vector3 position, float lastMin);
 };

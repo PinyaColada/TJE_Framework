@@ -106,13 +106,15 @@ void Player::move(Vector3 dir)
 }
 
 float minim_y;
+float radius = 3;
+float margen = 0.1;
+Vector3 centreplayer = Vector3(0,3,0);
 
-void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects, double elapsed_time)
+void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects)
 {
     //calculamos el target idial
     Vector3 position = model.getTranslation();
     Vector3 target = position + dir * speed;
-    Vector3 centreplayer = position + Vector3(0,3,0);
 
     //calculamos las coliciones
     Object* object;
@@ -123,7 +125,7 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
     for (int i = 0; i < static_objects.size(); i++)
     {
         object = static_objects[i];
-        if(onCollision(object, centreplayer, position, speed, target))
+        if(onCollision(object, position, speed, target))
             continue;
         if(hasGround(object, position)){
             isFalling = false;
@@ -136,7 +138,7 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
     for (int i = 0; i < dinamic_objects.size(); i++)
     {
         object = dinamic_objects[i];
-        if(onCollision(object, centreplayer, position, speed, target))
+        if(onCollision(object, position, speed, target))
             continue;
         if(hasGround(object, position)){
             isFalling = false;
@@ -149,18 +151,21 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
     model.setTranslation(target.x, target.y, target.z);
 }
 
-bool Player::onCollision(Object* object, Vector3 centre, Vector3 position, float speed, Vector3& target)
+bool Player::onCollision(Object* object, Vector3 position, float speed, Vector3& target)
 {
     //calculamos la colision de 1 objeto
     Vector3 coll, norm;
     float target_y = target.y;
+    Vector3 centre = position + centreplayer;
 
-    if (object->mesh == NULL || !object->mesh->mesh->testSphereCollision( object->model, centre, 3, coll, norm))
+    if (object->mesh == NULL || !object->mesh->mesh->testSphereCollision( object->model, centre, radius, coll, norm))
         return false;
     
     //actualizamos el objetivo
     Vector3 push_away = normalize(coll - position) * speed;
     target = position - push_away;
+    // Vector3 normal = normalize(coll - centre - position);
+    // target = target - dot(target - position, normal) * normal;
     
     //comprovamos si el eje y es correcto
     target.y = target_y;
@@ -172,7 +177,7 @@ bool Player::hasGround(Object* object, Vector3 position)
 {
     Vector3 coll, norm;
 
-    if (object->mesh->mesh->testRayCollision( object->model, position, Vector3(0, -1, 0), coll, norm, 3.1))
+    if (object->mesh->mesh->testRayCollision( object->model, position, Vector3(0, -1, 0), coll, norm, radius + margen))
         return true;
     
     return false;
@@ -184,8 +189,8 @@ float Player::minimHeight(Object* object, Vector3 position, float lastMin)
     float minim = lastMin;
 
     if (object->mesh->mesh->testRayCollision( object->model, position, Vector3(0, -1, 0), coll, norm)){
-        if (!(coll.y + 0.1 > minim)) // no se si coll s'actualizaria be
-        minim = coll.y + 0.1;
+        if (!(coll.y + margen > minim)) // no se si coll s'actualizaria be
+        minim = coll.y + margen;
     }
     
     return minim;

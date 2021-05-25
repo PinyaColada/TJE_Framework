@@ -59,7 +59,7 @@ void PlayStage::Render()
 
 
 	//Draw the floor grid
-	drawGrid();
+	//drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 
@@ -107,7 +107,7 @@ void PlayStage::Update(double elapsed_time)
 				ja = 15;
 			} 
 
-			player->move(dir, speed, scene->static_objects, scene->dinamic_objects, elapsed_time);
+			player->move(dir, speed, scene->static_objects, scene->dinamic_objects);
 
 			if (ja > 0){
 				ja--;
