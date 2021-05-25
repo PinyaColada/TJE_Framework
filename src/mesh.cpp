@@ -680,6 +680,29 @@ bool Mesh::testSphereCollision(Matrix44 model, Vector3 center, float radius, Vec
 	return true;
 }
 
+// test amb la Bounding
+bool Mesh::testRayBoundingCollision(Matrix44 model, Vector3 start, Vector3 front, Vector3& collision, Vector3& normal, float max_ray_dist, bool in_object_space)
+{
+	if (bounding == NULL)
+		return false;
+
+	model.translate(box.center.x, box.center.y, box.center.z);
+	model.scale(box.halfsize.x, box.halfsize.y, box.halfsize.z);
+
+	return bounding->testRayCollision(model, start, front, collision, normal, max_ray_dist, in_object_space);
+}
+
+bool Mesh::testSphereBoundingCollision(Matrix44 model, Vector3 center, float radius, Vector3& collision, Vector3& normal)
+{
+	if (bounding == NULL)
+		return false;
+
+	model.translate(box.center.x, box.center.y, box.center.z);
+	model.scale(box.halfsize.x, box.halfsize.y, box.halfsize.z);
+
+	return bounding->testSphereCollision(model, center, radius, collision, normal);
+}
+
 bool Mesh::interleaveBuffers()
 {
 	if (!vertices.size() || !normals.size() || !uvs.size())
@@ -1526,7 +1549,15 @@ void Mesh::renderBounding( const Matrix44& model, bool world_bounding )
 	sh->disable();
 }
 
-
+void Mesh::createBounding()
+{
+	if(bounding != NULL)
+		return;
+	
+	bounding = new Mesh();
+	bounding->createWireBox();
+	bounding->uploadToVRAM();
+}
 
 Mesh* Mesh::getQuad()
 {

@@ -54,7 +54,12 @@ void PlayStage::Render()
 	{
 		object = scene->static_objects[id];
 		object->render(camera);
-		object->mesh->mesh->renderBounding(object->model);
+		//object->mesh->mesh->renderBounding(object->model);
+		Matrix44 copymodel = object->model;
+		Mesh* mesh = object->mesh->mesh;
+		copymodel.translate(mesh->box.center.x, mesh->box.center.y, mesh->box.center.z);
+		copymodel.scale(mesh->box.halfsize.x, mesh->box.halfsize.y, mesh->box.halfsize.z);
+		object->mesh->mesh->bounding->renderBounding(copymodel);
 	}
 
 	//for para dinamic_objects
@@ -63,6 +68,7 @@ void PlayStage::Render()
 		object = scene->dinamic_objects[id];
 		object->render(camera);
 		object->mesh->mesh->renderBounding(object->model);
+		object->mesh->mesh->bounding->renderBounding(object->model);
 	}
 
 
@@ -121,7 +127,7 @@ void PlayStage::Update(double elapsed_time)
 			if (Input::isKeyPressed(SDL_SCANCODE_A)) dir = dir + -1 * aux.perpendicular();
 			if (Input::isKeyPressed(SDL_SCANCODE_D)) dir = dir + aux.perpendicular();
 			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && !player->isFalling) {
-				ja = 15;
+				ja = 25;
 			} 
 
 			player->move(dir, speed, scene->static_objects, scene->dinamic_objects);

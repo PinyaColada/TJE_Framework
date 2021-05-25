@@ -80,6 +80,8 @@ public:
 	unsigned int weights_vbo_id;
 	unsigned int uvs1_vbo_id;
 
+	Mesh* bounding = NULL;
+
 	Mesh();
 	~Mesh();
 
@@ -89,6 +91,7 @@ public:
 	void renderInstanced(unsigned int primitive, const Matrix44* instanced_models, int number);
 	void renderInstanced(unsigned int primitive, const std::vector<Vector3> positions, const char* uniform_name );
 	void renderBounding( const Matrix44& model, bool world_bounding = true );
+	void createBounding(); //crea la Bounding per probar colicions
 	void renderFixedPipeline(int primitive); //sloooooooow
 	void renderAnimated(unsigned int primitive, Skeleton *sk);
 
@@ -108,6 +111,10 @@ public:
 	//help: model is the transform of the mesh, ray origin and direction, a Vector3 where to store the collision if found, a Vector3 where to store the normal if there was a collision, max ray distance in case the ray should go to infintiy, and in_object_space to get the collision point in object space or world space
 	bool testRayCollision( Matrix44 model, Vector3 ray_origin, Vector3 ray_direction, Vector3& collision, Vector3& normal, float max_ray_dist = 3.4e+38F, bool in_object_space = false );
 	bool testSphereCollision(Matrix44 model, Vector3 center, float radius, Vector3& collision, Vector3& normal);
+
+	// test amb la Bounding
+	bool testRayBoundingCollision( Matrix44 model, Vector3 ray_origin, Vector3 ray_direction, Vector3& collision, Vector3& normal, float max_ray_dist = 3.4e+38F, bool in_object_space = false );
+	bool testSphereBoundingCollision(Matrix44 model, Vector3 center, float radius, Vector3& collision, Vector3& normal);
 
 	//loader
 	static Mesh* Get(const char* filename);

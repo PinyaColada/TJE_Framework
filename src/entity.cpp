@@ -72,6 +72,8 @@ Box::Box(EntityMesh* m)
 	mesh->mesh = Mesh::Get("data/Box/MetalBox.obj");
 	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
     mesh->color = Vector4(1,1,1,1);
+
+    mesh->mesh->createBounding();
 }
 
 // ----------------------------------------- class: Floor -------------------------------
@@ -88,6 +90,8 @@ Floor::Floor()
 	mesh->mesh = Mesh::Get("data/Floor/Floor.obj");
 	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
     mesh->color = Vector4(1,1,1,1);
+
+    mesh->mesh->createBounding();
 }
 
 
@@ -106,9 +110,9 @@ void Player::move(Vector3 dir)
 }
 
 float minim_y;
-float radius = 3;
+float radius = 1;
 float margen = 0.1;
-Vector3 centreplayer = Vector3(0,3,0);
+Vector3 centreplayer = Vector3(0,1,0);
 
 void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects)
 {
@@ -158,7 +162,7 @@ bool Player::onCollision(Object* object, Vector3 position, float speed, Vector3&
     float target_y = target.y;
     Vector3 centre = position + centreplayer;
 
-    if (object->mesh == NULL || !object->mesh->mesh->testSphereCollision( object->model, centre, radius, coll, norm))
+    if (object->mesh == NULL || !object->mesh->mesh->testSphereBoundingCollision( object->model, centre, radius, coll, norm))
         return false;
     
     //actualizamos el objetivo
@@ -177,7 +181,7 @@ bool Player::hasGround(Object* object, Vector3 position)
 {
     Vector3 coll, norm;
 
-    if (object->mesh->mesh->testRayCollision( object->model, position, Vector3(0, -1, 0), coll, norm, radius + margen))
+    if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm, radius + margen))
         return true;
     
     return false;
@@ -188,9 +192,17 @@ float Player::minimHeight(Object* object, Vector3 position, float lastMin)
     Vector3 coll, norm;
     float minim = lastMin;
 
-    if (object->mesh->mesh->testRayCollision( object->model, position, Vector3(0, -1, 0), coll, norm)){
+    if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm)){
         if (!(coll.y + margen > minim)) // no se si coll s'actualizaria be
+        if(object->name == BOX){
+            printf("minim: %f\n", minim);
+            printf("coll.y: %f\n", coll.y);
+        }
         minim = coll.y + margen;
+        if(object->name == BOX){
+            printf("caixa\n");
+            printf("minim: %f\n", minim);
+        }
     }
     
     return minim;
