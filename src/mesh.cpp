@@ -1557,17 +1557,18 @@ void Mesh::createBounding()
 		return;
 	
 	bounding = new Mesh();
+	bounding->createWireBox();
 		// Aixo es sa funcio createWireBox 
-		//const float _verts[] = { -1,-1,-1,  1,-1,-1,  -1,1,-1,  1,1,-1, -1,-1,1,  1,-1,1, -1,1,1,  1,1,1,    -1,-1,-1, -1,1,-1, 1,-1,-1, 1,1,-1, -1,-1,1, -1,1,1, 1,-1,1, 1,1,1,   -1,-1,-1, -1,-1,1, 1,-1,-1, 1,-1,1, -1,1,-1, -1,1,1, 1,1,-1, 1,1,1 };
-		//vertices.resize(24);
-		//memcpy(&vertices[0], _verts, sizeof(Vector3) * vertices.size());
-		bounding->box.center.set(box.center.x, box.center.y, box.center.z);
-		bounding->box.halfsize.set(box.halfsize.x, box.halfsize.y, box.halfsize.z);
-		bounding->vertices.resize(24);
+		// const float _verts[] = { -1,-1,-1,  1,-1,-1,  -1,1,-1,  1,1,-1, -1,-1,1,  1,-1,1, -1,1,1,  1,1,1,    -1,-1,-1, -1,1,-1, 1,-1,-1, 1,1,-1, -1,-1,1, -1,1,1, 1,-1,1, 1,1,1,   -1,-1,-1, -1,-1,1, 1,-1,-1, 1,-1,1, -1,1,-1, -1,1,1, 1,1,-1, 1,1,1 };
+		// vertices.resize(24);
+		// memcpy(&vertices[0], _verts, sizeof(Vector3) * vertices.size());
+		// bounding->box.center.set(box.center.x, box.center.y, box.center.z);
+		// bounding->box.halfsize.set(box.halfsize.x, box.halfsize.y, box.halfsize.z);
+		// bounding->vertices.resize(24);
 		
 		// box.center.set(0, 0, 0);
 		// box.halfsize.set(1,1,1);
-		radius = (float)box.halfsize.length();
+		// radius = (float)box.halfsize.length();
 
 	bounding->uploadToVRAM();
 	// Calculamos la model_bounding de la mesh
