@@ -86,6 +86,9 @@ void World::SelectBox()
             boxPicked = object;
         }
     }
+    if (boxPicked == NULL)
+        return;
+        
     player->boxPicked = boxPicked;
     boxPicked->isCatch = true;
 }
