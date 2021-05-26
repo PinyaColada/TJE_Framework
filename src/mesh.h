@@ -81,8 +81,6 @@ public:
 	unsigned int uvs1_vbo_id;
 
 	Mesh* bounding = NULL;
-	Matrix44 model_bounding;
-	Matrix44 inv_model_bounding;
 
 	Mesh();
 	~Mesh();
@@ -93,7 +91,6 @@ public:
 	void renderInstanced(unsigned int primitive, const Matrix44* instanced_models, int number);
 	void renderInstanced(unsigned int primitive, const std::vector<Vector3> positions, const char* uniform_name );
 	void renderBounding( const Matrix44& model, bool world_bounding = true );
-	void createBounding(); //crea la Bounding per probar colicions
 	void renderFixedPipeline(int primitive); //sloooooooow
 	void renderAnimated(unsigned int primitive, Skeleton *sk);
 
@@ -121,6 +118,8 @@ public:
 	//loader
 	static Mesh* Get(const char* filename);
 	void registerMesh(std::string name);
+
+	static Mesh* getMeshAndBounding(const char* fileMeshName, const char* fileBoundingName = "");
 
 	//create help meshes
 	void createQuad(float center_x, float center_y, float w, float h, bool flip_uvs);

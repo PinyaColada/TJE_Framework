@@ -685,12 +685,8 @@ bool Mesh::testRayBoundingCollision(Matrix44 model, Vector3 start, Vector3 front
 {
 	if (bounding == NULL)
 		return false;
-
-	bool aux = bounding->testRayCollision(model_bounding * model, start, front, collision, normal, max_ray_dist, in_object_space);
-	collision = inv_model_bounding * collision;
-	normal = inv_model_bounding * normal;
 	
-	return aux;
+	return bounding->testRayCollision(model, start, front, collision, normal, max_ray_dist, in_object_space);
 }
 
 bool Mesh::testSphereBoundingCollision(Matrix44 model, Vector3 center, float radius, Vector3& collision, Vector3& normal)
@@ -698,11 +694,7 @@ bool Mesh::testSphereBoundingCollision(Matrix44 model, Vector3 center, float rad
 	if (bounding == NULL)
 		return false;
 
-	bool aux = bounding->testSphereCollision(model, center, radius, collision, normal);
-	collision = inv_model_bounding * collision;
-	normal = inv_model_bounding * normal;
-
-	return aux;
+	return bounding->testSphereCollision(model, center, radius, collision, normal);
 }
 
 bool Mesh::interleaveBuffers()
@@ -1551,41 +1543,6 @@ void Mesh::renderBounding( const Matrix44& model, bool world_bounding )
 	sh->disable();
 }
 
-void Mesh::createBounding()
-{
-	if(bounding != NULL)
-		return;
-	
-	bounding = new Mesh();
-	bounding->createWireBox();
-		// Aixo es sa funcio createWireBox 
-		// const float _verts[] = { -1,-1,-1,  1,-1,-1,  -1,1,-1,  1,1,-1, -1,-1,1,  1,-1,1, -1,1,1,  1,1,1,    -1,-1,-1, -1,1,-1, 1,-1,-1, 1,1,-1, -1,-1,1, -1,1,1, 1,-1,1, 1,1,1,   -1,-1,-1, -1,-1,1, 1,-1,-1, 1,-1,1, -1,1,-1, -1,1,1, 1,1,-1, 1,1,1 };
-		// vertices.resize(24);
-		// memcpy(&vertices[0], _verts, sizeof(Vector3) * vertices.size());
-		// bounding->box.center.set(box.center.x, box.center.y, box.center.z);
-		// bounding->box.halfsize.set(box.halfsize.x, box.halfsize.y, box.halfsize.z);
-		// bounding->vertices.resize(24);
-		
-		// box.center.set(0, 0, 0);
-		// box.halfsize.set(1,1,1);
-		// radius = (float)box.halfsize.length();
-
-	bounding->uploadToVRAM();
-	// Calculamos la model_bounding de la mesh
-	// model_bounding.setIdentity();
-	// model_bounding.translate(box.center.x, box.center.y, box.center.z);
-	// model_bounding.scale(box.halfsize.x, box.halfsize.y, box.halfsize.z);
-	// model_bounding.getTranslation().debugVector();
-	// model_bounding.frontVector().debugVector();
-	// model_bounding.topVector().debugVector();
-
-	// // Para hacer la inversa tenemos que ajustar los parametros debido a que la toca por dentro
-
-	// inv_model_bounding.translate(box.center.x, box.center.y, box.center.z);
-	// inv_model_bounding.scale(box.halfsize.x, box.halfsize.y, box.halfsize.z);	
-	// inv_model_bounding.inverse();
-}
-
 Mesh* Mesh::getQuad()
 {
 	static Mesh* quad = NULL;
@@ -1699,4 +1656,15 @@ void Mesh::registerMesh( std::string name )
 {
 	this->name = name;
 	sMeshesLoaded[name] = this;
+}
+
+Mesh* Mesh::getMeshAndBounding(const char* fileMeshName, const char* fileBoundingName)
+{
+	if(std::strcmp(fileBoundingName, "") == 0) 
+		fileBoundingName = fileMeshName;
+
+	Mesh* mesh = Mesh::Get(fileMeshName);
+	mesh->bounding = Mesh::Get(fileBoundingName);
+
+	return mesh;
 }

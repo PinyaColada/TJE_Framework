@@ -33,7 +33,7 @@ void PlayStage::Render()
 	Camera* camera = world->camera;
 	Player* player = world->player;
 
-	// 1,2,3 accion!
+	// moure la camera a la pos del player
 	if(idmode == GAMEPLAY)
 		camera->lookAt(player->model.getTranslation() +  player->altura, player->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
     
@@ -46,35 +46,30 @@ void PlayStage::Render()
 	glDisable(GL_CULL_FACE);
    
 	Scene* scene = world->scenes[world->current_scene];
-	
 	Object* object;
 
-	//for para static_objects
+	// render de skybox
+
+
+	//render objectes
 	for (int id = 0; id < scene->static_objects.size(); id++)
 	{
+		//for para static_objects
 		object = scene->static_objects[id];
 		object->render(camera);
-		object->mesh->mesh->renderBounding(object->model);
-		// Matrix44 copymodel = object->model;
-		// Mesh* mesh = object->mesh->mesh;
-		// copymodel.translate(mesh->box.center.x, mesh->box.center.y, mesh->box.center.z);
-		// copymodel.scale(mesh->box.halfsize.x, mesh->box.halfsize.y, mesh->box.halfsize.z);
-		// object->mesh->mesh->bounding->renderBounding(copymodel);
+		//object->mesh->mesh->renderBounding(object->model);
+
+		object->mesh->mesh->bounding->renderBounding(object->model);
 	}
 
-	//for para dinamic_objects
 	for (int id = 0; id < scene->dinamic_objects.size(); id++)
 	{
+		//for para static_objects
 		object = scene->dinamic_objects[id];
 		object->render(camera);
-		object->mesh->mesh->renderBounding(object->model);
-		// Matrix44 copymodel = object->model;
-		// Mesh* mesh = object->mesh->mesh;
-		// copymodel.translate(mesh->box.center.x, mesh->box.center.y, mesh->box.center.z);
-		// copymodel.scale(mesh->box.halfsize.x, mesh->box.halfsize.y, mesh->box.halfsize.z);
-		// //copymodel = copymodel * mesh->model_bounding;
+		//object->mesh->mesh->renderBounding(object->model);
 
-		// object->mesh->mesh->bounding->renderBounding(copymodel);
+		object->mesh->mesh->bounding->renderBounding(object->model);
 	}
 
 
