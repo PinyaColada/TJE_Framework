@@ -48,8 +48,15 @@ void PlayStage::Render()
 	Scene* scene = world->scenes[world->current_scene];
 	Object* object;
 
-	// render de skybox
+	// Skybox
+	EntityMesh* skybox = scene->skybox;
+	if (skybox != NULL){
+		// mover skybox en la pos de player
+		skybox->model.translate(camera->eye);
 
+		// render de skybox
+		skybox->render(camera);
+	}
 
 	//render objectes
 	for (int id = 0; id < scene->static_objects.size(); id++)
@@ -75,7 +82,7 @@ void PlayStage::Render()
 
 
 	//Draw the floor grid
-	drawGrid();
+	//drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 
@@ -90,7 +97,8 @@ void PlayStage::Update(double elapsed_time)
 	for (int i = 0; i < scene->dinamic_objects.size(); i++)
 	{ 
 		object = scene->dinamic_objects[i];
-		object->physic->updateModel(elapsed_time, &object->model);
+		if(!object->isCatch)
+			object->physic->updateModel(elapsed_time, &object->model);
 	}
 
 	switch(idmode){
@@ -158,9 +166,16 @@ void PlayStage::Update(double elapsed_time)
 				break;
 			Object* boxPicked = player->boxPicked;
 			dir = player->model.frontVector();
-			dir = 50 * Vector3(dir.x, 0, dir.z).normalize();
-			Vector3 dir_d = 100 * Vector3(dir.x, 0, dir.z).normalize();
-			Vector3 pos = player->model.getTranslation() + Vector3(0,10,0) + dir;
+
+			float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
+			h = clamp(h, 0, 100);
+
+			dir = Vector3(dir.x, 0, dir.z).normalize();
+
+			Vector3 dir_p = 50 * dir;
+			Vector3 dir_d = 100 * dir;
+			Vector3 pos = player->model.getTranslation() + Vector3(0,h,0) + dir_p;
+
 			boxPicked->model.setTranslation(pos);
 			boxPicked->model.setFrontAndOrthonormalize(dir_d);
 			break;

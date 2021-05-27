@@ -3,9 +3,15 @@
 #include "entity.h"
 
 // ----------------------------------------- class: Scene -----------------------------------------
-Scene::Scene()
-{
+Scene::Scene() {}
 
+void Scene::getSkybox(const char* fileSkybox, const char* fileSkyboxTex)
+{
+    skybox = new EntityMesh( SKYBOX );
+
+    skybox->texture = new Texture();
+ 	skybox->texture->load(fileSkyboxTex);
+	skybox->mesh = Mesh::Get(fileSkybox);
 }
 
 // ----------------------------------------- class: World -----------------------------------------

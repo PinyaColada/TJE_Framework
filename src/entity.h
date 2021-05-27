@@ -14,7 +14,8 @@ enum eEntityName {
     LIGHT,
     PLAYER,
     BOX,
-    FLOOR
+    FLOOR,
+    SKYBOX
 };
 
 // ----------------------------------------- class: Entity -----------------------------------------

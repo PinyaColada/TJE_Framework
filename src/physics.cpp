@@ -14,5 +14,9 @@ void Physics::updateModel(double elapsed_time, Matrix44* model)
 
     pos.y = clamp(pos.y, 0, 10000);
 
+    //reseteo de la velcidad
+    if(pos.y <= 0)
+        vel.y = 0;
+
     model->setTranslation(pos);
 }

@@ -12,11 +12,17 @@ enum eScene{
 class Scene
 {
 public:
-
-    Scene();
+    // Atributos
     std::vector<EntityLight*> lights;
     std::vector<Object*> dinamic_objects;
     std::vector<Object*> static_objects;
+
+    EntityMesh* skybox = NULL;
+
+    // Metodos
+    Scene();
+
+    void getSkybox(const char* fileSkybox, const char* fileSkyboxTex);
 
 };
 // ----------------------------------------- class: World -----------------------------------------
