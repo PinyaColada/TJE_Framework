@@ -14,7 +14,7 @@ class Scene
 public:
     // Atributos
     std::vector<EntityLight*> lights;
-    std::vector<Object*> dinamic_objects;
+    std::vector<DinamicObject*> dinamic_objects;
     std::vector<Object*> static_objects;
 
     EntityMesh* skybox = NULL;

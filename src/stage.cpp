@@ -92,7 +92,7 @@ void PlayStage::Update(double elapsed_time)
 	Player* player = world->player;
 	Scene* scene = world->scenes[world->current_scene];
 
-	Object* object;
+	DinamicObject* object;
 
 	for (int i = 0; i < scene->dinamic_objects.size(); i++)
 	{ 
@@ -150,8 +150,8 @@ void PlayStage::Update(double elapsed_time)
 			}
 
 			if (player->isFalling){
-				acc += .03f;
-				acc = clamp(acc, -5, 3);
+				acc += .05f;
+				acc = clamp(acc, -5, 6);
 				player->model.setTranslationY(player->model.getTranslation().y - acc);
 			} else {
 				acc = 0;
@@ -164,20 +164,22 @@ void PlayStage::Update(double elapsed_time)
 			//cubo movil
 			if(player->boxPicked == NULL)
 				break;
-			Object* boxPicked = player->boxPicked;
+			DinamicObject* boxPicked = player->boxPicked;
 			dir = player->model.frontVector();
 
-			float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
-			h = clamp(h, 0, 100);
+			// float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
+			// h = clamp(h, 0, 100);
 
-			dir = Vector3(dir.x, 0, dir.z).normalize();
+			// dir = Vector3(dir.x, 0, dir.z).normalize();
 
-			Vector3 dir_p = 50 * dir;
-			Vector3 dir_d = 100 * dir;
-			Vector3 pos = player->model.getTranslation() + Vector3(0,h,0) + dir_p;
+			// Vector3 dir_p = 50 * dir;
+			// Vector3 dir_d = 100 * dir;
+			// Vector3 pos = player->model.getTranslation() + Vector3(0,h,0) + dir_p;
 
-			boxPicked->model.setTranslation(pos);
-			boxPicked->model.setFrontAndOrthonormalize(dir_d);
+			// boxPicked->model.setTranslation(pos);
+			// boxPicked->model.setFrontAndOrthonormalize(dir_d);
+
+			boxPicked->move(dir, speed, scene->static_objects, scene->dinamic_objects);
 			break;
 		}
 		case EDIT: {

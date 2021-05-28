@@ -22,18 +22,16 @@ enum eEntityName {
 class Entity
 {
 public:
-    Entity(); //constructor
-    //virtual ~Entity(); //destructor
- 
-    //some attributes 
+    // Atributos
     eEntityName name; 
     Matrix44 model;
- 
-    //methods overwritten by derived classes 
+
+    // Metodos
+    Entity(); //constructor
+  
     virtual void render(Camera* camera) = 0;
     virtual void update(float elapsed_time) = 0;
 
-    //some useful methods...
     Vector3 getPosition(); 
     Vector3 getDir(); 
 };
@@ -42,16 +40,16 @@ public:
 class EntityMesh : public Entity
 {
 public:
-    //Attributes of this class 
+    // Atributos
     Mesh* mesh = NULL;
     Texture* texture = NULL;
     Shader* shader = NULL;
     Vector4 color;
     eEntityName object; 
 
+    // Metodos
     EntityMesh( eEntityName obj ); //constructor
-
-    //methods overwritten 
+ 
     void render(Camera* camera);
     void update(float dt);
 };
@@ -60,39 +58,62 @@ public:
 class Object : public Entity
 {
  public:
+    // Atributos
     EntityMesh* mesh;
-    Physics* physic;
 
-    bool isCatch = false;
-
+    // Metodos
     Object(){}; //constructor
     Object(EntityMesh* m) { mesh = m; };
-
-    //methods overwritten 
-    bool onColission(Object* target);
 
     void render(Camera* camera);
     void update(float dt){};
 };
 
-// ----------------------------------------- class: Box -------------------------------
-class Box : public Object
+// ----------------------------------------- class: DinamicObject -------------------------------------
+class DinamicObject : public Object
 {
-public:
+ public:
+    // Atributos
+    Physics* physic;
 
-    Box(EntityMesh* m); //constructor
+    bool isCatch = false;
+    bool isFalling;
+
+    // Metodos
+    DinamicObject(){}; //constructor
+
+    virtual void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
+
+    bool onCollision(Object* object, Vector3 position, float speed, Vector3& target);
+    bool hasGround(Object* object, Vector3 position);
+    float minimHeight(Object* object, Vector3 position, float lastMin);
 };
 
 // ----------------------------------------- class: Box -------------------------------
+class Box : public DinamicObject
+{
+public:
+    // Atributos
+    Vector3 playerPos;
+
+    // Metodos
+    Box(EntityMesh* m); //constructor
+
+    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
+};
+
+// ----------------------------------------- class: Floor -------------------------------
 class Floor : public Object
 {
 public:
+    // Atributos
 
+    // Metodos
     Floor(); //constructor
 };
 
 // ----------------------------------------- class: Player -------------------------------
-class Player : public Object
+class Player : public DinamicObject
 {
 public:
     // Atributos
@@ -100,20 +121,18 @@ public:
 
     Camera* camera;
 
-    Object* boxPicked;
-
-    bool isFalling;
-
+    DinamicObject* boxPicked;
+    
     // Metodos
     Player(Camera* camera); 
 
     void move(Vector3 dir);
 
-    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects);
+    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
-    bool onCollision(Object* object, Vector3 position, float speed, Vector3& target);
-    bool hasGround(Object* object, Vector3 position);
-    float minimHeight(Object* object, Vector3 position, float lastMin);
+    // bool onCollision(Object* object, Vector3 position, float speed, Vector3& target);
+    // bool hasGround(Object* object, Vector3 position);
+    // float minimHeight(Object* object, Vector3 position, float lastMin);
 };
 
 // ----------------------------------------- class: EntityLight -------------------------------

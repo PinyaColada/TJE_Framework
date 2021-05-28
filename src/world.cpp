@@ -60,11 +60,11 @@ void World::SelectBox()
 
     Vector3 origin = camera->eye;
     Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, window_width, window_height);
-    Object* boxPicked = NULL;
+    DinamicObject* boxPicked = NULL;
 
     Vector3 col, normal, pos;
     float distPicked, distObject;
-    Object* object;
+    DinamicObject* object;
     Mesh* mesh; 
     
     for (int id=0; id < scene->dinamic_objects.size(); id++)

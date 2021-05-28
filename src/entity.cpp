@@ -5,6 +5,11 @@
 #include "shader.h"
 #include "camera.h"
 
+float minim_y;
+float radius = 3;
+float margen = 0.1;
+Vector3 centreObject = Vector3(0,radius,0);
+
 // ----------------------------------------- class: Entity -----------------------------------------
 Entity::Entity(){}
 
@@ -41,17 +46,57 @@ void EntityMesh::update(float dt)
 }
 
 // ----------------------------------------- class: Object -------------------------------------
-// bool Object::onColission(Object* target)
-// {
-
-// }
-
 void Object::render(Camera* camera)
 {
     if(mesh == NULL) return;
     mesh->model = this->model;
     mesh->render(camera);
 }
+
+// ----------------------------------------- class: DinamicObject -------------------------------------
+
+bool DinamicObject::onCollision(Object* object, Vector3 position, float speed, Vector3& target)
+{
+    //calculamos la colision de 1 objeto
+    Vector3 coll, norm;
+    float target_y = target.y;
+    Vector3 centre = position + centreObject;
+
+    if (object->mesh == NULL || !object->mesh->mesh->testSphereBoundingCollision( object->model, centre, radius, coll, norm))
+        return false;
+    
+    //actualizamos el objetivo
+    Vector3 push_away = normalize(coll - position) * speed;
+    target = position - push_away;
+    
+    //comprovamos si el eje y es correcto
+    target.y = target_y;
+
+    return true;
+}
+
+bool DinamicObject::hasGround(Object* object, Vector3 position)
+{
+    Vector3 coll, norm;
+
+    if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm, radius + margen))
+        return true;
+    
+    return false;
+}
+
+float DinamicObject::minimHeight(Object* object, Vector3 position, float lastMin)
+{
+    Vector3 coll, norm;
+    float minim = lastMin;
+
+    if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm)){
+        if (!(coll.y + margen > minim))
+            minim = coll.y + margen;
+    }
+    return minim;
+}
+
 // ----------------------------------------- class: Box -------------------------------
 Box::Box(EntityMesh* m)
 {
@@ -74,6 +119,55 @@ Box::Box(EntityMesh* m)
     mesh->color = Vector4(1,1,1,1);
 }
 
+void Box::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
+{
+    //calculamos el target idial
+    Vector3 position = model.getTranslation();
+    float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
+    Vector3 target = Vector3(dir.x, 0, dir.z);
+
+    //calculamos las coliciones
+    Object* object;
+    isFalling = true;
+
+    //for para static_objects
+    for (int i = 0; i < static_objects.size(); i++)
+    {
+        object = static_objects[i];
+        if(onCollision(object, position, speed, target))
+            continue;
+        if(hasGround(object, position)){
+            isFalling = false;
+            continue;
+        }
+        minim_y = minimHeight(object, position, minim_y);
+    }
+
+    //for para dinamic_objects
+    for (int i = 0; i < dinamic_objects.size(); i++)
+    {
+        object = dinamic_objects[i];
+        if(onCollision(object, position, speed, target))
+            continue;
+        if(hasGround(object, position)){
+            isFalling = false;
+            continue;
+        }
+        minim_y = minimHeight(object, position, minim_y);
+    }
+
+    h = clamp(h, minim_y, 100);
+
+    Vector3 dir_p = 50 * target.normalize();
+    Vector3 dir_d = 100 * target.normalize();
+
+    target = playerPos + Vector3(0,h,0) + dir_p;
+
+    model.setTranslation(target);
+    model.setFrontAndOrthonormalize(dir_d);
+
+}
+
 // ----------------------------------------- class: Floor -------------------------------
 Floor::Floor()
 {
@@ -81,7 +175,6 @@ Floor::Floor()
 
     //si no existeix la mesh
     mesh = new EntityMesh( FLOOR );
-    physic = new Physics();
 
 	mesh->texture = new Texture();
  	mesh->texture->load("data/Floor/Floor.png");
@@ -105,12 +198,7 @@ void Player::move(Vector3 dir)
     model.setTranslation(target.x, target.y, target.z);
 }
 
-float minim_y;
-float radius = 3;
-float margen = 0.1;
-Vector3 centreplayer = Vector3(0,radius,0);
-
-void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<Object*> dinamic_objects)
+void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
     //calculamos el target idial
     Vector3 position = model.getTranslation();
@@ -148,61 +236,7 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
     }
 
     target.clampY(minim_y, 10000);
-    //std::cout<<"target.y: "<<target.y<<std::endl;
-    //std::cout<<"minim_y: "<<minim_y<<std::endl;
 
     //aplicamos el movimiento
-    model.setTranslation(target.x, target.y, target.z);
-}
-
-bool Player::onCollision(Object* object, Vector3 position, float speed, Vector3& target)
-{
-    //calculamos la colision de 1 objeto
-    Vector3 coll, norm;
-    float target_y = target.y;
-    Vector3 centre = position + centreplayer;
-
-    if (object->mesh == NULL || !object->mesh->mesh->testSphereBoundingCollision( object->model, centre, radius, coll, norm))
-        return false;
-    
-    //actualizamos el objetivo
-    Vector3 push_away = normalize(coll - position) * speed;
-    target = position - push_away;
-    
-    //comprovamos si el eje y es correcto
-    target.y = target_y;
-
-    return true;
-}
-
-bool Player::hasGround(Object* object, Vector3 position)
-{
-    Vector3 coll, norm;
-
-    if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm, radius + margen))
-        return true;
-    
-    return false;
-}
-
-float Player::minimHeight(Object* object, Vector3 position, float lastMin)
-{
-    Vector3 coll, norm;
-    float minim = lastMin;
-
-    if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm)){
-        if (!(coll.y + margen > minim)){
-            // if(object->name == BOX){
-            //     printf("caixa\n");
-            //     // printf("minim: %f\n", minim);
-            // }
-            minim = coll.y + margen;
-            // if(object->name == BOX){
-            //     printf("minim: %f\n", minim);
-            //     printf("coll.y: %f\n", coll.y);
-            // }
-        } // no se si coll s'actualizaria be
-    }
-    
-    return minim;
+    model.setTranslation(target);
 }
