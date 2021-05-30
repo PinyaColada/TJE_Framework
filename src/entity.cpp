@@ -5,11 +5,6 @@
 #include "shader.h"
 #include "camera.h"
 
-float minim_y;
-float radius = 3;
-float margen = 0.1;
-Vector3 centreObject = Vector3(0,radius,0);
-
 // ----------------------------------------- class: Entity -----------------------------------------
 Entity::Entity(){}
 
@@ -60,6 +55,7 @@ bool DinamicObject::onCollision(Object* object, Vector3 position, float speed, V
     //calculamos la colision de 1 objeto
     Vector3 coll, norm;
     float target_y = target.y;
+    Vector3 centreObject = Vector3(0,radius,0);
     Vector3 centre = position + centreObject;
 
     if (object->mesh == NULL || !object->mesh->mesh->testSphereBoundingCollision( object->model, centre, radius, coll, norm))
@@ -91,8 +87,9 @@ float DinamicObject::minimHeight(Object* object, Vector3 position, float lastMin
     float minim = lastMin;
 
     if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm)){
-        if (!(coll.y + margen > minim))
+        if ((coll.y + margen > minim)){
             minim = coll.y + margen;
+        }
     }
     return minim;
 }
@@ -121,51 +118,58 @@ Box::Box(EntityMesh* m)
 
 void Box::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
-    //calculamos el target idial
+    //calculem la posicio
     Vector3 position = model.getTranslation();
-    float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
-    Vector3 target = Vector3(dir.x, 0, dir.z);
+    Vector3 target = Vector3();
 
-    //calculamos las coliciones
-    Object* object;
-    isFalling = true;
-
-    //for para static_objects
-    for (int i = 0; i < static_objects.size(); i++)
+    if (!isCatch)
     {
-        object = static_objects[i];
-        if(onCollision(object, position, speed, target))
-            continue;
-        if(hasGround(object, position)){
-            isFalling = false;
-            continue;
+        //donem valors inicials
+        Object* object;
+        isFalling = true;
+        float minim_y = -1000;
+
+        //for para static_objects
+        for (int i = 0; i < static_objects.size(); i++)
+        {
+            object = static_objects[i];
+            if(!isFalling)
+                break;
+            if(hasGround(object, position)){
+                isFalling = false;
+                continue;
+            }
+            minim_y = minimHeight(object, position, minim_y);
         }
-        minim_y = minimHeight(object, position, minim_y);
+
+        //for para dinamic_objects
+        for (int i = 0; i < dinamic_objects.size(); i++)
+        {
+            object = dinamic_objects[i];
+            if(!isFalling)
+                break;
+            if(idList == object->idList)
+                continue;
+            if(hasGround(object, position)){
+                isFalling = false;
+                continue;
+            }
+            minim_y = minimHeight(object, position, minim_y);
+        }
+
+        //donem el valor minim
+        physic->min_y = minim_y;
+
+        //calculem el target
+        target = physic->updateMove(speed, position, isFalling);
+    }
+    else
+    {
+
     }
 
-    //for para dinamic_objects
-    for (int i = 0; i < dinamic_objects.size(); i++)
-    {
-        object = dinamic_objects[i];
-        if(onCollision(object, position, speed, target))
-            continue;
-        if(hasGround(object, position)){
-            isFalling = false;
-            continue;
-        }
-        minim_y = minimHeight(object, position, minim_y);
-    }
-
-    h = clamp(h, minim_y, 100);
-
-    Vector3 dir_p = 50 * target.normalize();
-    Vector3 dir_d = 100 * target.normalize();
-
-    target = playerPos + Vector3(0,h,0) + dir_p;
-
+    //aplicamos el movimiento
     model.setTranslation(target);
-    model.setFrontAndOrthonormalize(dir_d);
-
 }
 
 // ----------------------------------------- class: Floor -------------------------------
@@ -207,7 +211,7 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
     //calculamos las coliciones
     Object* object;
     isFalling = true;
-    minim_y = -1000;
+    float minim_y = -1000;
 
     //for para static_objects
     for (int i = 0; i < static_objects.size(); i++)

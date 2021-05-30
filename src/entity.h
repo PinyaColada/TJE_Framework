@@ -61,6 +61,8 @@ class Object : public Entity
     // Atributos
     EntityMesh* mesh;
 
+    int idList;
+
     // Metodos
     Object(){}; //constructor
     Object(EntityMesh* m) { mesh = m; };
@@ -78,6 +80,9 @@ class DinamicObject : public Object
 
     bool isCatch = false;
     bool isFalling;
+
+    float radius = 3;
+    float margen = 0.1;
 
     // Metodos
     DinamicObject(){}; //constructor

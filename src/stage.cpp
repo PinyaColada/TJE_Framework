@@ -98,7 +98,7 @@ void PlayStage::Update(double elapsed_time)
 	{ 
 		object = scene->dinamic_objects[i];
 		if(!object->isCatch)
-			object->physic->updateModel(elapsed_time, &object->model);
+			object->move(Vector3(), elapsed_time, scene->static_objects, scene->dinamic_objects);
 	}
 
 	switch(idmode){
@@ -167,19 +167,19 @@ void PlayStage::Update(double elapsed_time)
 			DinamicObject* boxPicked = player->boxPicked;
 			dir = player->model.frontVector();
 
-			// float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
-			// h = clamp(h, 0, 100);
+			float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
+			h = clamp(h, 0, 100);
 
-			// dir = Vector3(dir.x, 0, dir.z).normalize();
+			dir = Vector3(dir.x, 0, dir.z).normalize();
 
-			// Vector3 dir_p = 50 * dir;
-			// Vector3 dir_d = 100 * dir;
-			// Vector3 pos = player->model.getTranslation() + Vector3(0,h,0) + dir_p;
+			Vector3 dir_p = 50 * dir;
+			Vector3 dir_d = 100 * dir;
+			Vector3 pos = player->model.getTranslation() + Vector3(0,h,0) + dir_p;
 
-			// boxPicked->model.setTranslation(pos);
-			// boxPicked->model.setFrontAndOrthonormalize(dir_d);
+			boxPicked->model.setTranslation(pos);
+			boxPicked->model.setFrontAndOrthonormalize(dir_d);
 
-			boxPicked->move(dir, speed, scene->static_objects, scene->dinamic_objects);
+			// boxPicked->move(dir, speed, scene->static_objects, scene->dinamic_objects);
 			break;
 		}
 		case EDIT: {
@@ -233,6 +233,8 @@ void PlayStage::AddBoxInFront()
 		world->meshs.push_back(box->mesh);
 	}
 
-	box->model.setTranslation(pos.x, pos.y, pos.z);
+	box->model.setTranslation(pos + Vector3(0, 1000, 0));
+	box->idList = scene->dinamic_objects.size();
+
     scene->dinamic_objects.push_back(box);
 }
