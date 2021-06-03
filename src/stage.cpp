@@ -145,12 +145,10 @@ void PlayStage::Render()
 
 		//object->mesh->mesh->bounding->renderBounding(object->model);
 	}
-	//printf("1\n");
+
 	DinamicObject* picked = world->boxPicked;
-	//printf("2\n");
 	if(picked != NULL)
 		picked->mesh->mesh->bounding->renderBounding(picked->model);
-	//printf("3\n");
 
 	//Draw the floor grid
 	//drawGrid();

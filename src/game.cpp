@@ -79,7 +79,6 @@ void Game::update(double seconds_elapsed)
 void Game::onKeyDown( SDL_KeyboardEvent event )
 {
 	Stage* stage = stages[idCS];
-	PlayStage* pstage;
 	switch(event.keysym.sym)
 	{
 		case SDLK_ESCAPE: //ESC key, kill the app

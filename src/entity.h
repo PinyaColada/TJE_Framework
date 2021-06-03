@@ -134,12 +134,10 @@ public:
 
     Vector3 altura = Vector3(0, 70, 0);
 
-    Camera* camera;
-
     DinamicObject* boxPicked;
     
     // Metodos
-    Player(Camera* camera); 
+    Player(); 
 
     void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 

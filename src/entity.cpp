@@ -218,11 +218,10 @@ Floor::Floor()
 
 
 // ----------------------------------------- class: Player -------------------------------
-Player::Player(Camera* camera)
+Player::Player()
 {
     physic = new Physics(200, 1000);
     name = eEntityName::PLAYER;
-    this->camera = camera;
 }
 
 void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)

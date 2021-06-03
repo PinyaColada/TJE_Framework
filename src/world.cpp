@@ -33,7 +33,7 @@ World::World( int window_width, int window_height )
     Object* floor = new Floor();
     scenes[current_scene]->static_objects.push_back(floor);
 
-    player = new Player(camera);
+    player = new Player();
     player->spawn = scene->spawn;
 }
 
