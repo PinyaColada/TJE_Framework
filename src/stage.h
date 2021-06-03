@@ -4,7 +4,10 @@
 #include "world.h"
 
 enum eStageID {
-    PLAY
+    INTRO,
+    MENU,
+    PLAY,
+    END
 };
 
 enum eModeID{
@@ -18,8 +21,10 @@ class Stage
 public:
     eModeID idmode = EDIT;
     eStageID idSatge;
+    eStageID nextSatge;
     World* world = NULL;
     bool mouse_locked = true; //tells if the mouse is locked (not seen)
+    bool isComplite = false;
 
     virtual void Render() = 0;
 
@@ -32,6 +37,40 @@ public:
     //events
     virtual void onKeyDown( SDL_KeyboardEvent event ) = 0;
     virtual void onMouseButtonDown( SDL_MouseButtonEvent event ) = 0;
+
+    eStageID passStage();
+};
+
+//------------------------------------ class: IntroStage  ----------------------------------
+class IntroStage : public Stage
+{
+public:
+
+    IntroStage();
+
+    void Render();
+
+    void Update(double elapsed_time);
+
+    //events
+    void onKeyDown( SDL_KeyboardEvent event );
+    void onMouseButtonDown( SDL_MouseButtonEvent event );
+};
+
+//------------------------------------ class: MenuStage  ----------------------------------
+class MenuStage : public Stage
+{
+public:
+
+    MenuStage();
+
+    void Render();
+
+    void Update(double elapsed_time);
+
+    //events
+    void onKeyDown( SDL_KeyboardEvent event );
+    void onMouseButtonDown( SDL_MouseButtonEvent event );
 };
 
 //------------------------------------ class: PlayStage  ----------------------------------
@@ -47,6 +86,22 @@ public:
 
     void AddBoxInFront();
     void SelectObject();
+
+    //events
+    void onKeyDown( SDL_KeyboardEvent event );
+    void onMouseButtonDown( SDL_MouseButtonEvent event );
+};
+
+//------------------------------------ class: EndStage  ----------------------------------
+class EndStage : public Stage
+{
+public:
+
+    EndStage();
+
+    void Render();
+
+    void Update(double elapsed_time);
 
     //events
     void onKeyDown( SDL_KeyboardEvent event );

@@ -15,10 +15,80 @@ void Stage::updateMouse()
 	SDL_ShowCursor(!mouse_locked);
 }
 
+eStageID Stage::passStage()
+{
+	if(isComplite)
+	{
+		isComplite = false;
+		return nextSatge;
+	}
+	else
+	{
+		return idSatge;
+	}
+}
+
+//------------------------------------ class: IntroStage  ----------------------------------
+IntroStage::IntroStage()
+{
+	idSatge = INTRO;
+	nextSatge = MENU;
+}
+
+void IntroStage::Render()
+{
+	drawText(100, 100, "INTRO", Vector3(1, 1, 1), 10);
+}
+
+void IntroStage::Update(double elapsed_time)
+{
+
+}
+
+//events
+void IntroStage::onKeyDown( SDL_KeyboardEvent event )
+{
+	isComplite = true;
+}
+
+void IntroStage::onMouseButtonDown( SDL_MouseButtonEvent event )
+{
+
+}
+
+//------------------------------------ class: MenuStage  ----------------------------------
+MenuStage::MenuStage()
+{
+	idSatge = MENU;
+	nextSatge = PLAY;
+}
+
+void MenuStage::Render()
+{
+	drawText(100, 100, "MENU", Vector3(1, 1, 1), 10);
+}
+
+void MenuStage::Update(double elapsed_time)
+{
+
+}
+
+//events
+void MenuStage::onKeyDown( SDL_KeyboardEvent event )
+{
+	isComplite = true;
+}
+
+void MenuStage::onMouseButtonDown( SDL_MouseButtonEvent event )
+{
+
+}
+
 //------------------------------------ class: PlayStage  ------------------------------------
 PlayStage::PlayStage()
 {
     idSatge = PLAY;
+	nextSatge = END;
 
     //hide the cursor
     mouse_locked = false;
@@ -156,6 +226,8 @@ void PlayStage::Update(double elapsed_time)
 			break;
 		}
 		case EDIT: {
+			speed *= elapsed_time;
+
 			if ((Input::mouse_state & SDL_BUTTON_LEFT) || mouse_locked ) {
 				camera->rotate(Input::mouse_delta.x * 0.005f, Vector3(0.0f,-1.0f,0.0f));
 				camera->rotate(Input::mouse_delta.y * 0.005f, camera->getLocalVector( Vector3(-1.0f,0.0f,0.0f)));
@@ -235,6 +307,9 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 		case SDLK_4:
 			idmode = EDIT;	
 			break;
+		case SDLK_F3:
+			isComplite = true;
+			break;
 	}
 }
 
@@ -255,4 +330,32 @@ void PlayStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 				player->LeaveBox();
 			break;
 	}
+}
+
+//------------------------------------ class: EndStage  ----------------------------------
+EndStage::EndStage()
+{
+	idSatge = END;
+	nextSatge = MENU;
+}
+
+void EndStage::Render()
+{
+	drawText(100, 100, "END", Vector3(1, 1, 1), 10);
+}
+
+void EndStage::Update(double elapsed_time)
+{
+
+}
+
+//events
+void EndStage::onKeyDown( SDL_KeyboardEvent event )
+{
+	isComplite = true;
+}
+
+void EndStage::onMouseButtonDown( SDL_MouseButtonEvent event )
+{
+
 }

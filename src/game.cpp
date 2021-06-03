@@ -39,10 +39,13 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	world = new World(window_width,window_height);
 	
 	//Create Stages
-	idCS = eStageID::PLAY;
+	idCS = eStageID::INTRO;
 
-	stages.reserve(1);
+	stages.reserve(4);
+	stages.push_back(new IntroStage());
+	stages.push_back(new MenuStage());
 	stages.push_back(new PlayStage());
+	stages.push_back(new EndStage());
 
 	stages[eStageID::PLAY]->setWorld(world);
 }
@@ -67,6 +70,8 @@ void Game::render(void)
 
 void Game::update(double seconds_elapsed)
 {
+	idCS = stages[idCS]->passStage();
+
 	stages[idCS]->Update(seconds_elapsed);
 }
 
