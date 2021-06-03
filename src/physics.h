@@ -2,19 +2,19 @@
 #define PHYSICS_H
 
 #include "framework.h"
+#include "config.h"
 
 class Physics
 {
 public:
     // Atributs
     Vector3 vel = Vector3(0, 0, 0);
-    float g;
-    float g_jump;
+    pPhysics* cfg;
     float min_y = -1000;
-    bool isJump;
+    bool isJump = false;;
 
     // Metodes
-    Physics(float gnew = 1000, float g_jumpnew = 0);
+    Physics(eType type);
 
     void updateModel(double elapsed_time, Matrix44* model);
 

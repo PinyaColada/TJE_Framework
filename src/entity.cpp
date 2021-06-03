@@ -105,7 +105,7 @@ Box::Box(EntityMesh* m, Vector3 pos)
 {
     name = BOX;
     spawn = pos;
-    physic = new Physics();
+    physic = new Physics(physicsBox);
 
     respawn();
 
@@ -220,7 +220,7 @@ Floor::Floor()
 // ----------------------------------------- class: Player -------------------------------
 Player::Player()
 {
-    physic = new Physics(200, 1000);
+    physic = new Physics(physicsPlayer);
     name = eEntityName::PLAYER;
 }
 

@@ -35,6 +35,9 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	glEnable( GL_CULL_FACE ); //render both sides of every triangle
 	glEnable( GL_DEPTH_TEST ); //check the occlusions using the Z buffer
 
+	//carregar la configuracio
+	LoadCfg();
+
 	//crear World
 	world = new World(window_width,window_height);
 	

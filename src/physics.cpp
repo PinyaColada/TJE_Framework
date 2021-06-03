@@ -1,12 +1,17 @@
 #include "physics.h"
 
-Physics::Physics(float gnew , float g_jumpnew)
+// estructura por defecte
+struct pPhysics cfgDefault = { DEFAULT, 1000, 1000, 500 };
+
+Physics::Physics(eType type)
 {
-    if (g_jumpnew == 0)
-        g_jumpnew = gnew;
-    
-    g = gnew;
-    g_jump = g_jumpnew;
+    // Busca la configuracio
+    void* cfgVoid = getCfg(type);
+
+    if (cfgVoid != NULL && ((pGeneric*)cfgVoid)->type == type)
+        cfg = (pPhysics*) cfgVoid;
+    else
+        cfg = &cfgDefault;
 }
 
 void Physics::updateModel(double elapsed_time, Matrix44* model)
@@ -14,12 +19,12 @@ void Physics::updateModel(double elapsed_time, Matrix44* model)
     // Hacemos caer la matriz :)
     Vector3 pos = model->getTranslation();
 
-    vel.y -= g * elapsed_time;
+    vel.y -= cfg->g * elapsed_time;
     pos = pos + (vel * elapsed_time);
 
     pos.y = clamp(pos.y, min_y, 10000);
 
-    //reseteo de la velcidad
+    // reseteo de la velcidad
     if(pos.y <= min_y)
         vel.y = 0;
 
@@ -29,11 +34,11 @@ void Physics::updateModel(double elapsed_time, Matrix44* model)
 Vector3 Physics::updateMove(double elapsed_time, Vector3 pos, bool isFalling)
 {
     if (isJump || isFalling){
-        if (vel.y>0){
-            vel.y -= g_jump * elapsed_time;
+        if (vel.y > 0){
+            vel.y -= cfg->g_jump * elapsed_time;
         }
         else {
-            vel.y -= g * elapsed_time;
+            vel.y -= cfg->g * elapsed_time;
             if(!isFalling){
                 vel.y = 0;
                 isJump = false;
@@ -51,5 +56,5 @@ Vector3 Physics::updateMove(double elapsed_time, Vector3 pos, bool isFalling)
 void Physics::Jump()
 {
     isJump = true;
-	vel.y = 500;
+	vel.y = cfg->v_jump;
 }
