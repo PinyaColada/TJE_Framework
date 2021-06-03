@@ -1,6 +1,12 @@
 #include "physics.h"
 
-Physics::Physics(){
+Physics::Physics(float gnew , float g_jumpnew)
+{
+    if (g_jumpnew == 0)
+        g_jumpnew = gnew;
+    
+    g = gnew;
+    g_jump = g_jumpnew;
 }
 
 void Physics::updateModel(double elapsed_time, Matrix44* model)
@@ -22,15 +28,28 @@ void Physics::updateModel(double elapsed_time, Matrix44* model)
 
 Vector3 Physics::updateMove(double elapsed_time, Vector3 pos, bool isFalling)
 {
-    if (isFalling && pos.y > min_y){
-        vel.y -= g * elapsed_time;
-        pos = pos + (vel * elapsed_time);
-
+    if (isJump || isFalling){
+        if (vel.y>0){
+            vel.y -= g_jump * elapsed_time;
+        }
+        else {
+            vel.y -= g * elapsed_time;
+            if(!isFalling){
+                vel.y = 0;
+                isJump = false;
+            }
+        }
+        pos = pos + vel * elapsed_time;
         pos.y = clamp(pos.y, min_y, 10000);
-
-    } else {
+    } 
+    else {
         vel.y = 0;
     }
-
     return pos;
+}
+
+void Physics::Jump()
+{
+    isJump = true;
+	vel.y = 500;
 }

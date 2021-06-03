@@ -84,14 +84,20 @@ class DinamicObject : public Object
     float radius = 3;
     float margen = 0.1;
 
+    Vector3 spawn;
+
     // Metodos
     DinamicObject(){}; //constructor
 
-    virtual void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
+    virtual void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
+
+    virtual void movePicked(Matrix44 player) = 0;
 
     bool onCollision(Object* object, Vector3 position, float speed, Vector3& target);
     bool hasGround(Object* object, Vector3 position);
     float minimHeight(Object* object, Vector3 position, float lastMin);
+
+    void respawn();
 };
 
 // ----------------------------------------- class: Box -------------------------------
@@ -102,9 +108,11 @@ public:
     Vector3 playerPos;
 
     // Metodos
-    Box(EntityMesh* m); //constructor
+    Box(EntityMesh* m,  Vector3 pos = Vector3(0,100,0)); //constructor
 
-    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
+    void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
+
+    void movePicked(Matrix44 player);
 };
 
 // ----------------------------------------- class: Floor -------------------------------
@@ -122,6 +130,8 @@ class Player : public DinamicObject
 {
 public:
     // Atributos
+    float Speed = 100.0f;
+
     Vector3 altura = Vector3(0, 70, 0);
 
     Camera* camera;
@@ -131,13 +141,12 @@ public:
     // Metodos
     Player(Camera* camera); 
 
-    void move(Vector3 dir);
+    void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
-    void move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
+    void movePicked(Matrix44 player){};
 
-    // bool onCollision(Object* object, Vector3 position, float speed, Vector3& target);
-    // bool hasGround(Object* object, Vector3 position);
-    // float minimHeight(Object* object, Vector3 position, float lastMin);
+    void SelectBox(DinamicObject* picked);
+    void LeaveBox();
 };
 
 // ----------------------------------------- class: EntityLight -------------------------------

@@ -77,32 +77,14 @@ void Game::onKeyDown( SDL_KeyboardEvent event )
 	PlayStage* pstage;
 	switch(event.keysym.sym)
 	{
-		case SDLK_ESCAPE: must_exit = true; break; //ESC key, kill the app
-		case SDLK_F1: Shader::ReloadAll(); break; 
-		case SDLK_1:
-			if (idCS != PLAY) break;
-			stage = (PlayStage*) stages[idCS];
-			if (stage->idmode == GAMEPLAY) break;
-			pstage = (PlayStage*) stages[idCS];
-			pstage->AddBoxInFront(); 
-			break;
-		case SDLK_2:
-			if (idCS != PLAY || stage->idmode == GAMEPLAY) break;
-            if(world->player->boxPicked == NULL)
-                world->SelectBox();
-			else 
-                world->LeaveBox();
-
-			break;
-		case SDLK_3:
-			if (idCS != PLAY) break;
-			stage = (PlayStage*) stages[idCS];
-			stage->idmode = GAMEPLAY;
-			break;
-		case SDLK_4:
-			if(idCS != PLAY) break;
-			stage = (PlayStage*) stages[idCS];
-			stage->idmode = EDIT;	
+		case SDLK_ESCAPE: //ESC key, kill the app
+			must_exit = true; 
+			break; 
+		case SDLK_F1: 
+			Shader::ReloadAll(); 
+			break; 
+		default:
+			stages[idCS]->onKeyDown( event );
 			break;
 	}
 }
@@ -123,18 +105,7 @@ void Game::onGamepadButtonUp(SDL_JoyButtonEvent event)
 
 void Game::onMouseButtonDown( SDL_MouseButtonEvent event )
 {
-	if (event.button == SDL_BUTTON_MIDDLE) //middle mouse
-	{
-		stages[idCS]->updateMouse();
-	}
-	if (idCS == PLAY && stages[idCS]->idmode == GAMEPLAY && event.button == SDL_BUTTON_LEFT)
-	{
-		PlayStage* pstage = (PlayStage*) stages[idCS];
-		if(world->player->boxPicked == NULL)
-			world->SelectBox();
-		else 
-			world->LeaveBox();
-	}
+	stages[idCS]->onMouseButtonDown( event );
 }
 
 void Game::onMouseButtonUp(SDL_MouseButtonEvent event)
@@ -143,7 +114,7 @@ void Game::onMouseButtonUp(SDL_MouseButtonEvent event)
 
 void Game::onMouseWheel(SDL_MouseWheelEvent event)
 {
-	mouse_speed *= event.y > 0 ? 1.1 : 0.9;
+	world->player->Speed *= event.y > 0 ? 1.1 : 0.9;
 }
 
 void Game::onResize(int width, int height)

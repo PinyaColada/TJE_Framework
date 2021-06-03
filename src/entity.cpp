@@ -94,11 +94,20 @@ float DinamicObject::minimHeight(Object* object, Vector3 position, float lastMin
     return minim;
 }
 
+void DinamicObject::respawn()
+{
+    model.setTranslation(spawn);
+    physic->vel.y = 0;
+}
+
 // ----------------------------------------- class: Box -------------------------------
-Box::Box(EntityMesh* m)
+Box::Box(EntityMesh* m, Vector3 pos)
 {
     name = BOX;
+    spawn = pos;
     physic = new Physics();
+
+    respawn();
 
     //si existeix la mesh
     if( m != NULL ){
@@ -116,60 +125,80 @@ Box::Box(EntityMesh* m)
     mesh->color = Vector4(1,1,1,1);
 }
 
-void Box::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
+void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
     //calculem la posicio
     Vector3 position = model.getTranslation();
     Vector3 target = Vector3();
 
-    if (!isCatch)
+    //comprovem que la caixa no estigui agafada
+    if (isCatch)
+        return;
+    
+    //donem valors inicials
+    Object* object;
+    isFalling = true;
+    float minim_y = -1000;
+
+    //for para static_objects
+    for (int i = 0; i < static_objects.size(); i++)
     {
-        //donem valors inicials
-        Object* object;
-        isFalling = true;
-        float minim_y = -1000;
-
-        //for para static_objects
-        for (int i = 0; i < static_objects.size(); i++)
-        {
-            object = static_objects[i];
-            if(!isFalling)
-                break;
-            if(hasGround(object, position)){
-                isFalling = false;
-                continue;
-            }
-            minim_y = minimHeight(object, position, minim_y);
+        object = static_objects[i];
+        if(!isFalling)
+            break;
+        if(hasGround(object, position)){
+            isFalling = false;
+            continue;
         }
-
-        //for para dinamic_objects
-        for (int i = 0; i < dinamic_objects.size(); i++)
-        {
-            object = dinamic_objects[i];
-            if(!isFalling)
-                break;
-            if(idList == object->idList)
-                continue;
-            if(hasGround(object, position)){
-                isFalling = false;
-                continue;
-            }
-            minim_y = minimHeight(object, position, minim_y);
-        }
-
-        //donem el valor minim
-        physic->min_y = minim_y;
-
-        //calculem el target
-        target = physic->updateMove(speed, position, isFalling);
+        minim_y = minimHeight(object, position, minim_y);
     }
-    else
+
+    //for para dinamic_objects
+    for (int i = 0; i < dinamic_objects.size(); i++)
     {
-
+        object = dinamic_objects[i];
+        if(!isFalling)
+            break;
+        if(idList == object->idList)
+            continue;
+        if(hasGround(object, position)){
+            isFalling = false;model.setTranslation(target);
+        }
+        minim_y = minimHeight(object, position, minim_y);
     }
+
+    //donem el valor minim
+    physic->min_y = minim_y;
+
+    //calculem el target
+    target = physic->updateMove(elapsed_time, position, isFalling);
+
+    //comprovem si esta per sota de la altura minim
+    if(target.y < -200){
+        respawn();
+        return;
+    }
+    
 
     //aplicamos el movimiento
     model.setTranslation(target);
+}
+
+void Box::movePicked(Matrix44 player)
+{
+    Vector3 dir = player.frontVector();
+
+    float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
+    h = clamp(h, 0, 100);
+
+    dir = Vector3(dir.x, 0, dir.z).normalize();
+
+    Vector3 dir_p = 50 * dir;
+    Vector3 dir_d = 100 * dir;
+    Vector3 pos = player.getTranslation() + Vector3(0,h,0) + dir_p;
+
+    model.setTranslation(pos);
+    model.setFrontAndOrthonormalize(dir_d);
 }
 
 // ----------------------------------------- class: Floor -------------------------------
@@ -191,21 +220,16 @@ Floor::Floor()
 // ----------------------------------------- class: Player -------------------------------
 Player::Player(Camera* camera)
 {
-    physic = new Physics();
+    physic = new Physics(200, 1000);
     name = eEntityName::PLAYER;
     this->camera = camera;
 }
 
-void Player::move(Vector3 dir)
-{
-    Vector3 target = model.getTranslation() + dir;
-    model.setTranslation(target.x, target.y, target.z);
-}
-
-void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
+void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
     //calculamos el target idial
     Vector3 position = model.getTranslation();
+    float speed = elapsed_time * Speed;
     Vector3 target = position + dir * speed;
 
     //calculamos las coliciones
@@ -239,8 +263,43 @@ void Player::move(Vector3 dir, float speed, std::vector<Object*> static_objects,
         minim_y = minimHeight(object, position, minim_y);
     }
 
-    target.clampY(minim_y, 10000);
+    //comprovem si esta per sota de la altura minim
+    if(target.y < -200){
+        respawn();
+        return;
+    }
+
+    //donem el valor minim
+    physic->min_y = minim_y;
+
+    //calculem el target
+    target = physic->updateMove(elapsed_time, target, isFalling);
 
     //aplicamos el movimiento
     model.setTranslation(target);
+
+    //mover la boxPicked
+    if(boxPicked != NULL)
+        boxPicked->movePicked(model);
+}
+
+void Player::SelectBox(DinamicObject* picked)
+{
+    if (picked == NULL || boxPicked != NULL)
+        return;
+
+    //codigo agafar Box
+    boxPicked = picked;
+    boxPicked->isCatch = false;
+}
+
+void Player::LeaveBox()
+{
+    if (boxPicked == NULL) 
+        return;
+
+    //codigo de soltar Box
+    boxPicked->isCatch = false;
+    boxPicked->physic->vel.y = 0;
+    boxPicked = NULL;
 }

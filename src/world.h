@@ -18,6 +18,7 @@ public:
     std::vector<Object*> static_objects;
 
     EntityMesh* skybox = NULL;
+    Vector3 spawn;
 
     // Metodos
     Scene();
@@ -40,6 +41,7 @@ public:
     eScene current_scene;
 
     Player* player;
+    DinamicObject* boxPicked = NULL;
 
     // Metodos
     World( int window_width, int window_height );
@@ -48,7 +50,6 @@ public:
 
     void setCamera( int window_width, int window_height );
     void SelectBox();
-    void LeaveBox();
 };
 
 

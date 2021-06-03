@@ -12,8 +12,6 @@ enum eModeID{
     GAMEPLAY,
 };
 
-extern float mouse_speed;
-
 //------------------------------------ class: Stage  --------------------------------------
 class Stage 
 {
@@ -30,6 +28,10 @@ public:
     void setWorld(World* w) { world = w; };
 
     void updateMouse();
+
+    //events
+    virtual void onKeyDown( SDL_KeyboardEvent event ) = 0;
+    virtual void onMouseButtonDown( SDL_MouseButtonEvent event ) = 0;
 };
 
 //------------------------------------ class: PlayStage  ----------------------------------
@@ -45,6 +47,10 @@ public:
 
     void AddBoxInFront();
     void SelectObject();
+
+    //events
+    void onKeyDown( SDL_KeyboardEvent event );
+    void onMouseButtonDown( SDL_MouseButtonEvent event );
 };
 
 #endif 

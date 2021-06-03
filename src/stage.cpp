@@ -3,10 +3,7 @@
 #include "world.h"
 #include "entity.h"
 
-float mouse_speed = 100.0f;
-float acc;
-float force;
-float ja;
+//float mouse_speed = 100.0f;
 float x_rotation;
 float y_rotation;
 Object* selectedObject;
@@ -66,7 +63,7 @@ void PlayStage::Render()
 		object->render(camera);
 		//object->mesh->mesh->renderBounding(object->model);
 
-		object->mesh->mesh->bounding->renderBounding(object->model);
+		//object->mesh->mesh->bounding->renderBounding(object->model);
 	}
 
 	for (int id = 0; id < scene->dinamic_objects.size(); id++)
@@ -76,10 +73,14 @@ void PlayStage::Render()
 		object->render(camera);
 		//object->mesh->mesh->renderBounding(object->model);
 
-		object->mesh->mesh->bounding->renderBounding(object->model);
+		//object->mesh->mesh->bounding->renderBounding(object->model);
 	}
-
-
+	//printf("1\n");
+	DinamicObject* picked = world->boxPicked;
+	//printf("2\n");
+	if(picked != NULL)
+		picked->mesh->mesh->bounding->renderBounding(picked->model);
+	//printf("3\n");
 
 	//Draw the floor grid
 	//drawGrid();
@@ -88,8 +89,8 @@ void PlayStage::Render()
 void PlayStage::Update(double elapsed_time) 
 {
     Camera* camera = world->camera;
-	float speed = elapsed_time * mouse_speed; //the speed is defined by the elapsed_time so it goes constant
 	Player* player = world->player;
+	float speed = player->Speed;
 	Scene* scene = world->scenes[world->current_scene];
 
 	DinamicObject* object;
@@ -100,6 +101,9 @@ void PlayStage::Update(double elapsed_time)
 		if(!object->isCatch)
 			object->move(Vector3(), elapsed_time, scene->static_objects, scene->dinamic_objects);
 	}
+
+	// buscar la box que pot ser piked
+	world->SelectBox();
 
 	switch(idmode){
 		case GAMEPLAY: {
@@ -118,68 +122,37 @@ void PlayStage::Update(double elapsed_time)
 			// Con este vector calculamos segun el frontvector hacia donde se tiene que pirar el player
 			Vector3 aux(player->model.frontVector().x, 0, player->model.frontVector().z);
 			aux = aux.normalize();
-
+	
+			//calculamos le canvio de velocidad i la el efcto de camera (Jaume ajusta les valors per no tenir dividint elapsed_time)
 			if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT) ){
-				speed += 5; //move faster with left shift
+				speed += 5/elapsed_time; //move faster with left shift
 				camera->fov += 1; // fer una transicio
 			} else{
-				speed -= 5;
+				speed -= 5/elapsed_time;
 				camera->fov -= .5; // fer una transicio
 			} 
 			camera->fov = clamp(camera->fov, 70, 80);
-			speed = clamp(speed, 1, 2);
+			speed = clamp(speed, 1/elapsed_time, 2/elapsed_time);
+
+			player->Speed = speed;
 
 			dir = Vector3();
-
+			
 			if (Input::isKeyPressed(SDL_SCANCODE_W)) dir = dir + aux;
 			if (Input::isKeyPressed(SDL_SCANCODE_S)) dir = dir + -1 * aux;
 			if (Input::isKeyPressed(SDL_SCANCODE_A)) dir = dir + -1 * aux.perpendicular();
 			if (Input::isKeyPressed(SDL_SCANCODE_D)) dir = dir + aux.perpendicular();
 			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && !player->isFalling) {
-				ja = 25;
+				player->physic->Jump();
 			} 
 
-			player->move(dir, speed, scene->static_objects, scene->dinamic_objects);
+			player->move(dir, elapsed_time, scene->static_objects, scene->dinamic_objects);
 
-			if (ja > 0){
-				ja--;
-				player->model.setTranslationY(player->model.getTranslation().y + force);
-				force -= .5;
-			} else if (ja == 0){
-				force = 10;
-			}
-
-			if (player->isFalling){
-				acc += .05f;
-				acc = clamp(acc, -5, 6);
-				player->model.setTranslationY(player->model.getTranslation().y - acc);
-			} else {
-				acc = 0;
-			}
 
 			// Ho posam lo mes guapo que podem :)
 			Input::centerMouse();
 			SDL_ShowCursor(false);
 
-			//cubo movil
-			if(player->boxPicked == NULL)
-				break;
-			DinamicObject* boxPicked = player->boxPicked;
-			dir = player->model.frontVector();
-
-			float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
-			h = clamp(h, 0, 100);
-
-			dir = Vector3(dir.x, 0, dir.z).normalize();
-
-			Vector3 dir_p = 50 * dir;
-			Vector3 dir_d = 100 * dir;
-			Vector3 pos = player->model.getTranslation() + Vector3(0,h,0) + dir_p;
-
-			boxPicked->model.setTranslation(pos);
-			boxPicked->model.setFrontAndOrthonormalize(dir_d);
-
-			// boxPicked->move(dir, speed, scene->static_objects, scene->dinamic_objects);
 			break;
 		}
 		case EDIT: {
@@ -228,13 +201,58 @@ void PlayStage::AddBoxInFront()
 
 	EntityMesh* mesh = world->searchMesh( eEntityName::BOX );
 
-	Box* box = new Box( mesh );
+	Box* box = new Box(mesh, pos + Vector3(0, 1000, 0));
 	if( mesh == NULL ){
 		world->meshs.push_back(box->mesh);
 	}
 
-	box->model.setTranslation(pos + Vector3(0, 1000, 0));
 	box->idList = scene->dinamic_objects.size();
 
     scene->dinamic_objects.push_back(box);
+}
+
+//events
+void PlayStage::onKeyDown( SDL_KeyboardEvent event )
+{
+	switch(event.keysym.sym)
+	{
+		case SDLK_1:
+			if (idmode == GAMEPLAY) 
+				break;
+			AddBoxInFront(); 
+			break;
+		case SDLK_2:
+			if (idmode == GAMEPLAY) 
+				break;
+            if(world->player->boxPicked == NULL)
+				world->player->SelectBox(world->boxPicked);
+			else 
+                world->player->LeaveBox();
+			break;
+		case SDLK_3:
+			idmode = GAMEPLAY;
+			break;
+		case SDLK_4:
+			idmode = EDIT;	
+			break;
+	}
+}
+
+void PlayStage::onMouseButtonDown( SDL_MouseButtonEvent event )
+{
+	switch(event.button)
+	{
+		case SDL_BUTTON_MIDDLE:
+			updateMouse();
+			break;
+		case SDL_BUTTON_LEFT:
+			if (idmode != GAMEPLAY)
+				break;
+			Player* player = world->player;
+			if(player->boxPicked == NULL)
+				player->SelectBox(world->boxPicked);
+			else 
+				player->LeaveBox();
+			break;
+	}
 }

@@ -3,7 +3,10 @@
 #include "entity.h"
 
 // ----------------------------------------- class: Scene -----------------------------------------
-Scene::Scene() {}
+Scene::Scene() 
+{
+    spawn = Vector3(0,120,0);
+}
 
 void Scene::getSkybox(const char* fileSkybox, const char* fileSkyboxTex)
 {
@@ -31,6 +34,7 @@ World::World( int window_width, int window_height )
     scenes[current_scene]->static_objects.push_back(floor);
 
     player = new Player(camera);
+    player->spawn = scene->spawn;
 }
 
 void World::setCamera( int window_width, int window_height )
@@ -55,13 +59,13 @@ EntityMesh* World::searchMesh( eEntityName obj )
 
 void World::SelectBox()
 {
-    if (player->boxPicked != NULL) return;
+    boxPicked = NULL;
+    if (player->boxPicked != NULL) 
+        return;
     Scene* scene = scenes[0];
 
     Vector3 origin = camera->eye;
     Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, window_width, window_height);
-    DinamicObject* boxPicked = NULL;
-
     Vector3 col, normal, pos;
     float distPicked, distObject;
     DinamicObject* object;
@@ -78,7 +82,8 @@ void World::SelectBox()
 
         mesh = object->mesh->mesh;
 
-        if (!mesh->testRayCollision(object->model,origin,dir,col,normal)) continue;
+        if (!mesh->testRayCollision(object->model,origin,dir,col,normal,100)) 
+            continue;
 
         if (boxPicked == NULL){
             boxPicked = object;
@@ -91,19 +96,5 @@ void World::SelectBox()
         if (distPicked > distObject){
             boxPicked = object;
         }
-    }
-    if (boxPicked == NULL)
-        return;
-        
-    player->boxPicked = boxPicked;
-    boxPicked->isCatch = true;
-}
-
-void World::LeaveBox()
-{
-    if (player->boxPicked == NULL) return;
-
-    //codigo de soltar Box
-    player->boxPicked->isCatch = false;
-    player->boxPicked = NULL;
+    }   
 }
