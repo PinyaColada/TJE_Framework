@@ -1,0 +1,15 @@
+<<< type: physicsBox
+
+g: 1000
+g_jump: 1000
+v_jump: 500
+
+>>>
+
+<<< type: physicsPlayer
+
+g: 1000
+g_jump: 4000
+v_jump: 600
+
+>>>

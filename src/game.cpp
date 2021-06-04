@@ -36,7 +36,8 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	glEnable( GL_DEPTH_TEST ); //check the occlusions using the Z buffer
 
 	//carregar la configuracio
-	LoadCfg();
+	InitCfg();
+	LoadCfg("data/Configuration.txt");
 
 	//crear World
 	world = new World(window_width,window_height);
@@ -89,6 +90,9 @@ void Game::onKeyDown( SDL_KeyboardEvent event )
 			break; 
 		case SDLK_F1: 
 			Shader::ReloadAll(); 
+			break; 
+		case SDLK_F2: 
+			LoadCfg("data/Configuration.txt");
 			break; 
 		default:
 			stages[idCS]->onKeyDown( event );

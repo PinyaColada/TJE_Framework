@@ -9,7 +9,7 @@ class Physics
 public:
     // Atributs
     Vector3 vel = Vector3(0, 0, 0);
-    pPhysics* cfg;
+    cfgPhysics* cfg;
     float min_y = -1000;
     bool isJump = false;;
 

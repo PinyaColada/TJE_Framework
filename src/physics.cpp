@@ -1,17 +1,14 @@
 #include "physics.h"
 
-// estructura por defecte
-struct pPhysics cfgDefault = { DEFAULT, 1000, 1000, 500};
-
 Physics::Physics(eType type)
 {
     // Busca la configuracio
-    void* cfgVoid = getCfg(type);
+    cfgGeneric* cfgP = getCfg(type);
 
-    if (cfgVoid != NULL && ((pGeneric*)cfgVoid)->type == type)
-        cfg = (pPhysics*) cfgVoid;
+    if (cfgP != NULL && ((cfgGeneric*)cfgP)->type == type)
+        cfg = (cfgPhysics*) cfgP;
     else
-        cfg = &cfgDefault;
+        cfg = new cfgPhysics();
 }
 
 void Physics::updateModel(double elapsed_time, Matrix44* model)
