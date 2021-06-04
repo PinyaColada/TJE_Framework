@@ -6,6 +6,7 @@
 Scene::Scene() 
 {
     spawn = Vector3(0,120,0);
+    getSkybox("data/Skybox/sphere.obj", "data/Skybox/Night.png");
 }
 
 void Scene::getSkybox(const char* fileSkybox, const char* fileSkyboxTex)
@@ -15,6 +16,9 @@ void Scene::getSkybox(const char* fileSkybox, const char* fileSkyboxTex)
     skybox->texture = new Texture();
  	skybox->texture->load(fileSkyboxTex);
 	skybox->mesh = Mesh::Get(fileSkybox);
+    skybox->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+    skybox->color = Vector4(1, 1, 1, 1);
+    skybox->model.rotate(180 * DEG2RAD, Vector3(0, 0, 1));
 }
 
 // ----------------------------------------- class: World -----------------------------------------

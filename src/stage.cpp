@@ -119,7 +119,7 @@ void PlayStage::Render()
 	EntityMesh* skybox = scene->skybox;
 	if (skybox != NULL){
 		// mover skybox en la pos de player
-		skybox->model.translate(camera->eye);
+		skybox->model.setTranslation(camera->eye);
 
 		// render de skybox
 		skybox->render(camera);
@@ -151,7 +151,7 @@ void PlayStage::Render()
 		picked->mesh->mesh->bounding->renderBounding(picked->model);
 
 	//Draw the floor grid
-	//drawGrid();
+	drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 

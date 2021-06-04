@@ -26,8 +26,8 @@ void LoadCfg()
     }
     pPhysics* PhysicsPlayer = (pPhysics*) cfgTable[physicsPlayer];
     {
-        PhysicsPlayer->g = 200;
-        PhysicsPlayer->g_jump = 1000;
-        PhysicsPlayer->v_jump = 500;
+        PhysicsPlayer->g = 1000;
+        PhysicsPlayer->g_jump = 4000;
+        PhysicsPlayer->v_jump = 600;
     }
 }

@@ -59,7 +59,7 @@ class Object : public Entity
 {
  public:
     // Atributos
-    EntityMesh* mesh;
+    EntityMesh* mesh = NULL;
 
     int idList;
 
@@ -134,7 +134,7 @@ public:
 
     Vector3 altura = Vector3(0, 70, 0);
 
-    DinamicObject* boxPicked;
+    DinamicObject* boxPicked = NULL;
     
     // Metodos
     Player(); 

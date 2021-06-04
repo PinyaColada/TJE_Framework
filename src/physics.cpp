@@ -1,7 +1,7 @@
 #include "physics.h"
 
 // estructura por defecte
-struct pPhysics cfgDefault = { DEFAULT, 1000, 1000, 500 };
+struct pPhysics cfgDefault = { DEFAULT, 1000, 1000, 500};
 
 Physics::Physics(eType type)
 {

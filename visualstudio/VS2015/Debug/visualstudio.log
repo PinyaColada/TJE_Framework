@@ -1,0 +1,73 @@
+﻿  animation.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\animation.cpp(275,12): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\animation.cpp(316,6): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\animation.cpp(374,12): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  camera.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+  box.cpp
+  box_bld.cpp
+D:\TJE\TJE_Framework\src\extra\coldet\box_bld.cpp(134,21): warning C4018: '<': no coinciden signed/unsigned
+  coldet.cpp
+D:\TJE\TJE_Framework\src\extra\coldet\coldet.cpp(374,10): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+  coldet_bld.cpp
+  math3d.cpp
+  mytritri.cpp
+  sysdep.cpp
+  tritri.cpp
+  picopng.cpp
+  textparser.cpp
+  fbo.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\fbo.cpp(112,24): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\fbo.cpp(113,25): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\fbo.cpp(143,24): warning C4018: '<': no coinciden signed/unsigned
+  framework.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\framework.cpp(46,4): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\framework.cpp(148,4): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\framework.cpp(1220,32): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+  game.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\entity.h(85,18): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\TJE\TJE_Framework\src\game.cpp(121,49): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
+  input.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\input.cpp(138,24): warning C4244: '=': conversión de 'float' a 'char'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\input.cpp(146,19): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+  main.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\entity.h(85,18): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
+D:\TJE\TJE_Framework\src\main.cpp(118,46): warning C4244: '=': conversión de 'Sint32' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\main.cpp(152,24): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+  mesh.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(256,3): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE\TJE_Framework\src\mesh.cpp(749,6): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\mesh.cpp(869,12): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\mesh.cpp(1074,12): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\mesh.cpp(1161,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\mesh.cpp(1165,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\mesh.cpp(1175,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\mesh.cpp(1276,27): warning C4244: 'argumento': conversión de 'double' a 'const unsigned int'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1277,23): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE\TJE_Framework\src\mesh.cpp(1225,12): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\TJE\TJE_Framework\src\mesh.cpp(1413,40): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1413,25): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1415,44): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1415,31): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1416,31): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1423,44): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1423,31): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1425,43): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1438,30): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1461,30): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\mesh.cpp(1490,21): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE\TJE_Framework\src\mesh.cpp(1499,21): warning C4018: '<': no coinciden signed/unsigned
+  rendertotexture.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+  shader.cpp
+D:\TJE\TJE_Framework\src\framework.h(387,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE\TJE_Framework\src\shader.cpp(177,20): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE\TJE_Framework\src\shader.cpp(216,20): warning C4018: '<': no coinciden signed/unsigned
+MSBUILD : error MSB4166: El nodo secundario "2" se cerró antes de tiempo. Se finalizará la ejecución ahora. Puede encontrar información de diagnóstico en los archivos en "C:\Users\jaume\AppData\Local\Temp\" y recibirá el nombre MSBuild_*.failure.txt. Esta ubicación se puede cambiar estableciendo la variable de entorno MSBUILDDEBUGPATH en un directorio diferente.
