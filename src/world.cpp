@@ -102,3 +102,32 @@ void World::SelectBox()
         }
     }   
 }
+
+void World::editMap()
+{
+    BlockPicked = NULL;
+
+    Scene* scene = scenes[0]; // Hardcodejat
+
+    Vector3 origin = camera->eye;
+    Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, window_width, window_height);
+    Vector3 col, normal;
+    Object* object;
+    Mesh* mesh;
+
+    for (int id = 0; id < scene->static_objects.size(); id++)
+    {
+        object = scene->static_objects[id];
+
+        if (object->mesh == NULL) continue;
+
+        mesh = object->mesh->mesh;
+
+        if (!mesh->testRayCollision(object->model, origin, dir, col, normal))
+            continue;
+
+        BlockPicked = object;
+
+        break;
+    }
+}

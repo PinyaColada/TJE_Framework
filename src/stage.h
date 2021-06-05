@@ -87,7 +87,7 @@ public:
     void Update(double elapsed_time);
 
     void AddBoxInFront();
-    void SelectObject();
+    void addBlockInFront(eBlocktype type);
 
     //events
     void onKeyDown( SDL_KeyboardEvent event );

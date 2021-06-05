@@ -42,6 +42,7 @@ public:
 
     Player* player;
     DinamicObject* boxPicked = NULL;
+    Object* BlockPicked;
 
     // Metodos
     World( int window_width, int window_height );
@@ -50,6 +51,7 @@ public:
 
     void setCamera( int window_width, int window_height );
     void SelectBox();
+    void editMap();
 };
 
 

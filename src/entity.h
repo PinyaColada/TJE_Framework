@@ -15,7 +15,16 @@ enum eEntityName {
     PLAYER,
     BOX,
     FLOOR,
-    SKYBOX
+    SKYBOX,
+    BLOCKLARGE,
+    BLOCKLONG,
+    BLOCKUNIT
+};
+
+enum eBlocktype {
+    BLARGE,
+    BLONG,
+    BUNIT
 };
 
 // ----------------------------------------- class: Entity -----------------------------------------
@@ -127,6 +136,18 @@ public:
 
     // Metodos
     Floor(); //constructor
+};
+
+// ----------------------------------------- class: Block -------------------------------
+
+class Block : public Object
+{
+public:
+    // Atributos
+    eBlocktype type;
+    // Metodos
+    Block(EntityMesh* m, Vector3 pos, eBlocktype type);
+
 };
 
 // ----------------------------------------- class: Player -------------------------------

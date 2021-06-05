@@ -132,9 +132,6 @@ void PlayStage::Render()
 		//for para static_objects
 		object = scene->static_objects[id];
 		object->render(camera);
-		//object->mesh->mesh->renderBounding(object->model);
-
-		//object->mesh->mesh->bounding->renderBounding(object->model);
 	}
 
 	for (int id = 0; id < scene->dinamic_objects.size(); id++)
@@ -142,17 +139,19 @@ void PlayStage::Render()
 		//for para static_objects
 		object = scene->dinamic_objects[id];
 		object->render(camera);
-		//object->mesh->mesh->renderBounding(object->model);
-
-		//object->mesh->mesh->bounding->renderBounding(object->model);
 	}
 
 	DinamicObject* picked = world->boxPicked;
 	if(picked != NULL)
 		picked->mesh->mesh->bounding->renderBounding(picked->model);
 
+	Object* BlockPic = world->BlockPicked;
+	if (BlockPic != NULL)
+		BlockPic->mesh->mesh->bounding->renderBounding(BlockPic->model);
+
+
 	//Draw the floor grid
-	//drawGrid();
+	drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 
@@ -283,34 +282,63 @@ void PlayStage::AddBoxInFront()
     scene->dinamic_objects.push_back(box);
 }
 
+void PlayStage::addBlockInFront(eBlocktype type)
+{
+	Camera* camera = world->camera;
+	Scene* scene = world->scenes[world->current_scene];
+
+	Vector3 origin = camera->eye;
+	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, world->window_width, world->window_height);
+	Vector3 up = Vector3(0, 1, 0);
+	Vector3 pos = RayPlaneCollision(Vector3(), up, origin, dir);
+	EntityMesh* mesh = NULL;
+
+	switch (type) {
+	case BLARGE: mesh = world->searchMesh(BLOCKLARGE); break;
+	case BLONG: mesh = world->searchMesh(BLOCKLONG); break;
+	case BUNIT: mesh = world->searchMesh(BLOCKUNIT); break;
+	}
+
+	Block* block = new Block(mesh, pos, type);
+
+	if (mesh == NULL) {
+		world->meshs.push_back(block->mesh);
+	}
+
+	block->idList = scene->static_objects.size();
+
+	scene->static_objects.push_back(block);
+}
+
 //events
 void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 {
-	switch(event.keysym.sym)
-	{
-		case SDLK_1:
-			if (idmode == GAMEPLAY) 
-				break;
-			AddBoxInFront(); 
+	switch (idmode) {
+		case GAMEPLAY: {
+			switch (event.keysym.sym) {
+				case SDLK_3: idmode = EDIT; break;
+			}
 			break;
-		case SDLK_2:
-			if (idmode == GAMEPLAY) 
-				break;
-            if(world->player->boxPicked == NULL)
-				world->player->SelectBox(world->boxPicked);
-			else 
-                world->player->LeaveBox();
+		}
+		case EDIT: {
+			switch (event.keysym.sym) {
+				case SDLK_1: AddBoxInFront(); break;
+				case SDLK_2:
+					if (world->player->boxPicked == NULL)
+						world->player->SelectBox(world->boxPicked);
+					else
+						world->player->LeaveBox();
+					break;
+				case SDLK_3: idmode = GAMEPLAY; break;
+				case SDLK_5: addBlockInFront(BLARGE); break;
+				case SDLK_6: addBlockInFront(BLONG); break;
+				case SDLK_7: addBlockInFront(BUNIT); break;
+				case SDLK_8: world->editMap(); break;
+				case SDLK_F3: isComplite = true; break;
+			}
 			break;
-		case SDLK_3:
-			idmode = GAMEPLAY;
-			break;
-		case SDLK_4:
-			idmode = EDIT;	
-			break;
-		case SDLK_F3:
-			isComplite = true;
-			break;
-	}
+		}
+	}	
 }
 
 void PlayStage::onMouseButtonDown( SDL_MouseButtonEvent event )

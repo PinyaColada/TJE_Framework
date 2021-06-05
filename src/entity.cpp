@@ -227,6 +227,51 @@ Floor::Floor()
     mesh->color = Vector4(1,1,1,1);
 }
 
+// ----------------------------------------- class: Block -------------------------------
+
+Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)
+{
+    switch (type) {
+    case BLARGE:
+        name = BLOCKLARGE;
+        break;
+    case BLONG:
+        name = BLOCKLONG;
+        break;
+    case BUNIT:
+        name = BLOCKUNIT;
+        break;
+    }
+
+    model.setTranslation(pos);
+
+    //si existeix la mesh
+    if (m != NULL) {
+        mesh = m;
+        return;
+    }
+
+    mesh = new EntityMesh(name);
+    mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+    mesh->color = Vector4(1, 1, 1, 1);
+    mesh->texture = new Texture();
+
+    switch (type) {
+    case BLARGE:
+        mesh->texture->load("data/Blocks/Large.png");
+        mesh->mesh = Mesh::getMeshAndBounding("data/Blocks/Large.obj", "data/Blocks/Large.obj");
+        break;
+    case BLONG:
+        mesh->texture->load("data/Blocks/Long.png");
+        mesh->mesh = Mesh::getMeshAndBounding("data/Blocks/Long.obj", "data/Blocks/Long.obj");
+        break;
+    case BUNIT:
+        mesh->texture->load("data/Blocks/Unit.png");
+        mesh->mesh = Mesh::getMeshAndBounding("data/Blocks/Unit.obj", "data/Blocks/Unit.obj");
+        break;
+    }
+}
+
 
 // ----------------------------------------- class: Player -------------------------------
 Player::Player()
