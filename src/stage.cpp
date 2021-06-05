@@ -149,7 +149,6 @@ void PlayStage::Render()
 	if (BlockPic != NULL)
 		BlockPic->mesh->mesh->bounding->renderBounding(BlockPic->model);
 
-
 	//Draw the floor grid
 	drawGrid();
 }

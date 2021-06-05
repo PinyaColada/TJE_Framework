@@ -42,7 +42,7 @@ public:
 
     Player* player;
     DinamicObject* boxPicked = NULL;
-    Object* BlockPicked;
+    Object* BlockPicked = NULL;
 
     // Metodos
     World( int window_width, int window_height );
