@@ -150,7 +150,7 @@ void PlayStage::Render()
 		BlockPic->mesh->mesh->bounding->renderBounding(BlockPic->model);
 
 	//Draw the floor grid
-	drawGrid();
+	//drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 
@@ -269,7 +269,7 @@ void PlayStage::AddBoxInFront()
 	// busque la mesh de la box
 	EntityMesh* mesh = world->searchMesh( eEntityName::BOX );
 
-	// creem la caixa
+	// creem la Box
 	Box* box = new Box(mesh, pos + Vector3(0, 1000, 0));
 	// si no existia la mesh guardem la nova mesh en la llista
 	if( mesh == NULL ){
@@ -286,26 +286,29 @@ void PlayStage::addBlockInFront(eBlocktype type)
 	Camera* camera = world->camera;
 	Scene* scene = world->scenes[world->current_scene];
 
+	// calculem les dades del nou BlocK
 	Vector3 origin = camera->eye;
 	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, world->window_width, world->window_height);
 	Vector3 up = Vector3(0, 1, 0);
 	Vector3 pos = RayPlaneCollision(Vector3(), up, origin, dir);
-	EntityMesh* mesh = NULL;
 
+	// busque la mesh del Block
+	EntityMesh* mesh = NULL;
 	switch (type) {
 	case BLARGE: mesh = world->searchMesh(BLOCKLARGE); break;
 	case BLONG: mesh = world->searchMesh(BLOCKLONG); break;
 	case BUNIT: mesh = world->searchMesh(BLOCKUNIT); break;
 	}
 
+	// creem el Block
 	Block* block = new Block(mesh, pos, type);
-
+	// si no existia la mesh guardem la nova mesh en la llista
 	if (mesh == NULL) {
 		world->meshs.push_back(block->mesh);
 	}
 
+	// afegim el Block a la llista de objectes
 	block->idList = scene->static_objects.size();
-
 	scene->static_objects.push_back(block);
 }
 

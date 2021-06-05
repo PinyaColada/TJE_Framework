@@ -228,21 +228,15 @@ Floor::Floor()
 }
 
 // ----------------------------------------- class: Block -------------------------------
+eEntityName block2entity[SIZEOFBLOCK] = {
+    BLOCKLARGE,
+    BLOCKLONG,
+    BLOCKUNIT
+};
 
 Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)
 {
-    switch (type) {
-    case BLARGE:
-        name = BLOCKLARGE;
-        break;
-    case BLONG:
-        name = BLOCKLONG;
-        break;
-    case BUNIT:
-        name = BLOCKUNIT;
-        break;
-    }
-
+    name = block2entity[type];
     model.setTranslation(pos);
 
     //si existeix la mesh
@@ -269,6 +263,7 @@ Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)
         mesh->texture->load("data/Blocks/Unit.png");
         mesh->mesh = Mesh::getMeshAndBounding("data/Blocks/Unit.obj", "data/Blocks/Unit.obj");
         break;
+    default: break;
     }
 }
 

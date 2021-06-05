@@ -24,7 +24,6 @@ public:
     Scene();
 
     void getSkybox(const char* fileSkybox, const char* fileSkyboxTex);
-
 };
 // ----------------------------------------- class: World -----------------------------------------
 class World
@@ -52,6 +51,9 @@ public:
     void setCamera( int window_width, int window_height );
     void SelectBox();
     void editMap();
+
+    // guardar i carregar Scenes
+    void SaveScene();
 };
 
 

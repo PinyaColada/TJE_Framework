@@ -27,7 +27,7 @@ void cfgPhysics::ReadCfg(FILE* f)
 {
         // per cada linea
     char line[100];
-    char * pch;
+    char* pch;
 
     while (feof(f) == 0)
     {
@@ -73,7 +73,7 @@ void cfgDinamic::ReadCfg(FILE* f)
 {
         // per cada linea
     char line[100];
-    char * pch;
+    char* pch;
 
     while (feof(f) == 0)
     {
@@ -119,7 +119,7 @@ void cfgPlayer::ReadCfg(FILE* f)
 {
         // per cada linea
     char line[100];
-    char * pch;
+    char* pch;
 
     while (feof(f) == 0)
     {
@@ -214,7 +214,7 @@ void LoadCfg(const char* filename)
 
     // per cada linea
     char line[100];
-    char * pch;
+    char* pch;
     eType type;
 
     while (feof(f) == 0)

@@ -24,7 +24,9 @@ enum eEntityName {
 enum eBlocktype {
     BLARGE,
     BLONG,
-    BUNIT
+    BUNIT,
+
+    SIZEOFBLOCK
 };
 
 // ----------------------------------------- class: Entity -----------------------------------------
@@ -57,7 +59,7 @@ public:
     eEntityName object; 
 
     // Metodos
-    EntityMesh( eEntityName obj ); //constructor
+    EntityMesh( eEntityName obj );
  
     void render(Camera* camera);
     void update(float dt);

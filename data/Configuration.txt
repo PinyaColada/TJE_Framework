@@ -21,3 +21,15 @@ minSpeed: 60
 altura: 0,70,0
 
 >>>
+
+
+*** Meshs ***
+
+<<< type: meshBox
+
+texture: data/Box/MetalBox.png
+mesh: data/Box/MetalBox.obj
+bounding: data/Box/ColissionBox.obj
+color: 1,1,1,1
+
+>>>

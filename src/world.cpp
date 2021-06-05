@@ -131,3 +131,9 @@ void World::editMap()
         break;
     }
 }
+
+// guardar i carregar Scenes
+void World::SaveScene()
+{
+    
+}
