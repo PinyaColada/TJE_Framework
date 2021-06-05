@@ -188,7 +188,7 @@ void PlayStage::Update(double elapsed_time)
 
 			player->model.setFrontAndOrthonormalize(dir);
 	
-			// pliquem els efectes de la camera i speed
+			// apliquem els efectes de la camera i speed
 			bool isShift = Input::isKeyPressed(SDL_SCANCODE_LSHIFT); // si tenim el Shift pulsat
 			camera->fov += isShift? 1 : -0.5;  // actualitzem el fov
 			speed *= isShift? 1.1 : 0.9;       // actualitzem la speed
@@ -262,20 +262,24 @@ void PlayStage::AddBoxInFront()
     Camera* camera = world->camera;
 	Scene* scene = world->scenes[world->current_scene];
 
+	// calculem les dades de la nova Box
 	Vector3 origin = camera->eye;
 	Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, world->window_width, world->window_height);
 	Vector3 up = Vector3(0, 1, 0);
 	Vector3 pos = RayPlaneCollision(Vector3(), up, origin, dir);
 
+	// busque la mesh de la box
 	EntityMesh* mesh = world->searchMesh( eEntityName::BOX );
 
+	// creem la caixa
 	Box* box = new Box(mesh, pos + Vector3(0, 1000, 0));
+	// si no existia la mesh guardem la nova mesh en la llista
 	if( mesh == NULL ){
 		world->meshs.push_back(box->mesh);
 	}
 
+	// afegim la Box a la llista de objectes
 	box->idList = scene->dinamic_objects.size();
-
     scene->dinamic_objects.push_back(box);
 }
 
