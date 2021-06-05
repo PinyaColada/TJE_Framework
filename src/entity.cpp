@@ -49,16 +49,26 @@ void Object::render(Camera* camera)
 }
 
 // ----------------------------------------- class: DinamicObject -------------------------------------
+void DinamicObject::setCfgD(eType type)
+{
+    // Busca la configuracio
+    cfgGeneric* cfg = getCfg(type);
+
+    if (cfg != NULL && ((cfgGeneric*)cfg)->type == type)
+        cfgD = (cfgDinamic*) cfg;
+    else
+        cfgD = new cfgDinamic();
+}
 
 bool DinamicObject::onCollision(Object* object, Vector3 position, float speed, Vector3& target)
 {
     //calculamos la colision de 1 objeto
     Vector3 coll, norm;
     float target_y = target.y;
-    Vector3 centreObject = Vector3(0,radius,0);
+    Vector3 centreObject = Vector3(0,cfgD->radius,0);
     Vector3 centre = position + centreObject;
 
-    if (object->mesh == NULL || !object->mesh->mesh->testSphereBoundingCollision( object->model, centre, radius, coll, norm))
+    if (object->mesh == NULL || !object->mesh->mesh->testSphereBoundingCollision( object->model, centre, cfgD->radius, coll, norm))
         return false;
     
     //actualizamos el objetivo
@@ -75,7 +85,7 @@ bool DinamicObject::hasGround(Object* object, Vector3 position)
 {
     Vector3 coll, norm;
 
-    if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm, radius + margen))
+    if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm, cfgD->radius + cfgD->margen))
         return true;
     
     return false;
@@ -87,8 +97,8 @@ float DinamicObject::minimHeight(Object* object, Vector3 position, float lastMin
     float minim = lastMin;
 
     if (object->mesh->mesh->testRayBoundingCollision( object->model, position, Vector3(0, -1, 0), coll, norm)){
-        if ((coll.y + margen > minim)){
-            minim = coll.y + margen;
+        if ((coll.y + cfgD->margen > minim)){
+            minim = coll.y + cfgD->margen;
         }
     }
     return minim;
@@ -105,6 +115,7 @@ Box::Box(EntityMesh* m, Vector3 pos)
 {
     name = BOX;
     spawn = pos;
+    setCfgD(dinamicsBox);
     physic = new Physics(physicsBox);
 
     respawn();
@@ -174,7 +185,7 @@ void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_obje
     target = physic->updateMove(elapsed_time, position, isFalling);
 
     //comprovem si esta per sota de la altura minim
-    if(target.y < -200){
+    if(target.y < cfgD->dead_y){
         respawn();
         return;
     }
@@ -220,8 +231,19 @@ Floor::Floor()
 // ----------------------------------------- class: Player -------------------------------
 Player::Player()
 {
+    setCfgD(dinamicsPlayer);
     physic = new Physics(physicsPlayer);
     name = eEntityName::PLAYER;
+
+    // Busca la configuracio
+    cfgGeneric* cfg = getCfg(player);
+
+    if (cfg != NULL && ((cfgGeneric*)cfg)->type == player)
+        cfgP = (cfgPlayer*) cfg;
+    else
+        cfgP = new cfgPlayer();
+
+    Speed = cfgP->minSpeed;
 }
 
 void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -263,7 +285,7 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
     }
 
     //comprovem si esta per sota de la altura minim
-    if(target.y < -200){
+    if(target.y < cfgD->dead_y){
         respawn();
         return;
     }

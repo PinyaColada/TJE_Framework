@@ -1,9 +1,13 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "framework.h"
 #include <stdio.h>
 
 enum eType {
+    dinamicsBox,
+    dinamicsPlayer,
+    player,
     physicsBox,
     physicsPlayer,
 
@@ -16,7 +20,7 @@ struct strNameCfg{
     eType type;
 };
 
-// ----- class: cfgGeneric -----
+// ---------- class: cfgGeneric ----------
 class cfgGeneric 
 {
 public:
@@ -27,7 +31,7 @@ public:
     virtual void ReadCfg(FILE* f) = 0;
 };
 
-// ----- class: cfgPhysics -----
+// ---------- class: cfgPhysics ----------
 class cfgPhysics : public cfgGeneric 
 {
 public:
@@ -38,6 +42,36 @@ public:
 
     // Metodes
     cfgPhysics(eType name = DEFAULT);
+
+    void ReadCfg(FILE* f);
+};
+
+// ---------- class: cfgDinamic ----------
+class cfgDinamic : public cfgGeneric 
+{
+public:
+    // Atributs
+    float radius = 3;
+    float margen = 0.1;
+    float dead_y = -200;
+
+    // Metodes
+    cfgDinamic(eType name = DEFAULT);
+
+    void ReadCfg(FILE* f);
+};
+
+// ---------- class: cfgPlayer ----------
+class cfgPlayer : public cfgGeneric 
+{
+public:
+    // Atributs
+    float maxSpeed;
+    float minSpeed;
+    Vector3 altura;
+
+    // Metodes
+    cfgPlayer(eType name = DEFAULT);
 
     void ReadCfg(FILE* f);
 };

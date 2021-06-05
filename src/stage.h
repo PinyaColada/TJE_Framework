@@ -7,7 +7,9 @@ enum eStageID {
     INTRO,
     MENU,
     PLAY,
-    END
+    END,
+
+    SIZEOFSTAGE
 };
 
 enum eModeID{

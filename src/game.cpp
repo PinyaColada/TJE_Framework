@@ -45,7 +45,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	//Create Stages
 	idCS = eStageID::INTRO;
 
-	stages.reserve(4);
+	stages.reserve(SIZEOFSTAGE);
 	stages.push_back(new IntroStage());
 	stages.push_back(new MenuStage());
 	stages.push_back(new PlayStage());

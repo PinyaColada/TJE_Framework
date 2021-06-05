@@ -81,13 +81,17 @@ class DinamicObject : public Object
     bool isCatch = false;
     bool isFalling;
 
-    float radius = 3;
-    float margen = 0.1;
+    cfgDinamic* cfgD;
+    // float radius = 3;
+    // float margen = 0.1;
+    // float dead_y = -200;
 
     Vector3 spawn;
 
     // Metodos
     DinamicObject(){}; //constructor
+
+    void setCfgD(eType type);
 
     virtual void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
 
@@ -130,9 +134,10 @@ class Player : public DinamicObject
 {
 public:
     // Atributos
-    float Speed = 100.0f;
+    cfgPlayer* cfgP;
+    float Speed;
 
-    Vector3 altura = Vector3(0, 70, 0);
+    // Vector3 altura = Vector3(0, 70, 0);
 
     DinamicObject* boxPicked = NULL;
     

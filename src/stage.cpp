@@ -99,10 +99,11 @@ void PlayStage::Render()
 {
 	Camera* camera = world->camera;
 	Player* player = world->player;
+	cfgPlayer* cfgP = player->cfgP;
 
 	// moure la camera a la pos del player
 	if(idmode == GAMEPLAY)
-		camera->lookAt(player->model.getTranslation() +  player->altura, player->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
+		camera->lookAt(player->model.getTranslation() +  cfgP->altura, cfgP->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
     
     //set the camera as default
 	camera->enable();
@@ -151,15 +152,15 @@ void PlayStage::Render()
 		picked->mesh->mesh->bounding->renderBounding(picked->model);
 
 	//Draw the floor grid
-	drawGrid();
+	//drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 
 {
     Camera* camera = world->camera;
 	Player* player = world->player;
-	float speed = player->Speed;
 	Scene* scene = world->scenes[world->current_scene];
+	float speed = player->Speed; // obtenim el valor de speed per alterarlo
 
 	DinamicObject* object;
 
@@ -175,7 +176,7 @@ void PlayStage::Update(double elapsed_time)
 
 	switch(idmode){
 		case GAMEPLAY: {
-			// pues rotamos un poquito 
+			// rotem la camera
 			x_rotation += Input::mouse_delta.x * 0.05f * DEG2RAD;
 			y_rotation += Input::mouse_delta.y * 0.05f * DEG2RAD;
 
@@ -186,24 +187,21 @@ void PlayStage::Update(double elapsed_time)
 									cos(x_rotation) * cos(y_rotation));
 
 			player->model.setFrontAndOrthonormalize(dir);
+	
+			// pliquem els efectes de la camera i speed
+			bool isShift = Input::isKeyPressed(SDL_SCANCODE_LSHIFT); // si tenim el Shift pulsat
+			camera->fov += isShift? 1 : -0.5;  // actualitzem el fov
+			speed *= isShift? 1.1 : 0.9;       // actualitzem la speed
+			
+			cfgPlayer* cfgP = player->cfgP;
+			// fem clamps del valors
+			camera->fov = clamp(camera->fov, 70, 80);
+			speed = clamp(speed, cfgP->minSpeed, cfgP->maxSpeed);
+			player->Speed = speed; // guardem els canvis de speed
 
-			// Con este vector calculamos segun el frontvector hacia donde se tiene que pirar el player
+			// Calculem el moviment del player
 			Vector3 aux(player->model.frontVector().x, 0, player->model.frontVector().z);
 			aux = aux.normalize();
-	
-			//calculamos le canvio de velocidad i la el efcto de camera (Jaume ajusta les valors per no tenir dividint elapsed_time)
-			if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT) ){
-				speed += 5/elapsed_time; //move faster with left shift
-				camera->fov += 1; // fer una transicio
-			} else{
-				speed -= 5/elapsed_time;
-				camera->fov -= .5; // fer una transicio
-			} 
-			camera->fov = clamp(camera->fov, 70, 80);
-			speed = clamp(speed, 1/elapsed_time, 2/elapsed_time);
-
-			player->Speed = speed;
-
 			dir = Vector3();
 			
 			if (Input::isKeyPressed(SDL_SCANCODE_W)) dir = dir + aux;
