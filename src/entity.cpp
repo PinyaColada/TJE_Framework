@@ -21,7 +21,7 @@ EntityMesh::EntityMesh(eEntityName obj, cfgMesh* cfgM)
 
     texture = new Texture();
  	texture->load(cfgM->texture);
-	mesh = Mesh::getMeshAndBounding(cfgM->mesh);
+	mesh = Mesh::getMeshAndBounding(cfgM->mesh, cfgM->bounding);
 	shader = Shader::Get(cfgM->vsf, cfgM->psf);
     color = cfgM->color;
 }
