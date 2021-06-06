@@ -2,6 +2,7 @@
 #include "input.h"
 #include "world.h"
 #include "entity.h"
+#include "loader.h"
 
 //float mouse_speed = 100.0f;
 float x_rotation;
@@ -340,6 +341,7 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 				case SDLK_7: addBlockInFront(BUNIT); break;
 				case SDLK_8: world->editMap(); break;
 				case SDLK_F3: isComplite = true; break;
+				case SDLK_F4: SaveLevel(world->SaveScene()); break;
 			}
 			break;
 		}

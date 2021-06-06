@@ -53,7 +53,7 @@ public:
     void editMap();
 
     // guardar i carregar Scenes
-    void SaveScene();
+    Level* SaveScene();
 };
 
 

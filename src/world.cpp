@@ -132,8 +132,77 @@ void World::editMap()
     }
 }
 
+// lista de enums per trobar quin amb quin al carregar
+block2enums block2Info[SIZEOFOT] = {
+    {PLAYER,ePlayer},
+    {FLOOR,efloor},
+    {BLOCKLARGE,eBLarge},
+    {BLOCKLONG,eBLong},
+    {BLOCKUNIT,eBUnit},
+    {BOX,eBox}
+};
+
 // guardar i carregar Scenes
-void World::SaveScene()
+Level* World::SaveScene()
 {
-    
+    // crea level + nom per defecte
+    Level* level = new Level{"DEFAULT"};
+
+    Scene* scene = scenes[0]; // Hardcodejat
+
+    // Skybox
+    cfgMesh* cfgSB = cfgSkyboxCreat(scene->skybox->texture->filename.c_str());
+    level->Skybox = *cfgSB;
+
+    // Player
+    DinamicObj* sPlayer = new DinamicObj{ePlayer, player->model.getTranslation() + Vector3(0,120,0)};
+    level->player = *sPlayer;
+
+    Object* object;
+    eObjType type;
+    // llista de Statics
+    StaticObj sObjs[MAXOBJ];
+    int max = 0;
+    for (int id = 0; id < scene->static_objects.size() && id < MAXOBJ; id++)
+    {
+        object = scene->static_objects[id];
+        // buscar el type
+        for(int i = 0; i < sizeof(block2Info)/sizeof(block2enums); i++)
+        {
+            if(object->name != block2Info[i].entity) 
+                continue;
+
+            type = block2Info[i].type;
+            break;
+        }
+        
+        // afegir el elemnt a la llista
+        level->sObjs[id] = *(new StaticObj{type, object->model.getTranslation(), object->model.getTranslation()}); // falta la rotacio
+        max++;
+    }
+    level->numSObj = max;
+
+    // llista de Dinamics
+    DinamicObj dObjs[MAXOBJ];
+    max = 0;
+    for (int id = 0; id < scene->dinamic_objects.size() && id < MAXOBJ; id++)
+    {
+        object = scene->dinamic_objects[id];
+        // buscar el type
+        for(int i = 0; i < sizeof(block2Info)/sizeof(block2enums); i++)
+        {
+            if(object->name != block2Info[i].entity) 
+                continue;
+
+            type = block2Info[i].type;
+            break;
+        }
+        
+        // afegir el elemnt a la llista
+        level->dObjs[id] = *(new DinamicObj{type, object->model.getTranslation() + Vector3(0,120,0)});
+        max++;
+    }
+    level->numDObj = max;
+
+    return level;
 }

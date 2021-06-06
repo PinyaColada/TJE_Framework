@@ -236,7 +236,7 @@ Floor::Floor()
 }
 
 // ----------------------------------------- class: Block -------------------------------
-block2enums block2Info[SIZEOFBLOCK] = {
+block2enumsM block2InfoM[SIZEOFBLOCK] = {
     {BLOCKLARGE,eBLargeMesh},
     {BLOCKLONG,eBLongMesh},
     {BLOCKUNIT,eBUnitMesh}
@@ -244,7 +244,7 @@ block2enums block2Info[SIZEOFBLOCK] = {
 
 Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)
 {
-    name = block2Info[type].entity;
+    name = block2InfoM[type].entity;
     model.setTranslation(pos);
 
     //si existeix la mesh
@@ -253,7 +253,7 @@ Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)
         return;
     }
 
-    cfgMesh* cfgM = getCfgMesh(block2Info[type].mesh);
+    cfgMesh* cfgM = getCfgMesh(block2InfoM[type].mesh);
 
     //prova de errors
     if (cfgM == NULL)

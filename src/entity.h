@@ -33,6 +33,12 @@ enum eBlocktype {
 struct block2enums
 {
     eEntityName entity;
+    eObjType type;
+};
+
+struct block2enumsM
+{
+    eEntityName entity;
     eCfgMesh mesh;
 };
 

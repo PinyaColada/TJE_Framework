@@ -3,6 +3,8 @@
 
 #include "framework.h"
 
+#define MAXOBJ 100
+
 // ---------- carregar Meshs ----------
 enum eCfgMesh {
     eFloor,
@@ -31,10 +33,13 @@ struct cfgMesh
 // ---------- carregar nivell ----------
 enum eObjType {
     ePlayer,
+    efloor,
     eBLarge,
     eBLong,
     eBUnit,
-    eBox
+    eBox,
+
+    SIZEOFOT
 };
 
 struct StaticObj
@@ -42,7 +47,7 @@ struct StaticObj
     eObjType type;
 
     Vector3 pos;
-    Vector3 dir;
+    Vector3 rot;
 };
 
 struct DinamicObj
@@ -60,12 +65,16 @@ struct Level
 
     cfgMesh Skybox;
 
-    StaticObj sObjs[100];
-    DinamicObj dObjs[100];
+    int numSObj;
+    int numDObj;
+
+    StaticObj sObjs[MAXOBJ];
+    DinamicObj dObjs[MAXOBJ];
 };
 
 // funcions que es criden desde fora
 extern void InitCfgMesh();
 extern cfgMesh* getCfgMesh(eCfgMesh name);
+extern cfgMesh* cfgSkyboxCreat(const char* texture);
 
 #endif 

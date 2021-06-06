@@ -62,3 +62,17 @@ cfgMesh* getCfgMesh(eCfgMesh name)
 {
     return cfgTableMesh[name];
 }
+
+cfgMesh* cfgSkyboxCreat(const char* texture)
+{
+    // crea cada element en default
+    cfgMesh* cfg = new cfgMesh{eSkybox};
+
+    // Poner la info
+    cfgMeshCreat(   cfg,                        // elemento 
+                    texture,                    // texture
+                    "data/Skybox/sphere.obj",   // mesh
+                    "");                        // bounding
+
+    return cfg;
+}

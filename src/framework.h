@@ -117,6 +117,8 @@ public:
 
 	void debugVector() { std::cout<<"["<<x<<", "<<y<<", "<<z<<"]"<<std::endl; }
 
+	void exportVector(FILE *f) {fprintf(f,"(%f,%f,%f)\n",x,y,x);}
+
 	float distance(const Vector3& v) const;
 
 	Vector3 cross( const Vector3& v ) const;
