@@ -300,6 +300,7 @@ void PlayStage::addBlockInFront(eBlocktype type)
 	case BLARGE: mesh = world->searchMesh(BLOCKLARGE); break;
 	case BLONG: mesh = world->searchMesh(BLOCKLONG); break;
 	case BUNIT: mesh = world->searchMesh(BLOCKUNIT); break;
+	default: break;
 	}
 
 	// creem el Block

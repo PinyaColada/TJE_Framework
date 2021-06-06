@@ -131,7 +131,7 @@ void cfgPlayer::ReadCfg(FILE* f)
             maxSpeed = atof(pch+9);
         }
         // minSpeed
-        if((pch = strstr(line, "minSpeed:")) != NULL)
+        else if((pch = strstr(line, "minSpeed:")) != NULL)
         {
             minSpeed = atof(pch+9);
         }

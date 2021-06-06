@@ -7,6 +7,7 @@
 #include "shader.h"
 #include "camera.h"
 #include "physics.h"
+#include "skin.h"
 
 enum eEntityName {
     ENTITY,
@@ -27,6 +28,12 @@ enum eBlocktype {
     BUNIT,
 
     SIZEOFBLOCK
+};
+
+struct block2enums
+{
+    eEntityName entity;
+    eCfgMesh mesh;
 };
 
 // ----------------------------------------- class: Entity -----------------------------------------
@@ -59,7 +66,7 @@ public:
     eEntityName object; 
 
     // Metodos
-    EntityMesh( eEntityName obj );
+    EntityMesh(eEntityName obj, cfgMesh* cfgM = NULL);
  
     void render(Camera* camera);
     void update(float dt);

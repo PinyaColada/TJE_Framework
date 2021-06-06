@@ -12,10 +12,18 @@ Vector3 Entity::getPosition() { return Vector3(1,1,1); }
 Vector3 Entity::getDir() { return model.frontVector(); }
 
 // ----------------------------------------- class: EntityMesh -------------------------------------
-EntityMesh::EntityMesh( eEntityName obj )
+EntityMesh::EntityMesh(eEntityName obj, cfgMesh* cfgM)
 {
     name = eEntityName::MESH;
     object = obj;
+
+    if(cfgM == NULL) return;
+
+    texture = new Texture();
+ 	texture->load(cfgM->texture);
+	mesh = Mesh::getMeshAndBounding(cfgM->mesh);
+	shader = Shader::Get(cfgM->vsf, cfgM->psf);
+    color = cfgM->color;
 }
 
 void EntityMesh::render(Camera* camera)
@@ -126,14 +134,14 @@ Box::Box(EntityMesh* m, Vector3 pos)
         return;
     }
 
-    //si no existeix la mesh
-    mesh = new EntityMesh( BOX );
+    cfgMesh* cfgM = getCfgMesh(eBoxMesh);
 
-	mesh->texture = new Texture();
- 	mesh->texture->load("data/Box/MetalBox.png");
-	mesh->mesh = Mesh::getMeshAndBounding("data/Box/MetalBox.obj","data/Box/ColissionBox.obj");
-	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-    mesh->color = Vector4(1,1,1,1);
+    //prova de errors
+    if (cfgM == NULL)
+        std::cout << "Error: Config not found" << std::endl;
+
+    //si no existeix la mesh
+    mesh = new EntityMesh(BOX, cfgM);
 }
 
 void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -217,26 +225,26 @@ Floor::Floor()
 {
     name = FLOOR;
 
-    //si no existeix la mesh
-    mesh = new EntityMesh( FLOOR );
+    cfgMesh* cfgM = getCfgMesh(eFloor);
 
-	mesh->texture = new Texture();
- 	mesh->texture->load("data/Floor/Floor.png");
-	mesh->mesh = Mesh::getMeshAndBounding("data/Floor/Floor.obj");
-	mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-    mesh->color = Vector4(1,1,1,1);
+    //prova de errors
+    if (cfgM == NULL)
+        std::cout << "Error: Config not found" << std::endl;
+
+    //si no existeix la mesh
+    mesh = new EntityMesh(FLOOR, cfgM);
 }
 
 // ----------------------------------------- class: Block -------------------------------
-eEntityName block2entity[SIZEOFBLOCK] = {
-    BLOCKLARGE,
-    BLOCKLONG,
-    BLOCKUNIT
+block2enums block2Info[SIZEOFBLOCK] = {
+    {BLOCKLARGE,eBLargeMesh},
+    {BLOCKLONG,eBLongMesh},
+    {BLOCKUNIT,eBUnitMesh}
 };
 
 Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)
 {
-    name = block2entity[type];
+    name = block2Info[type].entity;
     model.setTranslation(pos);
 
     //si existeix la mesh
@@ -245,26 +253,14 @@ Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)
         return;
     }
 
-    mesh = new EntityMesh(name);
-    mesh->shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
-    mesh->color = Vector4(1, 1, 1, 1);
-    mesh->texture = new Texture();
+    cfgMesh* cfgM = getCfgMesh(block2Info[type].mesh);
 
-    switch (type) {
-    case BLARGE:
-        mesh->texture->load("data/Blocks/Large.png");
-        mesh->mesh = Mesh::getMeshAndBounding("data/Blocks/Large.obj", "data/Blocks/Large.obj");
-        break;
-    case BLONG:
-        mesh->texture->load("data/Blocks/Long.png");
-        mesh->mesh = Mesh::getMeshAndBounding("data/Blocks/Long.obj", "data/Blocks/Long.obj");
-        break;
-    case BUNIT:
-        mesh->texture->load("data/Blocks/Unit.png");
-        mesh->mesh = Mesh::getMeshAndBounding("data/Blocks/Unit.obj", "data/Blocks/Unit.obj");
-        break;
-    default: break;
-    }
+    //prova de errors
+    if (cfgM == NULL)
+        std::cout << "Error: Config not found" << std::endl;
+
+    //si no existeix la mesh
+    mesh = new EntityMesh(name, cfgM);
 }
 
 

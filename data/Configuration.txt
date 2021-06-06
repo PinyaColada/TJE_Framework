@@ -10,7 +10,7 @@ v_jump: 500
 
 g: 1000
 g_jump: 4000
-v_jump: 600
+v_jump: 1000
 
 >>>
 
@@ -19,17 +19,5 @@ v_jump: 600
 maxSpeed: 130
 minSpeed: 60
 altura: 0,70,0
-
->>>
-
-
-*** Meshs ***
-
-<<< type: meshBox
-
-texture: data/Box/MetalBox.png
-mesh: data/Box/MetalBox.obj
-bounding: data/Box/ColissionBox.obj
-color: 1,1,1,1
 
 >>>
