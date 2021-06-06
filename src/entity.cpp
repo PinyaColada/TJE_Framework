@@ -28,19 +28,50 @@ EntityMesh::EntityMesh(eEntityName obj, cfgMesh* cfgM)
 
 void EntityMesh::render(Camera* camera)
 {
-    //enable shader and pass uniforms
+    //enable shader and pass uniforms	
+    Vector3 ambient_light(0.5411, 0.7607, 0.9019);
+
     shader->enable();
     shader->setUniform("u_color", color);
     shader->setUniform("u_model", model);
     shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
-    shader->setTexture("u_texture", texture, 0 );
+    shader->setTexture("u_texture", texture, 0);
 
-    //render the mesh using the shader
-    mesh->render( GL_TRIANGLES );
+    shader->setUniform("u_light_color", Vector3(1, 1, 1));
+    shader->setUniform("u_light_intensity", 1);
 
-    //disable the shader after finishing rendering
-    shader->disable(); 
+    shader->setUniform("u_ambient_light", ambient_light);
 
+    //render the mesh using the shader	
+    mesh->render(GL_TRIANGLES);
+
+    //disable the shader after finishing rendering	
+    shader->disable();
+}
+
+
+void EntityMesh::render(Camera* camera, std::vector<EntityLight*> lights)
+{
+    Vector3 ambient_light(0.5411, 0.7607, 0.9019);
+    //enable shader and pass uniforms	
+    shader->enable();
+    shader->setUniform("u_color", color);
+    shader->setUniform("u_model", model);
+    shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
+    shader->setTexture("u_texture", texture, 0);
+
+    shader->setUniform("u_light_color", lights[0]->color);
+    shader->setUniform("u_light_pos", lights[0]->model.getTranslation());
+    shader->setUniform("u_light_target", lights[0]->model.frontVector());
+    shader->setUniform("u_light_intensity", lights[0]->intensity);
+
+    shader->setUniform("u_ambient_light", ambient_light);
+
+    //render the mesh using the shader	
+    mesh->render(GL_TRIANGLES);
+
+    //disable the shader after finishing rendering	
+    shader->disable();
 }
 
 void EntityMesh::update(float dt)
@@ -49,6 +80,14 @@ void EntityMesh::update(float dt)
 }
 
 // ----------------------------------------- class: Object -------------------------------------
+
+void Object::render(Camera* camera, std::vector<EntityLight*> lights)
+{
+    if (mesh == NULL) return;
+    mesh->model = this->model;
+    mesh->render(camera, lights);
+}
+
 void Object::render(Camera* camera)
 {
     if(mesh == NULL) return;
@@ -359,4 +398,12 @@ void Player::LeaveBox()
     boxPicked->isCatch = false;
     boxPicked->physic->vel.y = 0;
     boxPicked = NULL;
+}
+
+// ----------------------------------------- class: EntityLight -------------------------------	
+EntityLight::EntityLight(Vector3 pos, Vector3 target, Vector3 color, float intensity) {
+    model.setTranslation(pos);
+    model.setFrontAndOrthonormalize(target);
+    this->color = color;
+    this->intensity = intensity;
 }

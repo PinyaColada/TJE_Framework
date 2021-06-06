@@ -60,6 +60,21 @@ public:
     Vector3 getDir(); 
 };
 
+// ----------------------------------------- class: EntityLight -------------------------------	
+class EntityLight : public Entity {
+public:
+    float intensity;
+
+    Vector3 color;
+
+    int area_size;
+
+    EntityLight(Vector3 pos, Vector3 target, Vector3 color, float intensity);
+
+    virtual void render(Camera* camera) { return; }
+    virtual void update(float elapsed_time) { return; }
+};
+
 // ----------------------------------------- class: EntityMesh -------------------------------------
 class EntityMesh : public Entity
 {
@@ -74,6 +89,7 @@ public:
     // Metodos
     EntityMesh(eEntityName obj, cfgMesh* cfgM = NULL);
  
+    void render(Camera* camera, std::vector<EntityLight*> lights);
     void render(Camera* camera);
     void update(float dt);
 };
@@ -91,6 +107,7 @@ class Object : public Entity
     Object(){}; //constructor
     Object(EntityMesh* m) { mesh = m; };
 
+    void render(Camera* camera, std::vector<EntityLight*> lights);
     void render(Camera* camera);
     void update(float dt){};
 };
@@ -187,8 +204,4 @@ public:
     void SelectBox(DinamicObject* picked);
     void LeaveBox();
 };
-
-// ----------------------------------------- class: EntityLight -------------------------------
-class EntityLight {};
-
 #endif 

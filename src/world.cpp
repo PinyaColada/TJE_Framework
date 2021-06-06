@@ -7,6 +7,8 @@ Scene::Scene()
 {
     spawn = Vector3(0,120,0);
     getSkybox("data/Skybox/sphere.obj", "data/Skybox/Night.png");
+    EntityLight* lus = new EntityLight(Vector3(0, 200, 0), Vector3(-0.00785305, -0.472548, 0.88127), Vector3(1, 1, 1), .5);
+    lights.push_back(lus);
 }
 
 void Scene::getSkybox(const char* fileSkybox, const char* fileSkyboxTex)

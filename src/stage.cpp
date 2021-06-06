@@ -127,31 +127,31 @@ void PlayStage::Render()
 		skybox->render(camera);
 	}
 
-	//render objectes
+	//render objectes	
 	for (int id = 0; id < scene->static_objects.size(); id++)
 	{
-		//for para static_objects
+		//for para static_objects	
 		object = scene->static_objects[id];
-		object->render(camera);
+		object->render(camera, scene->lights);
 	}
 
 	for (int id = 0; id < scene->dinamic_objects.size(); id++)
 	{
-		//for para static_objects
+		//for para static_objects	
 		object = scene->dinamic_objects[id];
-		object->render(camera);
+		object->render(camera, scene->lights);
 	}
 
 	DinamicObject* picked = world->boxPicked;
-	if(picked != NULL)
+	if (picked != NULL)
 		picked->mesh->mesh->bounding->renderBounding(picked->model);
 
 	Object* BlockPic = world->BlockPicked;
 	if (BlockPic != NULL)
 		BlockPic->mesh->mesh->bounding->renderBounding(BlockPic->model);
 
-	//Draw the floor grid
-	//drawGrid();
+	//Draw the floor grid	
+	drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 

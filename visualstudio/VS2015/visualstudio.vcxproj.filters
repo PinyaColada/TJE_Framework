@@ -76,6 +76,12 @@
     <ClCompile Include="..\..\src\config.cpp">
       <Filter>gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\loader.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\skin.cpp">
+      <Filter>gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\camera.h" />
@@ -147,6 +153,12 @@
       <Filter>gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\config.h">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\loader.h">
+      <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\skin.h">
       <Filter>gfx</Filter>
     </ClInclude>
   </ItemGroup>
