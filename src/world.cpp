@@ -3,10 +3,11 @@
 #include "entity.h"
 
 // ----------------------------------------- class: Scene -----------------------------------------
-Scene::Scene() 
+Scene::Scene(Vector3 sp, bool sb) 
 {
-    spawn = Vector3(0,120,0);
-    getSkybox("data/Skybox/sphere.obj", "data/Skybox/Night.png");
+    spawn = sp;
+    if(!sb)
+        getSkybox("data/Skybox/sphere.obj", "data/Skybox/Night.png");
     EntityLight* lus = new EntityLight(Vector3(0, 200, 0), Vector3(-0.00785305, -0.472548, 0.88127), Vector3(1, 1, 1), .5);
     lights.push_back(lus);
 }
@@ -134,14 +135,14 @@ void World::editMap()
     }
 }
 
-// lista de enums per trobar quin amb quin al carregar
+// lista de enums per trobar quin amb quin al carregar (ORDENAR PER eObjType DE skin.h!!!)
 block2enums block2Info[SIZEOFOT] = {
-    {PLAYER,ePlayer},
-    {FLOOR,efloor},
-    {BLOCKLARGE,eBLarge},
-    {BLOCKLONG,eBLong},
-    {BLOCKUNIT,eBUnit},
-    {BOX,eBox}
+    {PLAYER,ePlayer, NotUse},
+    {FLOOR,efloor, NotUse},
+    {BLOCKLARGE,eBLarge, BLARGE},
+    {BLOCKLONG,eBLong, BLONG},
+    {BLOCKUNIT,eBUnit, BUNIT},
+    {BOX,eBox, NotUse}
 };
 
 // guardar i carregar Scenes
@@ -177,7 +178,7 @@ Level* World::SaveScene()
             type = block2Info[i].type;
             break;
         }
-        
+
         // afegir el elemnt a la llista
         level->sObjs[id] = *(new StaticObj{type, object->model.getTranslation(), object->model.getTranslation()}); // falta la rotacio
         max++;
@@ -207,4 +208,73 @@ Level* World::SaveScene()
     level->numDObj = max;
 
     return level;
+}
+
+void World::LoadScene(Level* level)
+{
+    // Nom del nivell (no fa res de moment)
+
+    // player spawn
+    if(level->player.type != ePlayer)
+    {
+        std::cout << "Error: spawn of player nt fount" << std::endl;
+        return;
+    }
+    int id = scenes.size();
+    scenes.push_back(new Scene(level->player.pos, true));
+
+    // skybox
+    //scenes[id]->getSkybox(level->Skybox.mesh, level->Skybox.texture);
+    scenes[id]->getSkybox("data/Skybox/sphere.obj", "data/Skybox/Night.png");
+
+    EntityMesh* m;
+    eEntityName name;
+
+    // llista statica
+    StaticObj sobj;
+    for(int i = 0; i < level->numSObj; i++)
+    {
+        sobj = level->sObjs[i];
+        switch (sobj.type)
+        {
+            case eBLarge:
+            case eBLong:
+            case eBUnit:
+            {
+                if (block2Info[sobj.type].extra == NotUse)
+                {
+                    std::cout << "Error: type Static Uncorrect" << std::endl;
+                    break;
+                }
+                name = block2Info[sobj.type].entity;
+                m = searchMesh(name);
+                Block(m, sobj.pos, block2Info[sobj.type].extra); // falta la rotacio implemetar en el constructor
+
+                break;
+            }
+            default:
+                std::cout << "Error: Object Static Unespectet" << std::endl;
+                break;
+        }
+    }
+    // llista dinamica
+    DinamicObj dobj;
+    for(int i = 0; i < level->numDObj; i++)
+    {
+        dobj = level->dObjs[i];
+        switch (dobj.type)
+        {
+            case eBox:
+            {
+                name = block2Info[sobj.type].entity;
+                m = searchMesh(name);
+                Box(m, dobj.pos);
+                break;
+            }
+            default:
+                std::cout << "Error: Object Dinamic Unespectet" << std::endl;
+                break;
+        }
+    }
+    std::cout << " + Level Loaded" << std::endl; 
 }

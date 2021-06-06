@@ -27,13 +27,15 @@ enum eBlocktype {
     BLONG,
     BUNIT,
 
-    SIZEOFBLOCK
+    SIZEOFBLOCK,
+    NotUse = -1
 };
 
 struct block2enums
 {
     eEntityName entity;
     eObjType type;
+    eBlocktype extra;
 };
 
 struct block2enumsM

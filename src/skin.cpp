@@ -22,7 +22,7 @@ void cfgMeshCreat(   cfgMesh* cfg,
 // funcions que es criden desde fora
 void InitCfgMesh()
 {
-    std::cout << "--- Load Mesh Info ---" << std::endl;
+    std::cout << " * Load Mesh Info" << std::endl;
     for (int i = 0; i < SIZEOFMESHS; i++)
     {
         eCfgMesh name = (eCfgMesh) i;

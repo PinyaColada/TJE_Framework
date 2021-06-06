@@ -21,7 +21,7 @@ public:
     Vector3 spawn;
 
     // Metodos
-    Scene();
+    Scene(Vector3 sp = Vector3(0,120,0), bool sb = false);
 
     void getSkybox(const char* fileSkybox, const char* fileSkyboxTex);
 };
@@ -54,6 +54,7 @@ public:
 
     // guardar i carregar Scenes
     Level* SaveScene();
+    void LoadScene(Level* level);
 };
 
 
