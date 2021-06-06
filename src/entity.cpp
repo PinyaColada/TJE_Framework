@@ -30,6 +30,8 @@ void EntityMesh::render(Camera* camera)
 {
     //enable shader and pass uniforms	
     Vector3 ambient_light(0.5411, 0.7607, 0.9019);
+    Vector3 light_color(1, 1, 1);
+    float intensity = 1;
 
     shader->enable();
     shader->setUniform("u_color", color);
@@ -37,8 +39,8 @@ void EntityMesh::render(Camera* camera)
     shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
     shader->setTexture("u_texture", texture, 0);
 
-    shader->setUniform("u_light_color", Vector3(1, 1, 1));
-    shader->setUniform("u_light_intensity", 1);
+    shader->setUniform("u_light_color", light_color);
+    shader->setUniform("u_light_intensity", intensity);
 
     shader->setUniform("u_ambient_light", ambient_light);
 
