@@ -159,7 +159,7 @@ void cfgPlayer::ReadCfg(FILE* f)
 // funcions que es criden desde fora
 void InitCfg()
 {
-    std::cout << "--- Create data ---" << std::endl;
+    std::cout << " * Create data" << std::endl;
     for (int i = 0; i < SIZEOFCFG; i++)
     {
         eType name = (eType) i;
@@ -200,7 +200,7 @@ cfgGeneric* getCfg(eType type)
 
 void LoadCfg(const char* filename)
 {
-    std::cout << "--- Load data ---" << std::endl;
+    std::cout << " * Load data" << std::endl;
 
     //obrir fitxer
     FILE* f = fopen(filename, "r");
