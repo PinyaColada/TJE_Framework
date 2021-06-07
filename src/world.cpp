@@ -36,10 +36,10 @@ World::World( int window_width, int window_height )
     Scene* scene = new Scene(DEMO);
     scenes.push_back(scene);
 
-    current_scene = DEMO;
+    current_scene = NIVELDELAVA;
     // A partir de aqui empezamos a cargar el mapa.
-    Object* floor = new Floor();
-    scenes[current_scene]->static_objects.push_back(floor);
+    //Object* floor = new Floor();
+    //scenes[current_scene]->static_objects.push_back(floor);
 
     player = new Player();
     player->spawn = scene->spawn;
@@ -143,7 +143,11 @@ block2enums block2Info[SIZEOFOT] = {
     {BLOCKLARGE,eBLarge, BLARGE},
     {BLOCKLONG,eBLong, BLONG},
     {BLOCKUNIT,eBUnit, BUNIT},
-    {BOX,eBox, NotUse}
+    {BOX,eBox, NotUse},
+    {JEWEL,eJewel, BJEWEL},
+    {MUSHROOM,eMushroom, BMUSHROOM},
+    {ROCK,eRock, BROCK},
+    {WEED,eWeed, BWEED}
 };
 
 // guardar i carregar Scenes
@@ -234,6 +238,7 @@ void World::LoadScene(Level* level)
         return;
     }
     int id = scenes.size();
+    std::cout << id << std::endl;
     scenes.push_back(new Scene(nameScene, level->player.pos, true));
 
     // skybox
@@ -253,6 +258,10 @@ void World::LoadScene(Level* level)
             case eBLarge:
             case eBLong:
             case eBUnit:
+            case eJewel:
+            case eMushroom:
+            case eRock:
+            case eWeed:
             {
                 if (block2Info[sobj.type].extra == NotUse)
                 {

@@ -12,10 +12,10 @@ enum eCfgMesh {
     eBLongMesh,
     eBUnitMesh,
     eBoxMesh,
-    eJewel,
-    eMushroom,
-    eRock,
-    eWeed,
+    eJewelMesh,
+    eMushroomMesh,
+    eRockMesh,
+    eWeedMesh,
 
     SIZEOFMESHS,
 
@@ -42,6 +42,10 @@ enum eObjType {
     eBLong,
     eBUnit,
     eBox,
+    eJewel,
+    eMushroom,
+    eRock,
+    eWeed,
 
     SIZEOFOT
 };

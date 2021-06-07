@@ -8,7 +8,11 @@ strObjType nameType[SIZEOFOT] = {
     {"eBLarge",eBLarge},
     {"eBLong",eBLong},
     {"eBUnit",eBUnit},
-    {"eBox",eBox}
+    {"eBox",eBox},
+    {"eJewel",eJewel},
+    {"eMushroom",eMushroom},
+    {"eRock",eRock},
+    {"eWeed",eWeed}
 };
 
 // funcions que es criden desde fora

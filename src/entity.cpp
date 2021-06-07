@@ -281,10 +281,10 @@ block2enumsM block2InfoM[SIZEOFBLOCK] = {
     {BLOCKLARGE,eBLargeMesh},
     {BLOCKLONG,eBLongMesh},
     {BLOCKUNIT,eBUnitMesh},
-    {JEWEL,eJewel},
-    {MUSHROOM,eMushroom},
-    {ROCK,eRock},
-    {WEED,eWeed}
+    {JEWEL,eJewelMesh},
+    {MUSHROOM,eMushroomMesh},
+    {ROCK,eRockMesh},
+    {WEED,eWeedMesh}
 };
 
 Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)

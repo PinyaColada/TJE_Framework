@@ -57,22 +57,22 @@ void InitCfgMesh()
                     "data/Blocks/Unit.obj", 
                     "");
 
-    cfgMeshCreat(   cfgTableMesh[eJewel],
+    cfgMeshCreat(   cfgTableMesh[eJewelMesh],
                     "data/Blocks/Jewel.png",
                     "data/Blocks/Jewel.obj",
                     "");
 
-    cfgMeshCreat(   cfgTableMesh[eMushroom],
+    cfgMeshCreat(   cfgTableMesh[eMushroomMesh],
                     "data/Blocks/Mushroom.png",
                     "data/Blocks/Mushroom.obj",
                     "");
 
-    cfgMeshCreat(   cfgTableMesh[eRock],
+    cfgMeshCreat(   cfgTableMesh[eRockMesh],
                     "data/Blocks/Rock.png",
                     "data/Blocks/Rock.obj",
                     "");
 
-    cfgMeshCreat(   cfgTableMesh[eWeed],
+    cfgMeshCreat(   cfgTableMesh[eWeedMesh],
                     "data/Blocks/Weed.png",
                     "data/Blocks/Weed.obj",
                     "");
