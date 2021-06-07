@@ -301,6 +301,10 @@ void PlayStage::addBlockInFront(eBlocktype type)
 	case BLARGE: mesh = world->searchMesh(BLOCKLARGE); break;
 	case BLONG: mesh = world->searchMesh(BLOCKLONG); break;
 	case BUNIT: mesh = world->searchMesh(BLOCKUNIT); break;
+	case BJEWEL: mesh = world->searchMesh(JEWEL); break;
+	case BMUSHROOM: mesh = world->searchMesh(MUSHROOM); break;
+	case BROCK: mesh = world->searchMesh(ROCK); break;
+	case BWEED: mesh = world->searchMesh(WEED); break;
 	default: break;
 	}
 
@@ -336,10 +340,14 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 						world->player->LeaveBox();
 					break;
 				case SDLK_3: idmode = GAMEPLAY; break;
+				case SDLK_4: addBlockInFront(BJEWEL); break;
 				case SDLK_5: addBlockInFront(BLARGE); break;
 				case SDLK_6: addBlockInFront(BLONG); break;
 				case SDLK_7: addBlockInFront(BUNIT); break;
 				case SDLK_8: world->editMap(); break;
+				case SDLK_z: addBlockInFront(BMUSHROOM); break;
+				case SDLK_x: addBlockInFront(BROCK); break;
+				case SDLK_c: addBlockInFront(BWEED); break;
 				case SDLK_F3: isComplite = true; break;
 				case SDLK_F4: SaveLevel(world->SaveScene()); break;
 			}

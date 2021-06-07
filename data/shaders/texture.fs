@@ -23,7 +23,7 @@ void main()
 {
 	vec2 uv = v_uv;
 
-	vec3 N = v_normal;
+	vec3 N = normalize(v_normal);
 	vec3 D = u_light_target;
 	vec3 L = -D;
 	vec3 light = vec3(0.0);

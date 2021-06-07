@@ -19,13 +19,21 @@ enum eEntityName {
     SKYBOX,
     BLOCKLARGE,
     BLOCKLONG,
-    BLOCKUNIT
+    BLOCKUNIT,
+    JEWEL,
+    MUSHROOM,
+    ROCK,
+    WEED
 };
 
 enum eBlocktype {
     BLARGE,
     BLONG,
     BUNIT,
+    BJEWEL,
+    BMUSHROOM,
+    BROCK,
+    BWEED,
 
     SIZEOFBLOCK,
     NotUse = -1

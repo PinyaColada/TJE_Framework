@@ -56,6 +56,26 @@ void InitCfgMesh()
                     "data/Blocks/Unit.png",
                     "data/Blocks/Unit.obj", 
                     "");
+
+    cfgMeshCreat(   cfgTableMesh[eJewel],
+                    "data/Blocks/Jewel.png",
+                    "data/Blocks/Jewel.obj",
+                    "");
+
+    cfgMeshCreat(   cfgTableMesh[eMushroom],
+                    "data/Blocks/Mushroom.png",
+                    "data/Blocks/Mushroom.obj",
+                    "");
+
+    cfgMeshCreat(   cfgTableMesh[eRock],
+                    "data/Blocks/Rock.png",
+                    "data/Blocks/Rock.obj",
+                    "");
+
+    cfgMeshCreat(   cfgTableMesh[eWeed],
+                    "data/Blocks/Weed.png",
+                    "data/Blocks/Weed.obj",
+                    "");
 }
 
 cfgMesh* getCfgMesh(eCfgMesh name)

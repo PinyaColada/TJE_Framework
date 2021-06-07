@@ -280,7 +280,11 @@ Floor::Floor()
 block2enumsM block2InfoM[SIZEOFBLOCK] = {
     {BLOCKLARGE,eBLargeMesh},
     {BLOCKLONG,eBLongMesh},
-    {BLOCKUNIT,eBUnitMesh}
+    {BLOCKUNIT,eBUnitMesh},
+    {JEWEL,eJewel},
+    {MUSHROOM,eMushroom},
+    {ROCK,eRock},
+    {WEED,eWeed}
 };
 
 Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)
@@ -339,6 +343,8 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
     for (int i = 0; i < static_objects.size(); i++)
     {
         object = static_objects[i];
+        if (object->name == MUSHROOM || object->name == ROCK || object->name == WEED)
+            continue;
         if(onCollision(object, position, speed, target))
             continue;
         if(hasGround(object, position)){

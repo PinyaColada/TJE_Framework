@@ -12,6 +12,10 @@ enum eCfgMesh {
     eBLongMesh,
     eBUnitMesh,
     eBoxMesh,
+    eJewel,
+    eMushroom,
+    eRock,
+    eWeed,
 
     SIZEOFMESHS,
 
