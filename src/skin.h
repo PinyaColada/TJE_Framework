@@ -7,7 +7,7 @@
 
 // ---------- carregar Meshs ----------
 enum eCfgMesh {
-    eFloor,
+    eFloorMesh,
     eBLargeMesh,
     eBLongMesh,
     eBUnitMesh,
@@ -37,7 +37,7 @@ struct cfgMesh
 // ---------- carregar nivell ----------
 enum eObjType {
     ePlayer,
-    efloor,
+    eFloor,
     eBLarge,
     eBLong,
     eBUnit,

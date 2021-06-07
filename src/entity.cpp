@@ -266,7 +266,7 @@ Floor::Floor()
 {
     name = FLOOR;
 
-    cfgMesh* cfgM = getCfgMesh(eFloor);
+    cfgMesh* cfgM = getCfgMesh(eFloorMesh);
 
     //prova de errors
     if (cfgM == NULL)

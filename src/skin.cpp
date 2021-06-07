@@ -32,7 +32,7 @@ void InitCfgMesh()
     }
 
     // Poner la info
-    cfgMeshCreat(   cfgTableMesh[eFloor],   // elemento 
+    cfgMeshCreat(   cfgTableMesh[eFloorMesh],   // elemento 
                     "data/Floor/Floor.png", // texture
                     "data/Floor/Floor.obj", // mesh
                     "");                    // bounding

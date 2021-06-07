@@ -151,7 +151,7 @@ void PlayStage::Render()
 		BlockPic->mesh->mesh->bounding->renderBounding(BlockPic->model);
 
 	//Draw the floor grid	
-	drawGrid();
+	//drawGrid();
 }
 
 void PlayStage::Update(double elapsed_time) 

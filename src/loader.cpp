@@ -4,7 +4,7 @@
 
 strObjType nameType[SIZEOFOT] = {
     {"ePlayer",ePlayer},
-    {"efloor",efloor},
+    {"eFloor",eFloor},
     {"eBLarge",eBLarge},
     {"eBLong",eBLong},
     {"eBUnit",eBUnit},
@@ -57,7 +57,7 @@ void SaveLevel(Level* level)
     for(int i = 0; i < level->numSObj; i++)
     {
         sobj = level->sObjs[i];
-        if(sobj.type == efloor)
+        if(sobj.type == eFloor)
             continue;
 
         fprintf(f,"--- %s\n", nameType[sobj.type].name);
@@ -74,7 +74,7 @@ void SaveLevel(Level* level)
     for(int i = 0; i < level->numDObj; i++)
     {
         dobj = level->dObjs[i];
-        if(dobj.type == efloor)
+        if(dobj.type == eFloor)
             continue;
         
         fprintf(f,"--- %s\n", nameType[dobj.type].name);
@@ -197,16 +197,16 @@ Level* LoadLevel(const char* filename)
 
                     // buscar la type de la linea
                     pch += 3;
-                    type = efloor;
+                    type = eFloor;
 
-                    for (int i = 0; type == efloor && i < SIZEOFOT; i++)
+                    for (int i = 0; type == eFloor && i < SIZEOFOT; i++)
                     {
                         // si es el element
                         if(strstr(pch, nameType[i].name) != NULL) 
                             type = nameType[i].type;
                     }
 
-                    if (type == efloor)
+                    if (type == eFloor)
                         continue;
                     
                     SObj->type = type;
@@ -253,16 +253,16 @@ Level* LoadLevel(const char* filename)
 
                     // buscar la type de la linea
                     pch += 3;
-                    type = efloor;
+                    type = eFloor;
 
-                    for (int i = 0; type == efloor && i < SIZEOFOT; i++)
+                    for (int i = 0; type == eFloor && i < SIZEOFOT; i++)
                     {
                         // si es el element
                         if(strstr(pch, nameType[i].name) != NULL) 
                             type = nameType[i].type;
                     }
 
-                    if (type == efloor)
+                    if (type == eFloor)
                         continue;
                     
                     DObj->type = type;

@@ -49,7 +49,7 @@ World::World( int window_width, int window_height )
     scenes.push_back(scene);
 
     current_scene = DEMO;
-    printf("current_scene: %d\n", current_scene);
+
     // A partir de aqui empezamos a cargar el mapa.
 
     player = new Player();
@@ -165,7 +165,7 @@ void World::changeScene(eScene nextScene)
 // lista de enums per trobar quin amb quin al carregar (ORDENAR PER eObjType DE skin.h!!!)
 block2enums block2Info[SIZEOFOT] = {
     {PLAYER,ePlayer, NotUse},
-    {FLOOR,efloor, NotUse},
+    {FLOOR,eFloor, NotUse},
     {BLOCKLARGE,eBLarge, BLARGE},
     {BLOCKLONG,eBLong, BLONG},
     {BLOCKUNIT,eBUnit, BUNIT},
@@ -248,6 +248,10 @@ Level* World::SaveScene()
 
 void World::LoadScene(Level* level)
 {
+    if(level == NULL)
+    {
+        return;
+    }
     // Nom del nivell
     eScene nameScene = DEFAULTSCENE;
     for (int i = 0; nameScene == DEFAULTSCENE && i < SIZEOFSCENE; i++)
