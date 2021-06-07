@@ -224,8 +224,7 @@ void World::LoadScene(Level* level)
     scenes.push_back(new Scene(level->player.pos, true));
 
     // skybox
-    //scenes[id]->getSkybox(level->Skybox.mesh, level->Skybox.texture);
-    scenes[id]->getSkybox("data/Skybox/sphere.obj", "data/Skybox/Night.png");
+    scenes[id]->getSkybox(level->Skybox.mesh, level->Skybox.texture);
 
     EntityMesh* m;
     eEntityName name;

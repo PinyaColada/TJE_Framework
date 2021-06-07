@@ -84,6 +84,9 @@ void SaveLevel(Level* level)
     std::cout << " + Level Saved" << std::endl;
 }
 
+char name[40];
+char tex[40];
+
 Level* LoadLevel(const char* filename)
 {
     FILE* f = fopen(filename, "r");
@@ -99,7 +102,6 @@ Level* LoadLevel(const char* filename)
     char line[100];
     char* pch;
     char* pch1;
-    char name[40];
     Level* level = new Level;
     
     // nom del nivell
@@ -139,9 +141,9 @@ Level* LoadLevel(const char* filename)
                 //textura
                 if((pch = strstr(line, "tex:")) != NULL)
                 {
-                    sscanf(pch+4, " %s", name);
+                    sscanf(pch+4, " %s", tex);
 
-                    cfgMesh* cfgSB = cfgSkyboxCreat(name);
+                    cfgMesh* cfgSB = cfgSkyboxCreat(tex);
                     level->Skybox = *cfgSB;
                 }
                 // tag de fi
