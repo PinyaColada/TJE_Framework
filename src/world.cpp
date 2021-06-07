@@ -3,8 +3,9 @@
 #include "entity.h"
 
 // ----------------------------------------- class: Scene -----------------------------------------
-Scene::Scene(Vector3 sp, bool sb) 
+Scene::Scene(eScene n, Vector3 sp, bool sb) 
 {
+    name = n;
     spawn = sp;
     if(!sb)
         getSkybox("data/Skybox/sphere.obj", "data/Skybox/Night.png");
@@ -32,7 +33,7 @@ World::World( int window_width, int window_height )
 
     setCamera(window_width, window_height); 
 
-    Scene* scene = new Scene();
+    Scene* scene = new Scene(DEMO);
     scenes.push_back(scene);
 
     current_scene = DEMO;
@@ -146,6 +147,11 @@ block2enums block2Info[SIZEOFOT] = {
 };
 
 // guardar i carregar Scenes
+NameLevel TableSceneNames[SIZEOFSCENE] = {
+    {"DEMO",DEMO},
+    {"NIVELDELAVA",NIVELDELAVA}
+};
+
 Level* World::SaveScene()
 {
     // crea level + nom per defecte
@@ -213,6 +219,13 @@ Level* World::SaveScene()
 void World::LoadScene(Level* level)
 {
     // Nom del nivell (no fa res de moment)
+    eScene nameScene = DEFAULTSCENE;
+    for (int i = 0; nameScene == DEFAULTSCENE && i < SIZEOFSCENE; i++)
+    {
+        // si es el element
+        if(strstr(level->name, TableSceneNames[i].cName) != NULL) 
+            nameScene = TableSceneNames[i].eName;
+    }
 
     // player spawn
     if(level->player.type != ePlayer)
@@ -221,13 +234,14 @@ void World::LoadScene(Level* level)
         return;
     }
     int id = scenes.size();
-    scenes.push_back(new Scene(level->player.pos, true));
+    scenes.push_back(new Scene(nameScene, level->player.pos, true));
 
     // skybox
     scenes[id]->getSkybox(level->Skybox.mesh, level->Skybox.texture);
 
     EntityMesh* m;
     eEntityName name;
+    Object* obj;
 
     // llista statica
     StaticObj sobj;
@@ -247,8 +261,13 @@ void World::LoadScene(Level* level)
                 }
                 name = block2Info[sobj.type].entity;
                 m = searchMesh(name);
-                Block(m, sobj.pos, block2Info[sobj.type].extra); // falta la rotacio implemetar en el constructor
+                obj = new Block(m, sobj.pos, block2Info[sobj.type].extra); // falta la rotacio implemetar en el constructor
 
+                // afeges la mesh del obj si no estaba
+                if( m == NULL )
+                {
+		            meshs.push_back(obj->mesh);
+	            }
                 break;
             }
             default:
@@ -267,7 +286,13 @@ void World::LoadScene(Level* level)
             {
                 name = block2Info[sobj.type].entity;
                 m = searchMesh(name);
-                Box(m, dobj.pos);
+                obj = new Box(m, dobj.pos);
+
+                // afeges la mesh del obj si no estaba
+                if( m == NULL )
+                {
+		            meshs.push_back(obj->mesh);
+	            }
                 break;
             }
             default:

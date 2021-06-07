@@ -5,7 +5,15 @@
 
 enum eScene{
     DEMO,
-    NIVELDELAVA
+    NIVELDELAVA,
+
+    SIZEOFSCENE,
+    DEFAULTSCENE = -1
+};
+
+struct NameLevel{
+    const char* cName;
+    eScene eName;
 };
 
 // ----------------------------------------- class: Scene -----------------------------------------
@@ -13,6 +21,8 @@ class Scene
 {
 public:
     // Atributos
+    eScene name;
+
     std::vector<EntityLight*> lights;
     std::vector<DinamicObject*> dinamic_objects;
     std::vector<Object*> static_objects;
@@ -21,7 +31,7 @@ public:
     Vector3 spawn;
 
     // Metodos
-    Scene(Vector3 sp = Vector3(0,120,0), bool sb = false);
+    Scene(eScene n = DEFAULTSCENE, Vector3 sp = Vector3(0,120,0), bool sb = false);
 
     void getSkybox(const char* fileSkybox, const char* fileSkyboxTex);
 };
