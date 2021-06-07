@@ -3,14 +3,16 @@
 #include "entity.h"
 
 // ----------------------------------------- class: Scene -----------------------------------------
-Scene::Scene(eScene n, Vector3 sp, bool sb) 
+Scene::Scene(eScene n, bool hasInfo, Vector3 sp) 
 {
     name = n;
     spawn = sp;
-    if(!sb)
-        getSkybox("data/Skybox/sphere.obj", "data/Skybox/Night.png");
     EntityLight* lus = new EntityLight(Vector3(0, 200, 0), Vector3(-0.00785305, -0.472548, 0.88127), Vector3(1, 1, 1), .5);
     lights.push_back(lus);
+
+    // carga la Scene per defecte
+    if(!hasInfo)
+        defaultScene();
 }
 
 void Scene::getSkybox(const char* fileSkybox, const char* fileSkyboxTex)
@@ -25,6 +27,16 @@ void Scene::getSkybox(const char* fileSkybox, const char* fileSkyboxTex)
     skybox->model.rotate(180 * DEG2RAD, Vector3(0, 0, 1));
 }
 
+void Scene::defaultScene()
+{
+    // Skybox
+    getSkybox("data/Skybox/sphere.obj", "data/Skybox/Night.png");
+
+    // Floor
+    Object* floor = new Floor();
+    static_objects.push_back(floor);
+}
+
 // ----------------------------------------- class: World -----------------------------------------
 World::World( int window_width, int window_height ) 
 { 
@@ -36,13 +48,12 @@ World::World( int window_width, int window_height )
     Scene* scene = new Scene(DEMO);
     scenes.push_back(scene);
 
-    current_scene = NIVELDELAVA;
+    current_scene = DEMO;
+    printf("current_scene: %d\n", current_scene);
     // A partir de aqui empezamos a cargar el mapa.
-    //Object* floor = new Floor();
-    //scenes[current_scene]->static_objects.push_back(floor);
 
     player = new Player();
-    player->spawn = scene->spawn;
+    changeScene(current_scene);
 }
 
 void World::setCamera( int window_width, int window_height )
@@ -70,7 +81,7 @@ void World::SelectBox()
     boxPicked = NULL;
     if (player->boxPicked != NULL) 
         return;
-    Scene* scene = scenes[0];
+    Scene* scene = scenes[current_scene];
 
     Vector3 origin = camera->eye;
     Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, window_width, window_height);
@@ -111,7 +122,7 @@ void World::editMap()
 {
     BlockPicked = NULL;
 
-    Scene* scene = scenes[0]; // Hardcodejat
+    Scene* scene = scenes[current_scene];
 
     Vector3 origin = camera->eye;
     Vector3 dir = camera->getRayDirection(Input::mouse_position.x, Input::mouse_position.y, window_width, window_height);
@@ -134,6 +145,21 @@ void World::editMap()
 
         break;
     }
+}
+
+void World::changeScene(eScene nextScene)
+{
+    // canviar el spawn del player
+    player->spawn = scenes[nextScene]->spawn;
+
+    // caniar el current
+    current_scene = nextScene;
+
+    // deixar les caixa
+    player->LeaveBox();
+    
+    // respawn el player
+    player->respawn();
 }
 
 // lista de enums per trobar quin amb quin al carregar (ORDENAR PER eObjType DE skin.h!!!)
@@ -159,9 +185,9 @@ NameLevel TableSceneNames[SIZEOFSCENE] = {
 Level* World::SaveScene()
 {
     // crea level + nom per defecte
-    Level* level = new Level{"DEFAULT"};
+    Level* level = new Level{"DEMO"};
 
-    Scene* scene = scenes[0]; // Hardcodejat
+    Scene* scene = scenes[current_scene];
 
     // Skybox
     cfgMesh* cfgSB = cfgSkyboxCreat(scene->skybox->texture->filename.c_str());
@@ -222,13 +248,19 @@ Level* World::SaveScene()
 
 void World::LoadScene(Level* level)
 {
-    // Nom del nivell (no fa res de moment)
+    // Nom del nivell
     eScene nameScene = DEFAULTSCENE;
     for (int i = 0; nameScene == DEFAULTSCENE && i < SIZEOFSCENE; i++)
     {
         // si es el element
         if(strstr(level->name, TableSceneNames[i].cName) != NULL) 
             nameScene = TableSceneNames[i].eName;
+    }
+    // Nom del nivell no trobat
+    if(nameScene == DEFAULTSCENE)
+    {
+        std::cout << "Error: Name of level not found" << std::endl;
+        return;
     }
 
     // player spawn
@@ -237,19 +269,32 @@ void World::LoadScene(Level* level)
         std::cout << "Error: spawn of player nt fount" << std::endl;
         return;
     }
-    int id = scenes.size();
-    std::cout << id << std::endl;
-    scenes.push_back(new Scene(nameScene, level->player.pos, true));
+
+    // trobar i colocar el nivell en la llist on toqui
+    int lastid = scenes.size();
+    Scene* scene = new Scene(nameScene, true, level->player.pos);
+    if(lastid > nameScene)
+        scenes[nameScene] = scene;
+    else
+    {
+        // crea el elemnt default que faltin
+        for(int id = lastid; id < nameScene; id++)
+        {
+            scenes.push_back(new Scene( (eScene)id) );
+        }
+        // afegeix en el index corresponent la scene
+        scenes.push_back(scene);
+    }
 
     // skybox
-    scenes[id]->getSkybox(level->Skybox.mesh, level->Skybox.texture);
+    scene->getSkybox(level->Skybox.mesh, level->Skybox.texture);
 
     EntityMesh* m;
     eEntityName name;
-    Object* obj;
 
     // llista statica
     StaticObj sobj;
+    Object* objb;
     for(int i = 0; i < level->numSObj; i++)
     {
         sobj = level->sObjs[i];
@@ -270,13 +315,18 @@ void World::LoadScene(Level* level)
                 }
                 name = block2Info[sobj.type].entity;
                 m = searchMesh(name);
-                obj = new Block(m, sobj.pos, block2Info[sobj.type].extra); // falta la rotacio implemetar en el constructor
+                objb = new Block(m, sobj.pos, block2Info[sobj.type].extra); // falta la rotacio implemetar en el constructor
 
                 // afeges la mesh del obj si no estaba
                 if( m == NULL )
                 {
-		            meshs.push_back(obj->mesh);
+		            meshs.push_back(objb->mesh);
 	            }
+
+                // afegim la Box a la llista de objectes
+                objb->idList = scene->dinamic_objects.size();
+                scene->static_objects.push_back(objb);
+
                 break;
             }
             default:
@@ -286,6 +336,7 @@ void World::LoadScene(Level* level)
     }
     // llista dinamica
     DinamicObj dobj;
+    DinamicObject* objd;
     for(int i = 0; i < level->numDObj; i++)
     {
         dobj = level->dObjs[i];
@@ -293,15 +344,20 @@ void World::LoadScene(Level* level)
         {
             case eBox:
             {
-                name = block2Info[sobj.type].entity;
+                name = block2Info[dobj.type].entity;
                 m = searchMesh(name);
-                obj = new Box(m, dobj.pos);
+                objd = new Box(m, dobj.pos);
 
                 // afeges la mesh del obj si no estaba
                 if( m == NULL )
                 {
-		            meshs.push_back(obj->mesh);
+		            meshs.push_back(objd->mesh);
 	            }
+                
+                // afegim la Box a la llista de objectes
+                objd->idList = scene->dinamic_objects.size();
+                scene->dinamic_objects.push_back(objd);
+
                 break;
             }
             default:

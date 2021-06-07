@@ -327,6 +327,7 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 		case GAMEPLAY: {
 			switch (event.keysym.sym) {
 				case SDLK_3: idmode = EDIT; break;
+				case SDLK_4: world->changeScene(eScene( (world->current_scene+1) % SIZEOFSCENE )); break;
 			}
 			break;
 		}
@@ -340,14 +341,15 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 						world->player->LeaveBox();
 					break;
 				case SDLK_3: idmode = GAMEPLAY; break;
-				case SDLK_4: addBlockInFront(BJEWEL); break;
+				case SDLK_4: world->changeScene(eScene( (world->current_scene+1) % SIZEOFSCENE )); break;
 				case SDLK_5: addBlockInFront(BLARGE); break;
 				case SDLK_6: addBlockInFront(BLONG); break;
 				case SDLK_7: addBlockInFront(BUNIT); break;
 				case SDLK_8: world->editMap(); break;
-				case SDLK_z: addBlockInFront(BMUSHROOM); break;
-				case SDLK_x: addBlockInFront(BROCK); break;
-				case SDLK_c: addBlockInFront(BWEED); break;
+				case SDLK_z: addBlockInFront(BJEWEL); break;
+				case SDLK_x: addBlockInFront(BMUSHROOM); break;
+				case SDLK_c: addBlockInFront(BROCK); break;
+				case SDLK_v: addBlockInFront(BWEED); break;
 				case SDLK_F3: isComplite = true; break;
 				case SDLK_F4: SaveLevel(world->SaveScene()); break;
 			}

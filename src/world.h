@@ -31,9 +31,11 @@ public:
     Vector3 spawn;
 
     // Metodos
-    Scene(eScene n = DEFAULTSCENE, Vector3 sp = Vector3(0,120,0), bool sb = false);
+    Scene(eScene n, bool hasInfo = false, Vector3 sp = Vector3(0,120,0));
 
     void getSkybox(const char* fileSkybox, const char* fileSkyboxTex);
+
+    void defaultScene();
 };
 // ----------------------------------------- class: World -----------------------------------------
 class World
@@ -61,6 +63,8 @@ public:
     void setCamera( int window_width, int window_height );
     void SelectBox();
     void editMap();
+
+    void changeScene(eScene nextScene);
 
     // guardar i carregar Scenes
     Level* SaveScene();
