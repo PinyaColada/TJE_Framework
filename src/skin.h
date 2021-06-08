@@ -5,26 +5,41 @@
 
 #define MAXOBJ 100
 
-// ---------- carregar Meshs ----------
-enum eCfgMesh {
-    eFloorMesh,
-    eBLargeMesh,
-    eBLongMesh,
-    eBUnitMesh,
-    eBoxMesh,
-    eJewelMesh,
-    eMushroomMesh,
-    eRockMesh,
-    eWeedMesh,
-
-    SIZEOFMESHS,
-
-    eSkybox
+enum eEntityName {
+    ENTITY,
+    MESH,
+    LIGHT,
+    OBJECT
 };
 
+enum eObjectName {
+    PLAYER,
+    BOX,
+    FLOOR,
+    SKYBOX,
+    BLOCKLARGE,
+    BLOCKLONG,
+    BLOCKUNIT,
+    JEWEL,
+    MUSHROOM,
+    ROCK,
+    WEED,
+
+    SIZEOFOBJ
+};
+
+struct Object2str {
+    const char* name;
+    eObjectName type;
+};
+
+extern Object2str TableObj2str[SIZEOFOBJ];
+extern bool hasBlock(eObjectName type);
+
+// ---------- carregar Meshs ----------
 struct cfgMesh
 {
-    eCfgMesh name;
+    eObjectName name;
 
     const char* texture;
 	const char* mesh;
@@ -35,24 +50,10 @@ struct cfgMesh
 };
 
 // ---------- carregar nivell ----------
-enum eObjType {
-    ePlayer,
-    eFloor,
-    eBLarge,
-    eBLong,
-    eBUnit,
-    eBox,
-    eJewel,
-    eMushroom,
-    eRock,
-    eWeed,
-
-    SIZEOFOT
-};
 
 struct StaticObj
 {
-    eObjType type;
+    eObjectName type;
 
     Vector3 pos;
     Vector3 rot;
@@ -60,7 +61,7 @@ struct StaticObj
 
 struct DinamicObj
 {
-    eObjType type;
+    eObjectName type;
 
     Vector3 pos;
 };
@@ -82,7 +83,7 @@ struct Level
 
 // funcions que es criden desde fora
 extern void InitCfgMesh();
-extern cfgMesh* getCfgMesh(eCfgMesh name);
+extern cfgMesh* getCfgMesh(eObjectName name);
 extern cfgMesh* cfgSkyboxCreat(const char* texture);
 
 #endif 

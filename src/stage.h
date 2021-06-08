@@ -17,7 +17,7 @@ enum eModeID{
     GAMEPLAY,
 };
 
-//------------------------------------ class: Stage  --------------------------------------
+// ------------------------------------ class: Stage  --------------------------------------
 class Stage 
 {
 public:
@@ -25,7 +25,7 @@ public:
     eStageID idSatge;
     eStageID nextSatge;
     World* world = NULL;
-    bool mouse_locked = true; //tells if the mouse is locked (not seen)
+    bool mouse_locked = true; // tells if the mouse is locked (not seen)
     bool isComplite = false;
 
     virtual void Render() = 0;
@@ -36,14 +36,14 @@ public:
 
     void updateMouse();
 
-    //events
+    // events
     virtual void onKeyDown( SDL_KeyboardEvent event ) = 0;
     virtual void onMouseButtonDown( SDL_MouseButtonEvent event ) = 0;
 
     eStageID passStage();
 };
 
-//------------------------------------ class: IntroStage  ----------------------------------
+// ------------------------------------ class: IntroStage  ----------------------------------
 class IntroStage : public Stage
 {
 public:
@@ -54,12 +54,12 @@ public:
 
     void Update(double elapsed_time);
 
-    //events
+    // events
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 };
 
-//------------------------------------ class: MenuStage  ----------------------------------
+// ------------------------------------ class: MenuStage  ----------------------------------
 class MenuStage : public Stage
 {
 public:
@@ -70,12 +70,12 @@ public:
 
     void Update(double elapsed_time);
 
-    //events
+    // events
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 };
 
-//------------------------------------ class: PlayStage  ----------------------------------
+// ------------------------------------ class: PlayStage  ----------------------------------
 class PlayStage : public Stage
 {
 public:
@@ -87,14 +87,14 @@ public:
     void Update(double elapsed_time);
 
     void AddBoxInFront();
-    void addBlockInFront(eBlocktype type);
+    void addBlockInFront(eObjectName type);
 
-    //events
+    // events
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 };
 
-//------------------------------------ class: EndStage  ----------------------------------
+// ------------------------------------ class: EndStage  ----------------------------------
 class EndStage : public Stage
 {
 public:
@@ -105,7 +105,7 @@ public:
 
     void Update(double elapsed_time);
 
-    //events
+    // events
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 };

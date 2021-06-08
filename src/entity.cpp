@@ -12,9 +12,9 @@ Vector3 Entity::getPosition() { return Vector3(1,1,1); }
 Vector3 Entity::getDir() { return model.frontVector(); }
 
 // ----------------------------------------- class: EntityMesh -------------------------------------
-EntityMesh::EntityMesh(eEntityName obj, cfgMesh* cfgM)
+EntityMesh::EntityMesh(eObjectName obj, cfgMesh* cfgM)
 {
-    name = eEntityName::MESH;
+    eName = MESH;
     object = obj;
 
     if(cfgM == NULL) return;
@@ -28,7 +28,7 @@ EntityMesh::EntityMesh(eEntityName obj, cfgMesh* cfgM)
 
 void EntityMesh::render(Camera* camera)
 {
-    //enable shader and pass uniforms	
+    // enable shader and pass uniforms	
     Vector3 ambient_light(0.5411, 0.7607, 0.9019);
     Vector3 light_color(1, 1, 1);
     float intensity = 1;
@@ -44,10 +44,10 @@ void EntityMesh::render(Camera* camera)
 
     shader->setUniform("u_ambient_light", ambient_light);
 
-    //render the mesh using the shader	
+    // render the mesh using the shader	
     mesh->render(GL_TRIANGLES);
 
-    //disable the shader after finishing rendering	
+    // disable the shader after finishing rendering	
     shader->disable();
 }
 
@@ -55,7 +55,7 @@ void EntityMesh::render(Camera* camera)
 void EntityMesh::render(Camera* camera, std::vector<EntityLight*> lights)
 {
     Vector3 ambient_light(0.5411, 0.7607, 0.9019);
-    //enable shader and pass uniforms	
+    // enable shader and pass uniforms	
     shader->enable();
     shader->setUniform("u_color", color);
     shader->setUniform("u_model", model);
@@ -69,10 +69,10 @@ void EntityMesh::render(Camera* camera, std::vector<EntityLight*> lights)
 
     shader->setUniform("u_ambient_light", ambient_light);
 
-    //render the mesh using the shader	
+    // render the mesh using the shader	
     mesh->render(GL_TRIANGLES);
 
-    //disable the shader after finishing rendering	
+    // disable the shader after finishing rendering	
     shader->disable();
 }
 
@@ -97,6 +97,45 @@ void Object::render(Camera* camera)
     mesh->render(camera);
 }
 
+// ----------------------------------------- class: Floor -------------------------------
+Floor::Floor()
+{
+    eName = OBJECT;
+    oName = FLOOR;
+
+    cfgMesh* cfgM = getCfgMesh(FLOOR);
+
+    // prova de errors
+    if (cfgM == NULL)
+        std::cout << "Error: Config not found" << std::endl;
+
+    // si no existeix la mesh
+    mesh = new EntityMesh(FLOOR, cfgM);
+}
+
+// ----------------------------------------- class: Block -------------------------------
+Block::Block(EntityMesh* m, Vector3 pos, eObjectName type)
+{
+    eName = OBJECT;
+    oName = type; 
+    model.setTranslation(pos);
+
+    // si existeix la mesh
+    if (m != NULL) {
+        mesh = m;
+        return;
+    }
+
+    cfgMesh* cfgM = getCfgMesh(type);
+
+    // prova de errors
+    if (cfgM == NULL)
+        std::cout << "Error: Config not found" << std::endl;
+
+    // si no existeix la mesh
+    mesh = new EntityMesh(oName, cfgM);
+}
+
 // ----------------------------------------- class: DinamicObject -------------------------------------
 void DinamicObject::setCfgD(eType type)
 {
@@ -111,7 +150,7 @@ void DinamicObject::setCfgD(eType type)
 
 bool DinamicObject::onCollision(Object* object, Vector3 position, float speed, Vector3& target)
 {
-    //calculamos la colision de 1 objeto
+    // calculamos la colision de 1 objeto
     Vector3 coll, norm;
     float target_y = target.y;
     Vector3 centreObject = Vector3(0,cfgD->radius,0);
@@ -120,11 +159,11 @@ bool DinamicObject::onCollision(Object* object, Vector3 position, float speed, V
     if (object->mesh == NULL || !object->mesh->mesh->testSphereBoundingCollision( object->model, centre, cfgD->radius, coll, norm))
         return false;
     
-    //actualizamos el objetivo
+    // actualizamos el objetivo
     Vector3 push_away = normalize(coll - position) * speed;
     target = position - push_away;
     
-    //comprovamos si el eje y es correcto
+    // comprovamos si el eje y es correcto
     target.y = target_y;
 
     return true;
@@ -162,45 +201,46 @@ void DinamicObject::respawn()
 // ----------------------------------------- class: Box -------------------------------
 Box::Box(EntityMesh* m, Vector3 pos)
 {
-    name = BOX;
+    eName = OBJECT;
+    oName = BOX;
     spawn = pos;
     setCfgD(dinamicsBox);
     physic = new Physics(physicsBox);
 
     respawn();
 
-    //si existeix la mesh
+    // si existeix la mesh
     if( m != NULL ){
         mesh = m;
         return;
     }
 
-    cfgMesh* cfgM = getCfgMesh(eBoxMesh);
+    cfgMesh* cfgM = getCfgMesh(BOX);
 
-    //prova de errors
+    // prova de errors
     if (cfgM == NULL)
         std::cout << "Error: Config not found" << std::endl;
 
-    //si no existeix la mesh
+    // si no existeix la mesh
     mesh = new EntityMesh(BOX, cfgM);
 }
 
 void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
-    //calculem la posicio
+    // calculem la posicio
     Vector3 position = model.getTranslation();
     Vector3 target = Vector3();
 
-    //comprovem que la caixa no estigui agafada
+    // comprovem que la caixa no estigui agafada
     if (isCatch)
         return;
     
-    //donem valors inicials
+    // donem valors inicials
     Object* object;
     isFalling = true;
     float minim_y = -1000;
 
-    //for para static_objects
+    // for para static_objects
     for (int i = 0; i < static_objects.size(); i++)
     {
         object = static_objects[i];
@@ -213,7 +253,7 @@ void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_obje
         minim_y = minimHeight(object, position, minim_y);
     }
 
-    //for para dinamic_objects
+    // for para dinamic_objects
     for (int i = 0; i < dinamic_objects.size(); i++)
     {
         object = dinamic_objects[i];
@@ -227,20 +267,20 @@ void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_obje
         minim_y = minimHeight(object, position, minim_y);
     }
 
-    //donem el valor minim
+    // donem el valor minim
     physic->min_y = minim_y;
 
-    //calculem el target
+    // calculem el target
     target = physic->updateMove(elapsed_time, position, isFalling);
 
-    //comprovem si esta per sota de la altura minim
+    // comprovem si esta per sota de la altura minim
     if(target.y < cfgD->dead_y){
         respawn();
         return;
     }
     
 
-    //aplicamos el movimiento
+    // aplicamos el movimiento
     model.setTranslation(target);
 }
 
@@ -261,60 +301,13 @@ void Box::movePicked(Matrix44 player)
     model.setFrontAndOrthonormalize(dir_d);
 }
 
-// ----------------------------------------- class: Floor -------------------------------
-Floor::Floor()
-{
-    name = FLOOR;
-
-    cfgMesh* cfgM = getCfgMesh(eFloorMesh);
-
-    //prova de errors
-    if (cfgM == NULL)
-        std::cout << "Error: Config not found" << std::endl;
-
-    //si no existeix la mesh
-    mesh = new EntityMesh(FLOOR, cfgM);
-}
-
-// ----------------------------------------- class: Block -------------------------------
-block2enumsM block2InfoM[SIZEOFBLOCK] = {
-    {BLOCKLARGE,eBLargeMesh},
-    {BLOCKLONG,eBLongMesh},
-    {BLOCKUNIT,eBUnitMesh},
-    {JEWEL,eJewelMesh},
-    {MUSHROOM,eMushroomMesh},
-    {ROCK,eRockMesh},
-    {WEED,eWeedMesh}
-};
-
-Block::Block(EntityMesh* m, Vector3 pos, eBlocktype type)
-{
-    name = block2InfoM[type].entity;
-    model.setTranslation(pos);
-
-    //si existeix la mesh
-    if (m != NULL) {
-        mesh = m;
-        return;
-    }
-
-    cfgMesh* cfgM = getCfgMesh(block2InfoM[type].mesh);
-
-    //prova de errors
-    if (cfgM == NULL)
-        std::cout << "Error: Config not found" << std::endl;
-
-    //si no existeix la mesh
-    mesh = new EntityMesh(name, cfgM);
-}
-
-
 // ----------------------------------------- class: Player -------------------------------
 Player::Player()
 {
     setCfgD(dinamicsPlayer);
     physic = new Physics(physicsPlayer);
-    name = eEntityName::PLAYER;
+    eName = OBJECT;
+    oName = PLAYER;
 
     // Busca la configuracio
     cfgGeneric* cfg = getCfg(player);
@@ -329,21 +322,21 @@ Player::Player()
 
 void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
-    //calculamos el target idial
+    // calculamos el target idial
     Vector3 position = model.getTranslation();
     float speed = elapsed_time * Speed;
     Vector3 target = position + dir * speed;
 
-    //calculamos las coliciones
+    // calculamos las coliciones
     Object* object;
     isFalling = true;
     float minim_y = -1000;
 
-    //for para static_objects
+    // for para static_objects
     for (int i = 0; i < static_objects.size(); i++)
     {
         object = static_objects[i];
-        if (object->name == MUSHROOM || object->name == ROCK || object->name == WEED)
+        if (object->oName == MUSHROOM || object->oName == ROCK || object->oName == WEED)
             continue;
         if(onCollision(object, position, speed, target))
             continue;
@@ -354,7 +347,7 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
         minim_y = minimHeight(object, position, minim_y);
     }
 
-    //for para dinamic_objects
+    // for para dinamic_objects
     for (int i = 0; i < dinamic_objects.size(); i++)
     {
         object = dinamic_objects[i];
@@ -367,22 +360,22 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
         minim_y = minimHeight(object, position, minim_y);
     }
 
-    //comprovem si esta per sota de la altura minim
+    // comprovem si esta per sota de la altura minim
     if(target.y < cfgD->dead_y){
         respawn();
         return;
     }
 
-    //donem el valor minim
+    // donem el valor minim
     physic->min_y = minim_y;
 
-    //calculem el target
+    // calculem el target
     target = physic->updateMove(elapsed_time, target, isFalling);
 
-    //aplicamos el movimiento
+    // aplicamos el movimiento
     model.setTranslation(target);
 
-    //mover la boxPicked
+    // mover la boxPicked
     if(boxPicked != NULL)
         boxPicked->movePicked(model);
 }
@@ -392,7 +385,7 @@ void Player::SelectBox(DinamicObject* picked)
     if (picked == NULL || boxPicked != NULL)
         return;
 
-    //codigo agafar Box
+    // codigo agafar Box
     boxPicked = picked;
     boxPicked->isCatch = false;
 }
@@ -402,7 +395,7 @@ void Player::LeaveBox()
     if (boxPicked == NULL) 
         return;
 
-    //codigo de soltar Box
+    // codigo de soltar Box
     boxPicked->isCatch = false;
     boxPicked->physic->vel.y = 0;
     boxPicked = NULL;

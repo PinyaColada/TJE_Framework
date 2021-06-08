@@ -5,7 +5,7 @@
 
 struct strObjType{
     const char* name;
-    eObjType type;
+    eObjectName type;
 };
 
 // funcions que es criden desde fora

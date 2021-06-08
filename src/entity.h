@@ -9,59 +9,16 @@
 #include "physics.h"
 #include "skin.h"
 
-enum eEntityName {
-    ENTITY,
-    MESH,
-    LIGHT,
-    PLAYER,
-    BOX,
-    FLOOR,
-    SKYBOX,
-    BLOCKLARGE,
-    BLOCKLONG,
-    BLOCKUNIT,
-    JEWEL,
-    MUSHROOM,
-    ROCK,
-    WEED
-};
-
-enum eBlocktype {
-    BLARGE,
-    BLONG,
-    BUNIT,
-    BJEWEL,
-    BMUSHROOM,
-    BROCK,
-    BWEED,
-
-    SIZEOFBLOCK,
-    NotUse = -1
-};
-
-struct block2enums
-{
-    eEntityName entity;
-    eObjType type;
-    eBlocktype extra;
-};
-
-struct block2enumsM
-{
-    eEntityName entity;
-    eCfgMesh mesh;
-};
-
 // ----------------------------------------- class: Entity -----------------------------------------
 class Entity
 {
 public:
     // Atributos
-    eEntityName name; 
+    eEntityName eName; 
     Matrix44 model;
 
     // Metodos
-    Entity(); //constructor
+    Entity();
   
     virtual void render(Camera* camera) = 0;
     virtual void update(float elapsed_time) = 0;
@@ -94,10 +51,10 @@ public:
     Texture* texture = NULL;
     Shader* shader = NULL;
     Vector4 color;
-    eEntityName object; 
+    eObjectName object; 
 
     // Metodos
-    EntityMesh(eEntityName obj, cfgMesh* cfgM = NULL);
+    EntityMesh(eObjectName obj, cfgMesh* cfgM = NULL);
  
     void render(Camera* camera, std::vector<EntityLight*> lights);
     void render(Camera* camera);
@@ -109,17 +66,38 @@ class Object : public Entity
 {
  public:
     // Atributos
+    eObjectName oName;
+
     EntityMesh* mesh = NULL;
 
     int idList;
 
     // Metodos
-    Object(){}; //constructor
+    Object(){};
     Object(EntityMesh* m) { mesh = m; };
 
     void render(Camera* camera, std::vector<EntityLight*> lights);
     void render(Camera* camera);
     void update(float dt){};
+};
+
+// ----------------------------------------- class: Floor -------------------------------
+class Floor : public Object
+{
+public:
+    // Metodos
+    Floor();
+};
+
+// ----------------------------------------- class: Block -------------------------------
+
+class Block : public Object
+{
+public:
+    // Atributos
+
+    // Metodos
+    Block(EntityMesh* m, Vector3 pos, eObjectName type);
 };
 
 // ----------------------------------------- class: DinamicObject -------------------------------------
@@ -133,14 +111,11 @@ class DinamicObject : public Object
     bool isFalling;
 
     cfgDinamic* cfgD;
-    // float radius = 3;
-    // float margen = 0.1;
-    // float dead_y = -200;
 
     Vector3 spawn;
 
     // Metodos
-    DinamicObject(){}; //constructor
+    DinamicObject(){};
 
     void setCfgD(eType type);
 
@@ -163,33 +138,11 @@ public:
     Vector3 playerPos;
 
     // Metodos
-    Box(EntityMesh* m,  Vector3 pos = Vector3(0,100,0)); //constructor
+    Box(EntityMesh* m,  Vector3 pos = Vector3(0,100,0));
 
     void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
     void movePicked(Matrix44 player);
-};
-
-// ----------------------------------------- class: Floor -------------------------------
-class Floor : public Object
-{
-public:
-    // Atributos
-
-    // Metodos
-    Floor(); //constructor
-};
-
-// ----------------------------------------- class: Block -------------------------------
-
-class Block : public Object
-{
-public:
-    // Atributos
-    eBlocktype type;
-    // Metodos
-    Block(EntityMesh* m, Vector3 pos, eBlocktype type);
-
 };
 
 // ----------------------------------------- class: Player -------------------------------
@@ -199,8 +152,6 @@ public:
     // Atributos
     cfgPlayer* cfgP;
     float Speed;
-
-    // Vector3 altura = Vector3(0, 70, 0);
 
     DinamicObject* boxPicked = NULL;
     

@@ -58,7 +58,7 @@ public:
     // Metodos
     World( int window_width, int window_height );
 
-    EntityMesh* searchMesh( eEntityName obj );
+    EntityMesh* searchMesh( eObjectName obj );
 
     void setCamera( int window_width, int window_height );
     void SelectBox();

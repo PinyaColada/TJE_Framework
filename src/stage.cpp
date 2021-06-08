@@ -4,12 +4,11 @@
 #include "entity.h"
 #include "loader.h"
 
-//float mouse_speed = 100.0f;
 float x_rotation;
 float y_rotation;
 Object* selectedObject;
 
-//------------------------------------ class: Stage  ----------------------------------------
+// ------------------------------------ class: Stage  ----------------------------------------
 void Stage::updateMouse()
 {
     mouse_locked = !mouse_locked;
@@ -29,7 +28,7 @@ eStageID Stage::passStage()
 	}
 }
 
-//------------------------------------ class: IntroStage  ----------------------------------
+// ------------------------------------ class: IntroStage  ----------------------------------
 IntroStage::IntroStage()
 {
 	idSatge = INTRO;
@@ -46,7 +45,7 @@ void IntroStage::Update(double elapsed_time)
 
 }
 
-//events
+// events
 void IntroStage::onKeyDown( SDL_KeyboardEvent event )
 {
 	isComplite = true;
@@ -57,7 +56,7 @@ void IntroStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 
 }
 
-//------------------------------------ class: MenuStage  ----------------------------------
+// ------------------------------------ class: MenuStage  ----------------------------------
 MenuStage::MenuStage()
 {
 	idSatge = MENU;
@@ -74,7 +73,7 @@ void MenuStage::Update(double elapsed_time)
 
 }
 
-//events
+// events
 void MenuStage::onKeyDown( SDL_KeyboardEvent event )
 {
 	isComplite = true;
@@ -85,13 +84,13 @@ void MenuStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 
 }
 
-//------------------------------------ class: PlayStage  ------------------------------------
+// ------------------------------------ class: PlayStage  ------------------------------------
 PlayStage::PlayStage()
 {
     idSatge = PLAY;
 	nextSatge = END;
 
-    //hide the cursor
+    // hide the cursor
     mouse_locked = false;
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
 }
@@ -106,10 +105,10 @@ void PlayStage::Render()
 	if(idmode == GAMEPLAY)
 		camera->lookAt(player->model.getTranslation() +  cfgP->altura, cfgP->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
     
-    //set the camera as default
+    // set the camera as default
 	camera->enable();
 
-	//set flags
+	// set flags
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -127,7 +126,7 @@ void PlayStage::Render()
 		skybox->render(camera);
 	}
 
-	//render objectes	
+	// render objectes	
 	for (int id = 0; id < scene->static_objects.size(); id++)
 	{
 		//for para static_objects	
@@ -270,7 +269,7 @@ void PlayStage::AddBoxInFront()
 	Vector3 pos = RayPlaneCollision(Vector3(), up, origin, dir);
 
 	// busque la mesh de la box
-	EntityMesh* mesh = world->searchMesh( eEntityName::BOX );
+	EntityMesh* mesh = world->searchMesh( BOX );
 
 	// creem la Box
 	Box* box = new Box(mesh, pos + Vector3(0, 1000, 0));
@@ -284,8 +283,13 @@ void PlayStage::AddBoxInFront()
     scene->dinamic_objects.push_back(box);
 }
 
-void PlayStage::addBlockInFront(eBlocktype type)
+void PlayStage::addBlockInFront(eObjectName type)
 {
+	if(!hasBlock(type))
+	{
+		return;
+	}
+
 	Camera* camera = world->camera;
 	Scene* scene = world->scenes[world->current_scene];
 
@@ -296,17 +300,7 @@ void PlayStage::addBlockInFront(eBlocktype type)
 	Vector3 pos = RayPlaneCollision(Vector3(), up, origin, dir);
 
 	// busque la mesh del Block
-	EntityMesh* mesh = NULL;
-	switch (type) {
-	case BLARGE: mesh = world->searchMesh(BLOCKLARGE); break;
-	case BLONG: mesh = world->searchMesh(BLOCKLONG); break;
-	case BUNIT: mesh = world->searchMesh(BLOCKUNIT); break;
-	case BJEWEL: mesh = world->searchMesh(JEWEL); break;
-	case BMUSHROOM: mesh = world->searchMesh(MUSHROOM); break;
-	case BROCK: mesh = world->searchMesh(ROCK); break;
-	case BWEED: mesh = world->searchMesh(WEED); break;
-	default: break;
-	}
+	EntityMesh* mesh = world->searchMesh(type);
 
 	// creem el Block
 	Block* block = new Block(mesh, pos, type);
@@ -320,14 +314,14 @@ void PlayStage::addBlockInFront(eBlocktype type)
 	scene->static_objects.push_back(block);
 }
 
-//events
+// events
 void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 {
 	switch (idmode) {
 		case GAMEPLAY: {
 			switch (event.keysym.sym) {
 				case SDLK_3: idmode = EDIT; break;
-				case SDLK_4: world->changeScene(eScene( (world->current_scene+1) % SIZEOFSCENE )); break;
+				case SDLK_4: world->changeScene(eScene( (world->current_scene+1) % world->scenes.size() )); break;
 			}
 			break;
 		}
@@ -341,15 +335,15 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 						world->player->LeaveBox();
 					break;
 				case SDLK_3: idmode = GAMEPLAY; break;
-				case SDLK_4: world->changeScene(eScene( (world->current_scene+1) % SIZEOFSCENE )); break;
-				case SDLK_5: addBlockInFront(BLARGE); break;
-				case SDLK_6: addBlockInFront(BLONG); break;
-				case SDLK_7: addBlockInFront(BUNIT); break;
+				case SDLK_4: world->changeScene(eScene( (world->current_scene+1) % world->scenes.size() )); break;
+				case SDLK_5: addBlockInFront(BLOCKLARGE); break;
+				case SDLK_6: addBlockInFront(BLOCKLONG); break;
+				case SDLK_7: addBlockInFront(BLOCKUNIT); break;
 				case SDLK_8: world->editMap(); break;
-				case SDLK_z: addBlockInFront(BJEWEL); break;
-				case SDLK_x: addBlockInFront(BMUSHROOM); break;
-				case SDLK_c: addBlockInFront(BROCK); break;
-				case SDLK_v: addBlockInFront(BWEED); break;
+				case SDLK_z: addBlockInFront(JEWEL); break;
+				case SDLK_x: addBlockInFront(MUSHROOM); break;
+				case SDLK_c: addBlockInFront(ROCK); break;
+				case SDLK_v: addBlockInFront(WEED); break;
 				case SDLK_F3: isComplite = true; break;
 				case SDLK_F4: SaveLevel(world->SaveScene()); break;
 			}
@@ -377,7 +371,7 @@ void PlayStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 	}
 }
 
-//------------------------------------ class: EndStage  ----------------------------------
+// ------------------------------------ class: EndStage  ----------------------------------
 EndStage::EndStage()
 {
 	idSatge = END;
@@ -394,7 +388,7 @@ void EndStage::Update(double elapsed_time)
 
 }
 
-//events
+// events
 void EndStage::onKeyDown( SDL_KeyboardEvent event )
 {
 	isComplite = true;

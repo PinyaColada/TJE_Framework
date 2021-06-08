@@ -50,21 +50,19 @@ World::World( int window_width, int window_height )
 
     current_scene = DEMO;
 
-    // A partir de aqui empezamos a cargar el mapa.
-
     player = new Player();
     changeScene(current_scene);
 }
 
 void World::setCamera( int window_width, int window_height )
 {
-    //create our camera
+    // create our camera
 	camera = new Camera();
 	camera->lookAt(Vector3(0.f,100.f, 100.f),Vector3(1.f,0.f,0.f), Vector3(0.f,1.f,0.f)); //position the camera and point to 0,0,0
 	camera->setPerspective(70.f,window_width/(float)window_height,0.1f,10000.f); //set the projection, we want to be perspective
 }
 
-EntityMesh* World::searchMesh( eEntityName obj )
+EntityMesh* World::searchMesh( eObjectName obj )
 {
     EntityMesh* mesh;
     
@@ -97,7 +95,7 @@ void World::SelectBox()
         pos = object->getPosition();
 
         if (object->mesh == NULL) continue;
-        if (object->name != BOX) continue;
+        if (object->oName != BOX) continue;
 
         mesh = object->mesh->mesh;
 
@@ -162,20 +160,6 @@ void World::changeScene(eScene nextScene)
     player->respawn();
 }
 
-// lista de enums per trobar quin amb quin al carregar (ORDENAR PER eObjType DE skin.h!!!)
-block2enums block2Info[SIZEOFOT] = {
-    {PLAYER,ePlayer, NotUse},
-    {FLOOR,eFloor, NotUse},
-    {BLOCKLARGE,eBLarge, BLARGE},
-    {BLOCKLONG,eBLong, BLONG},
-    {BLOCKUNIT,eBUnit, BUNIT},
-    {BOX,eBox, NotUse},
-    {JEWEL,eJewel, BJEWEL},
-    {MUSHROOM,eMushroom, BMUSHROOM},
-    {ROCK,eRock, BROCK},
-    {WEED,eWeed, BWEED}
-};
-
 // guardar i carregar Scenes
 NameLevel TableSceneNames[SIZEOFSCENE] = {
     {"DEMO",DEMO},
@@ -194,29 +178,20 @@ Level* World::SaveScene()
     level->Skybox = *cfgSB;
 
     // Player
-    DinamicObj* sPlayer = new DinamicObj{ePlayer, player->model.getTranslation() + Vector3(0,120,0)};
+    DinamicObj* sPlayer = new DinamicObj{PLAYER, player->model.getTranslation() + Vector3(0,120,0)};
     level->player = *sPlayer;
 
     Object* object;
-    eObjType type;
+
     // llista de Statics
     StaticObj sObjs[MAXOBJ];
     int max = 0;
     for (int id = 0; id < scene->static_objects.size() && id < MAXOBJ; id++)
     {
         object = scene->static_objects[id];
-        // buscar el type
-        for(int i = 0; i < sizeof(block2Info)/sizeof(block2enums); i++)
-        {
-            if(object->name != block2Info[i].entity) 
-                continue;
-
-            type = block2Info[i].type;
-            break;
-        }
 
         // afegir el elemnt a la llista
-        level->sObjs[id] = *(new StaticObj{type, object->model.getTranslation(), object->model.getTranslation()}); // falta la rotacio
+        level->sObjs[id] = *(new StaticObj{object->oName, object->model.getTranslation(), object->model.getTranslation()}); // falta la rotacio
         max++;
     }
     level->numSObj = max;
@@ -227,18 +202,9 @@ Level* World::SaveScene()
     for (int id = 0; id < scene->dinamic_objects.size() && id < MAXOBJ; id++)
     {
         object = scene->dinamic_objects[id];
-        // buscar el type
-        for(int i = 0; i < sizeof(block2Info)/sizeof(block2enums); i++)
-        {
-            if(object->name != block2Info[i].entity) 
-                continue;
-
-            type = block2Info[i].type;
-            break;
-        }
         
         // afegir el elemnt a la llista
-        level->dObjs[id] = *(new DinamicObj{type, object->model.getTranslation() + Vector3(0,120,0)});
+        level->dObjs[id] = *(new DinamicObj{object->oName, object->model.getTranslation() + Vector3(0,120,0)});
         max++;
     }
     level->numDObj = max;
@@ -268,7 +234,7 @@ void World::LoadScene(Level* level)
     }
 
     // player spawn
-    if(level->player.type != ePlayer)
+    if(level->player.type != PLAYER)
     {
         std::cout << "Error: spawn of player nt fount" << std::endl;
         return;
@@ -294,7 +260,6 @@ void World::LoadScene(Level* level)
     scene->getSkybox(level->Skybox.mesh, level->Skybox.texture);
 
     EntityMesh* m;
-    eEntityName name;
 
     // llista statica
     StaticObj sobj;
@@ -302,41 +267,21 @@ void World::LoadScene(Level* level)
     for(int i = 0; i < level->numSObj; i++)
     {
         sobj = level->sObjs[i];
-        switch (sobj.type)
+        if(!hasBlock(sobj.type))
+            continue;
+        
+        m = searchMesh(sobj.type);
+        objb = new Block(m, sobj.pos, sobj.type); // falta la rotacio implemetar en el constructor
+
+        // afeges la mesh del obj si no estaba
+        if( m == NULL )
         {
-            case eBLarge:
-            case eBLong:
-            case eBUnit:
-            case eJewel:
-            case eMushroom:
-            case eRock:
-            case eWeed:
-            {
-                if (block2Info[sobj.type].extra == NotUse)
-                {
-                    std::cout << "Error: type Static Uncorrect" << std::endl;
-                    break;
-                }
-                name = block2Info[sobj.type].entity;
-                m = searchMesh(name);
-                objb = new Block(m, sobj.pos, block2Info[sobj.type].extra); // falta la rotacio implemetar en el constructor
-
-                // afeges la mesh del obj si no estaba
-                if( m == NULL )
-                {
-		            meshs.push_back(objb->mesh);
-	            }
-
-                // afegim la Box a la llista de objectes
-                objb->idList = scene->dinamic_objects.size();
-                scene->static_objects.push_back(objb);
-
-                break;
-            }
-            default:
-                std::cout << "Error: Object Static Unespectet" << std::endl;
-                break;
+            meshs.push_back(objb->mesh);
         }
+
+        // afegim la Box a la llista de objectes
+        objb->idList = scene->dinamic_objects.size();
+        scene->static_objects.push_back(objb);
     }
     // llista dinamica
     DinamicObj dobj;
@@ -346,10 +291,9 @@ void World::LoadScene(Level* level)
         dobj = level->dObjs[i];
         switch (dobj.type)
         {
-            case eBox:
+            case BOX:
             {
-                name = block2Info[dobj.type].entity;
-                m = searchMesh(name);
+                m = searchMesh(dobj.type);
                 objd = new Box(m, dobj.pos);
 
                 // afeges la mesh del obj si no estaba
@@ -365,7 +309,7 @@ void World::LoadScene(Level* level)
                 break;
             }
             default:
-                std::cout << "Error: Object Dinamic Unespectet" << std::endl;
+                std::cout << "Error: " << TableObj2str[sobj.type].name << " has not Dinamic" << std::endl;
                 break;
         }
     }

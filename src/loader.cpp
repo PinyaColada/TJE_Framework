@@ -2,19 +2,6 @@
 #include "framework.h"
 #include <string.h>
 
-strObjType nameType[SIZEOFOT] = {
-    {"ePlayer",ePlayer},
-    {"eFloor",eFloor},
-    {"eBLarge",eBLarge},
-    {"eBLong",eBLong},
-    {"eBUnit",eBUnit},
-    {"eBox",eBox},
-    {"eJewel",eJewel},
-    {"eMushroom",eMushroom},
-    {"eRock",eRock},
-    {"eWeed",eWeed}
-};
-
 // funcions que es criden desde fora
 void SaveLevel(Level* level)
 {
@@ -31,9 +18,9 @@ void SaveLevel(Level* level)
     fprintf(f,"### %s\n\n", level->name);
 
     // Skybox
-    if (level->Skybox.name == eSkybox)
+    if (level->Skybox.name == SKYBOX)
     {
-        fprintf(f,"<<< %s\n", "eSkybox");
+        fprintf(f,"<<< %s\n", "SKYBOX");
         fprintf(f,"tex: %s\n", level->Skybox.texture);
         fprintf(f,">>>\n\n");
     }
@@ -41,9 +28,9 @@ void SaveLevel(Level* level)
         std::cout << "Skybox not found" << std::endl;
 
     // Player
-    if (level->player.type == ePlayer)
+    if (level->player.type == PLAYER)
     {
-        fprintf(f,"<<< %s\n", "ePlayer");
+        fprintf(f,"<<< %s\n", "PLAYER");
         fprintf(f,"p: "); level->player.pos.exportVector(f);
         fprintf(f,">>>\n\n");
     }
@@ -57,10 +44,10 @@ void SaveLevel(Level* level)
     for(int i = 0; i < level->numSObj; i++)
     {
         sobj = level->sObjs[i];
-        if(sobj.type == eFloor)
+        if(sobj.type == FLOOR)
             continue;
 
-        fprintf(f,"--- %s\n", nameType[sobj.type].name);
+        fprintf(f,"--- %s\n", TableObj2str[sobj.type].name);
         fprintf(f,"p: "); sobj.pos.exportVector(f);
         fprintf(f,"r: "); sobj.rot.exportVector(f);
     }
@@ -74,10 +61,10 @@ void SaveLevel(Level* level)
     for(int i = 0; i < level->numDObj; i++)
     {
         dobj = level->dObjs[i];
-        if(dobj.type == eFloor)
+        if(dobj.type == FLOOR)
             continue;
         
-        fprintf(f,"--- %s\n", nameType[dobj.type].name);
+        fprintf(f,"--- %s\n", TableObj2str[dobj.type].name);
         fprintf(f,"p: "); dobj.pos.exportVector(f);
     }
 
@@ -124,7 +111,7 @@ Level* LoadLevel(const char* filename)
     
     // variables del while
     float x,y,z;
-    eObjType type;
+    eObjectName type;
     StaticObj* SObj;
     DinamicObj* DObj;
     while (feof(f) == 0)
@@ -136,13 +123,13 @@ Level* LoadLevel(const char* filename)
             continue;
 
         // Skybox
-        if((pch1 = strstr(pch+3, "eSkybox")) != NULL)
+        if((pch1 = strstr(pch+3, "SKYBOX")) != NULL)
         {
             while (feof(f) == 0)
             {
                 fgets(line, 100, f);
                 
-                //textura
+                // textura
                 if((pch = strstr(line, "tex:")) != NULL)
                 {
                     sscanf(pch+4, " %s", tex);
@@ -158,7 +145,7 @@ Level* LoadLevel(const char* filename)
             }
         }
         // Player
-        else if((pch1 = strstr(pch+3, "ePlayer")) != NULL)
+        else if((pch1 = strstr(pch+3, "PLAYER")) != NULL)
         {
             while (feof(f) == 0)
             {
@@ -170,7 +157,7 @@ Level* LoadLevel(const char* filename)
                     x = 0; y = 0; z = 0;
                     sscanf(pch+2, " (%f,%f,%f)", &x,&y,&z);
 
-                    DinamicObj* sPlayer = new DinamicObj{ePlayer, Vector3(x,y,z)};
+                    DinamicObj* sPlayer = new DinamicObj{PLAYER, Vector3(x,y,z)};
                     level->player = *sPlayer;
                 }
                 // tag de fi
@@ -197,16 +184,16 @@ Level* LoadLevel(const char* filename)
 
                     // buscar la type de la linea
                     pch += 3;
-                    type = eFloor;
+                    type = FLOOR;
 
-                    for (int i = 0; type == eFloor && i < SIZEOFOT; i++)
+                    for (int i = 0; type == FLOOR && i < SIZEOFOBJ; i++)
                     {
                         // si es el element
-                        if(strstr(pch, nameType[i].name) != NULL) 
-                            type = nameType[i].type;
+                        if(strstr(pch, TableObj2str[i].name) != NULL) 
+                            type = TableObj2str[i].type;
                     }
 
-                    if (type == eFloor)
+                    if (type == FLOOR)
                         continue;
                     
                     SObj->type = type;
@@ -253,16 +240,16 @@ Level* LoadLevel(const char* filename)
 
                     // buscar la type de la linea
                     pch += 3;
-                    type = eFloor;
+                    type = FLOOR;
 
-                    for (int i = 0; type == eFloor && i < SIZEOFOT; i++)
+                    for (int i = 0; type == FLOOR && i < SIZEOFOBJ; i++)
                     {
                         // si es el element
-                        if(strstr(pch, nameType[i].name) != NULL) 
-                            type = nameType[i].type;
+                        if(strstr(pch, TableObj2str[i].name) != NULL) 
+                            type = TableObj2str[i].type;
                     }
 
-                    if (type == eFloor)
+                    if (type == FLOOR)
                         continue;
                     
                     DObj->type = type;
