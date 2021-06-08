@@ -21,3 +21,11 @@ minSpeed: 60
 altura: 0,70,0
 
 >>>
+
+<<< type: box
+
+max_h: 100
+min_h: 0
+distPicked: 50
+
+>>>

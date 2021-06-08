@@ -8,8 +8,16 @@
 // ----------------------------------------- class: Entity -----------------------------------------
 Entity::Entity(){}
 
-Vector3 Entity::getPosition() { return Vector3(1,1,1); } 
+Vector3 Entity::getPosition() { return model.getTranslation(); } 
 Vector3 Entity::getDir() { return model.frontVector(); }
+
+// ----------------------------------------- class: EntityLight -------------------------------	
+EntityLight::EntityLight(Vector3 pos, Vector3 target, Vector3 color, float intensity) {
+    model.setTranslation(pos);
+    model.setFrontAndOrthonormalize(target);
+    this->color = color;
+    this->intensity = intensity;
+}
 
 // ----------------------------------------- class: EntityMesh -------------------------------------
 EntityMesh::EntityMesh(eObjectName obj, cfgMesh* cfgM)
@@ -63,8 +71,8 @@ void EntityMesh::render(Camera* camera, std::vector<EntityLight*> lights)
     shader->setTexture("u_texture", texture, 0);
 
     shader->setUniform("u_light_color", lights[0]->color);
-    shader->setUniform("u_light_pos", lights[0]->model.getTranslation());
-    shader->setUniform("u_light_target", lights[0]->model.frontVector());
+    shader->setUniform("u_light_pos", lights[0]->getPosition());
+    shader->setUniform("u_light_target", lights[0]->getDir());
     shader->setUniform("u_light_intensity", lights[0]->intensity);
 
     shader->setUniform("u_ambient_light", ambient_light);
@@ -207,6 +215,14 @@ Box::Box(EntityMesh* m, Vector3 pos)
     setCfgD(dinamicsBox);
     physic = new Physics(physicsBox);
 
+    // Busca la configuracio
+    cfgGeneric* cfg = getCfg(box);
+
+    if (cfg != NULL && ((cfgGeneric*)cfg)->type == box)
+        cfgB = (cfgBox*) cfg;
+    else
+        cfgB = new cfgBox();
+
     respawn();
 
     // si existeix la mesh
@@ -228,7 +244,7 @@ Box::Box(EntityMesh* m, Vector3 pos)
 void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
     // calculem la posicio
-    Vector3 position = model.getTranslation();
+    Vector3 position = getPosition();
     Vector3 target = Vector3();
 
     // comprovem que la caixa no estigui agafada
@@ -284,21 +300,76 @@ void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_obje
     model.setTranslation(target);
 }
 
-void Box::movePicked(Matrix44 player)
+void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
+    Vector3 pos = getPosition();
+    // calcul del moviment ideal
     Vector3 dir = player.frontVector();
 
-    float h = 100 * (clamp(dir.y, -0.6, 0.7) + 0.6);
-    h = clamp(h, 0, 100);
+    float h = cfgB->max_h * (clamp(dir.y, -0.6, 0.7) + 0.6);
+    h = clamp(h, cfgB->min_h, cfgB->max_h);
 
     dir = Vector3(dir.x, 0, dir.z).normalize();
 
-    Vector3 dir_p = 50 * dir;
-    Vector3 dir_d = 100 * dir;
-    Vector3 pos = player.getTranslation() + Vector3(0,h,0) + dir_p;
+    // aplica la rotacio
+    Vector3 rot = dir;
 
-    model.setTranslation(pos);
-    model.setFrontAndOrthonormalize(dir_d);
+    // calcul del target
+    Vector3 target = player.getTranslation() + Vector3(0,h,0) + cfgB->distPicked * dir;
+    dir = target - pos;
+    double modul = dir.length();
+    // proba de errors
+    if(modul == 0)
+    {
+        model.setTranslation(target);
+        model.setFrontAndOrthonormalize(rot);
+        return;
+    }
+
+    // calcul de variables pels fors
+    dir = dir.normalize();
+    Object* object;
+    Vector3 coll, norm;
+    float rad = cfgD->radius;
+    Vector3 center = pos + Vector3(0,rad,0);
+    float minim_y = -1000;
+
+    // for para static_objects
+    for (int i = 0; i < static_objects.size() && modul != 0; i++)
+    {
+        object = static_objects[i];
+        if (object->oName == MUSHROOM || object->oName == ROCK || object->oName == WEED)
+            continue;
+        minim_y = minimHeight(object, pos, minim_y);
+        if (!object->mesh->mesh->testRayBoundingCollision( object->model, center, dir, coll, norm, modul))
+            continue;
+
+        modul = (coll-center).length() - rad;
+    }
+    // for para dinamic_objects
+    for (int i = 0; i < dinamic_objects.size() && modul != 0; i++)
+    {
+        object = dinamic_objects[i];
+        if(object->idList == idList)
+            continue;
+        minim_y = minimHeight(object, pos, minim_y);
+        if (!object->mesh->mesh->testRayBoundingCollision( object->model, center, dir, coll, norm, modul))
+            continue;
+
+        modul = (coll-center).length() - rad;
+    }
+    // calcula la minima y
+    target = pos + dir * modul;
+    target.clampY(minim_y, 1000);
+
+    // calcula la nova rotacio
+    rot = target - player.getTranslation();
+    rot = Vector3(rot.x, 0, rot.z).normalize();
+
+    // aplica el canvi
+    model.setTranslation(target);
+    model.setFrontAndOrthonormalize(rot);
+
 }
 
 // ----------------------------------------- class: Player -------------------------------
@@ -323,7 +394,7 @@ Player::Player()
 void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
     // calculamos el target idial
-    Vector3 position = model.getTranslation();
+    Vector3 position = getPosition();
     float speed = elapsed_time * Speed;
     Vector3 target = position + dir * speed;
 
@@ -377,7 +448,7 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
 
     // mover la boxPicked
     if(boxPicked != NULL)
-        boxPicked->movePicked(model);
+        boxPicked->movePicked(model, static_objects, dinamic_objects);
 }
 
 void Player::SelectBox(DinamicObject* picked)
@@ -399,12 +470,4 @@ void Player::LeaveBox()
     boxPicked->isCatch = false;
     boxPicked->physic->vel.y = 0;
     boxPicked = NULL;
-}
-
-// ----------------------------------------- class: EntityLight -------------------------------	
-EntityLight::EntityLight(Vector3 pos, Vector3 target, Vector3 color, float intensity) {
-    model.setTranslation(pos);
-    model.setFrontAndOrthonormalize(target);
-    this->color = color;
-    this->intensity = intensity;
 }

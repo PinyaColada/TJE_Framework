@@ -121,7 +121,7 @@ class DinamicObject : public Object
 
     virtual void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
 
-    virtual void movePicked(Matrix44 player) = 0;
+    virtual void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
 
     bool onCollision(Object* object, Vector3 position, float speed, Vector3& target);
     bool hasGround(Object* object, Vector3 position);
@@ -135,14 +135,15 @@ class Box : public DinamicObject
 {
 public:
     // Atributos
-    Vector3 playerPos;
+    cfgBox* cfgB;
 
     // Metodos
     Box(EntityMesh* m,  Vector3 pos = Vector3(0,100,0));
 
     void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
-    void movePicked(Matrix44 player);
+    void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
+    //void movePicked2(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 };
 
 // ----------------------------------------- class: Player -------------------------------
@@ -160,7 +161,7 @@ public:
 
     void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
-    void movePicked(Matrix44 player){};
+    void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects){};
 
     void SelectBox(DinamicObject* picked);
     void LeaveBox();

@@ -8,6 +8,7 @@ enum eType {
     dinamicsBox,
     dinamicsPlayer,
     player,
+    box,
     physicsBox,
     physicsPlayer,
 
@@ -72,6 +73,21 @@ public:
 
     // Metodes
     cfgPlayer(eType name = DEFAULT);
+
+    void ReadCfg(FILE* f);
+};
+
+// ---------- class: cfgBox ----------
+class cfgBox : public cfgGeneric 
+{
+public:
+    // Atributs
+    float max_h;
+    float min_h;
+    float distPicked;
+
+    // Metodes
+    cfgBox(eType name = DEFAULT);
 
     void ReadCfg(FILE* f);
 };

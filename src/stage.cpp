@@ -6,7 +6,6 @@
 
 float x_rotation;
 float y_rotation;
-Object* selectedObject;
 
 // ------------------------------------ class: Stage  ----------------------------------------
 void Stage::updateMouse()
@@ -103,7 +102,7 @@ void PlayStage::Render()
 
 	// moure la camera a la pos del player
 	if(idmode == GAMEPLAY)
-		camera->lookAt(player->model.getTranslation() +  cfgP->altura, cfgP->altura + player->model.getTranslation() + player->model.frontVector(), Vector3(0,1.01,0));
+		camera->lookAt(player->getPosition() +  cfgP->altura, cfgP->altura + player->getPosition() + player->getDir(), Vector3(0,1.01,0));
     
     // set the camera as default
 	camera->enable();
@@ -198,7 +197,7 @@ void PlayStage::Update(double elapsed_time)
 			player->Speed = speed; // guardem els canvis de speed
 
 			// Calculem el moviment del player
-			Vector3 aux(player->model.frontVector().x, 0, player->model.frontVector().z);
+			Vector3 aux(player->getDir().x, 0, player->getDir().z);
 			aux = aux.normalize();
 			dir = Vector3();
 			

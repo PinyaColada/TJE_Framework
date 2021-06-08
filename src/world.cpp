@@ -178,7 +178,7 @@ Level* World::SaveScene()
     level->Skybox = *cfgSB;
 
     // Player
-    DinamicObj* sPlayer = new DinamicObj{PLAYER, player->model.getTranslation() + Vector3(0,120,0)};
+    DinamicObj* sPlayer = new DinamicObj{PLAYER, player->getPosition() + Vector3(0,120,0)};
     level->player = *sPlayer;
 
     Object* object;
@@ -191,7 +191,7 @@ Level* World::SaveScene()
         object = scene->static_objects[id];
 
         // afegir el elemnt a la llista
-        level->sObjs[id] = *(new StaticObj{object->oName, object->model.getTranslation(), object->model.getTranslation()}); // falta la rotacio
+        level->sObjs[id] = *(new StaticObj{object->oName, object->getPosition(), object->getPosition()}); // falta la rotacio
         max++;
     }
     level->numSObj = max;
@@ -204,7 +204,7 @@ Level* World::SaveScene()
         object = scene->dinamic_objects[id];
         
         // afegir el elemnt a la llista
-        level->dObjs[id] = *(new DinamicObj{object->oName, object->model.getTranslation() + Vector3(0,120,0)});
+        level->dObjs[id] = *(new DinamicObj{object->oName, object->getPosition() + Vector3(0,120,0)});
         max++;
     }
     level->numDObj = max;

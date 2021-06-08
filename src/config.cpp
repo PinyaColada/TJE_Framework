@@ -8,9 +8,42 @@ strNameCfg namesCfg[SIZEOFCFG] = {
     {"dinamicsBox",dinamicsBox},
     {"dinamicsPlayer",dinamicsPlayer},
     {"player",player},
+    {"box",box},
     {"physicsBox",physicsBox},
     {"physicsPlayer",physicsPlayer},
 };
+
+// guarda un float
+bool setFloat(float &var, char* line, const char* par, int dim)
+{
+    char* pch;
+    if((pch = strstr(line, par)) != NULL)
+    {
+        var = atof(pch + dim);
+        return true;
+    }
+    else
+        return false;
+}
+
+// guarda un Vector3
+bool setVector3(Vector3 &var, char* line, const char* par, int dim)
+{
+    char* pch;
+    if((pch = strstr(line, par)) != NULL)
+    {
+        // per agafar el valors separats per ","
+        char* token = strtok(pch + dim, ",");
+        for (int i = 0; i < 3 && token != NULL; i++)
+        {
+            var[i] = atof(token);
+            token = strtok(NULL, ",");
+        }
+        return true;
+    }
+    else
+        return false;
+}
 
 // ---------- class: cfgPhysics ----------
 cfgPhysics::cfgPhysics(eType name)
@@ -27,32 +60,18 @@ void cfgPhysics::ReadCfg(FILE* f)
 {
         // per cada linea
     char line[100];
-    char* pch;
 
     while (feof(f) == 0)
     {
         fgets(line, 100, f);
 
-        // g
-        if((pch = strstr(line, "g:")) != NULL)
-        {
-            g = atof(pch+2);
-        }
-        // g_jump
-        else if((pch = strstr(line, "g_jump:")) != NULL)
-        {
-            g_jump = atof(pch+7);
-        }
-        // v_jump
-        else if((pch = strstr(line, "v_jump:")) != NULL)
-        {
-            v_jump = atof(pch+7);
-        }
-
+        // set parametres
+        if (setFloat( g, line, "g:", 2)) {}
+        else if (setFloat( g_jump, line, "g_jump:", 7)) {}
+        else if (setFloat( v_jump, line, "v_jump:", 7)) {}
         // tag fin
         else if(strstr(line, ">>>") != NULL) 
             break;
-
         else if (strlen(line) > 1)
             std::cout << "Line error: \"" << line << "\""<< std::endl;
     }
@@ -73,32 +92,18 @@ void cfgDinamic::ReadCfg(FILE* f)
 {
         // per cada linea
     char line[100];
-    char* pch;
 
     while (feof(f) == 0)
     {
         fgets(line, 100, f);
 
-        // radius
-        if((pch = strstr(line, "radius:")) != NULL)
-        {
-            radius = atof(pch+7);
-        }
-        // margen
-        else if((pch = strstr(line, "margen:")) != NULL)
-        {
-            margen = atof(pch+7);
-        }
-        // dead_y
-        else if((pch = strstr(line, "dead_y:")) != NULL)
-        {
-            dead_y = atof(pch+7);
-        }
-
+        // set parametres
+        if (setFloat( radius, line, "radius:", 7)) {}
+        else if (setFloat( margen, line, "margen:", 7)) {}
+        else if (setFloat( dead_y, line, "dead_y:", 7)) {}
         // tag fin
         else if(strstr(line, ">>>") != NULL) 
             break;
-
         else if (strlen(line) > 1)
             std::cout << "Line error: \"" << line << "\""<< std::endl;
     }
@@ -119,38 +124,50 @@ void cfgPlayer::ReadCfg(FILE* f)
 {
         // per cada linea
     char line[100];
-    char* pch;
 
     while (feof(f) == 0)
     {
         fgets(line, 100, f);
 
-        // maxSpeed
-        if((pch = strstr(line, "maxSpeed:")) != NULL)
-        {
-            maxSpeed = atof(pch+9);
-        }
-        // minSpeed
-        else if((pch = strstr(line, "minSpeed:")) != NULL)
-        {
-            minSpeed = atof(pch+9);
-        }
-        // altura
-        else if((pch = strstr(line, "altura:")) != NULL)
-        {
-            // per agafar el valors separats per ","
-            char* token = strtok(pch+7, ",");
-            for (int i = 0; i < 3 && token != NULL; i++)
-            {
-                altura[i] = atof(token);
-                token = strtok(NULL, ",");
-            }
-        }
-
+        // set parametres
+        if (setFloat( maxSpeed, line, "maxSpeed:", 9)) {}
+        else if (setFloat( minSpeed, line, "minSpeed:", 9)) {}
+        else if (setVector3( altura, line, "altura:", 7)) {}
         // tag fin
         else if(strstr(line, ">>>") != NULL) 
             break;
+        else if (strlen(line) > 1)
+            std::cout << "Line error: \"" << line << "\""<< std::endl;
+    }
+}
 
+// ---------- class: cfgBox ----------
+cfgBox::cfgBox(eType name)
+{
+    type = name;
+
+    // valors per defecte
+    max_h = 100;
+    min_h = 0;
+    distPicked = 50;
+}
+
+void cfgBox::ReadCfg(FILE* f)
+{
+        // per cada linea
+    char line[100];
+
+    while (feof(f) == 0)
+    {
+        fgets(line, 100, f);
+
+        // set parametres
+        if (setFloat( max_h, line, "max_h:", 6)) {}
+        else if (setFloat( min_h, line, "min_h:", 6)) {}
+        else if (setFloat( distPicked, line, "distPicked:", 11)) {}
+        // tag fin
+        else if(strstr(line, ">>>") != NULL) 
+            break;
         else if (strlen(line) > 1)
             std::cout << "Line error: \"" << line << "\""<< std::endl;
     }
@@ -176,6 +193,12 @@ void InitCfg()
             case player:
             {
                 cfgPlayer* cfg = new cfgPlayer(name);
+                cfgTable[name] = cfg;
+                break;
+            }
+            case box:
+            {
+                cfgBox* cfg = new cfgBox(name);
                 cfgTable[name] = cfg;
                 break;
             }
