@@ -37,6 +37,7 @@ public:
 
     void defaultScene();
 };
+
 // ----------------------------------------- class: World -----------------------------------------
 class World
 {
@@ -65,6 +66,7 @@ public:
     void editMap();
 
     void changeScene(eScene nextScene);
+    void respawn();
 
     // guardar i carregar Scenes
     Level* SaveScene();

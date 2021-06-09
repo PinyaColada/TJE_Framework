@@ -33,6 +33,20 @@ bool hasBlock(eObjectName type)
     }
 }
 
+bool hasCollition(eObjectName type)
+{
+    switch (type)
+    {
+        case MUSHROOM:
+        case ROCK:
+        case WEED:
+            return false;
+        
+        default:
+            return true;
+    }
+}
+
 // ---------- carregar Meshs ----------
 cfgMesh* cfgTableMesh[SIZEOFOBJ];
 

@@ -35,6 +35,7 @@ struct Object2str {
 
 extern Object2str TableObj2str[SIZEOFOBJ];
 extern bool hasBlock(eObjectName type);
+extern bool hasCollition(eObjectName type);
 
 // ---------- carregar Meshs ----------
 struct cfgMesh

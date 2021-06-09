@@ -153,11 +153,26 @@ void World::changeScene(eScene nextScene)
     // caniar el current
     current_scene = nextScene;
 
-    // deixar les caixa
+    // respawn
+    respawn();
+}
+
+void World::respawn()
+{
+    // deixar box
     player->LeaveBox();
-    
-    // respawn el player
+
+    // respawn player
     player->respawn();
+
+    // respawn objectes dinamics
+    Scene* scene = scenes[current_scene];
+    DinamicObject* object;
+	for (int i = 0; i < scene->dinamic_objects.size(); i++)
+	{ 
+		object = scene->dinamic_objects[i];
+		object->respawn();
+	}
 }
 
 // guardar i carregar Scenes

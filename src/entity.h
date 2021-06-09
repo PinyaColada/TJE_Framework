@@ -143,7 +143,6 @@ public:
     void move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
     void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
-    //void movePicked2(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 };
 
 // ----------------------------------------- class: Player -------------------------------

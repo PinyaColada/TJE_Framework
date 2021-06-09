@@ -260,6 +260,8 @@ void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_obje
     for (int i = 0; i < static_objects.size(); i++)
     {
         object = static_objects[i];
+        if (!hasCollition(object->oName))
+            continue;
         if(!isFalling)
             break;
         if(hasGround(object, position)){
@@ -303,6 +305,8 @@ void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_obje
 void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
     Vector3 pos = getPosition();
+    Vector3 playerPos = player.getTranslation();
+
     // calcul del moviment ideal
     Vector3 dir = player.frontVector();
 
@@ -315,7 +319,7 @@ void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
     Vector3 rot = dir;
 
     // calcul del target
-    Vector3 target = player.getTranslation() + Vector3(0,h,0) + cfgB->distPicked * dir;
+    Vector3 target = playerPos + Vector3(0,h,0) + cfgB->distPicked * dir;
     dir = target - pos;
     double modul = dir.length();
     // proba de errors
@@ -332,13 +336,13 @@ void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
     Vector3 coll, norm;
     float rad = cfgD->radius;
     Vector3 center = pos + Vector3(0,rad,0);
-    float minim_y = -1000;
+    float minim_y = cfgB->min_h + playerPos.y;
 
     // for para static_objects
     for (int i = 0; i < static_objects.size() && modul != 0; i++)
     {
         object = static_objects[i];
-        if (object->oName == MUSHROOM || object->oName == ROCK || object->oName == WEED)
+        if (!hasCollition(object->oName))
             continue;
         minim_y = minimHeight(object, pos, minim_y);
         if (!object->mesh->mesh->testRayBoundingCollision( object->model, center, dir, coll, norm, modul))
@@ -363,7 +367,7 @@ void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
     target.clampY(minim_y, 1000);
 
     // calcula la nova rotacio
-    rot = target - player.getTranslation();
+    rot = target - playerPos;
     rot = Vector3(rot.x, 0, rot.z).normalize();
 
     // aplica el canvi
@@ -407,7 +411,7 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
     for (int i = 0; i < static_objects.size(); i++)
     {
         object = static_objects[i];
-        if (object->oName == MUSHROOM || object->oName == ROCK || object->oName == WEED)
+        if (!hasCollition(object->oName))
             continue;
         if(onCollision(object, position, speed, target))
             continue;
