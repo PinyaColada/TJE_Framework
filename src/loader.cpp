@@ -50,6 +50,9 @@ void SaveLevel(Level* level)
         fprintf(f,"--- %s\n", TableObj2str[sobj.type].name);
         fprintf(f,"p: "); sobj.pos.exportVector(f);
         fprintf(f,"r: "); sobj.rot.exportVector(f);
+
+        if (sobj.scene != DEFAULTSCENE)
+            fprintf(f,"scene: %s\n", TableSceneNames[sobj.scene].cName);
     }
 
     fprintf(f,">>>\n\n");
@@ -199,6 +202,7 @@ Level* LoadLevel(const char* filename)
                     SObj->type = type;
                     SObj->pos = Vector3();
                     SObj->rot = Vector3();
+                    SObj->scene = DEFAULTSCENE;
                     id++;
                     level->numSObj = id;
                 }
@@ -215,6 +219,20 @@ Level* LoadLevel(const char* filename)
                     sscanf(pch+2, " (%f,%f,%f)", &x,&y,&z);
 
                     SObj->rot = Vector3(x,y,z);
+                }
+                // scene
+                else if((pch = strstr(line, "scene:")) != NULL)
+                {
+                    pch += 6;
+                    eScene scene = DEFAULTSCENE;
+
+                    for(int i = 0; scene == DEFAULTSCENE && i < SIZEOFSCENE; i++)
+                    {
+                        if (strstr(pch, TableSceneNames[i].cName) != NULL)
+                            scene = TableSceneNames[i].eName;
+                    }
+                    if(scene != DEFAULTSCENE)
+                        SObj->scene = scene;
                 }
                 // tag de fi
                 else if((pch = strstr(line, ">>>")) != NULL) 

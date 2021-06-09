@@ -1,5 +1,6 @@
 #include "skin.h"
 
+// llista de objectes amb str
 Object2str TableObj2str[SIZEOFOBJ] = {
     {"PLAYER", PLAYER},
     {"BOX", BOX},
@@ -12,6 +13,12 @@ Object2str TableObj2str[SIZEOFOBJ] = {
     {"MUSHROOM", MUSHROOM},
     {"ROCK", ROCK},
     {"WEED", WEED}
+};
+
+// llista de Scenes amb str
+NameLevel TableSceneNames[SIZEOFSCENE] = {
+    {"DEMO",DEMO},
+    {"NIVELDELAVA",NIVELDELAVA}
 };
 
 bool hasBlock(eObjectName type)
@@ -44,6 +51,18 @@ bool hasCollition(eObjectName type)
         
         default:
             return true;
+    }
+}
+
+bool hasDinamic(eObjectName type)
+{
+    switch (type)
+    {
+        case BOX:
+            return true;
+        
+        default:
+            return false;
     }
 }
 

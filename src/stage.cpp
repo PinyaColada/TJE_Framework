@@ -156,12 +156,20 @@ void PlayStage::Update(double elapsed_time)
 {
     Camera* camera = world->camera;
 	Player* player = world->player;
+
+	// comprova si has mort
+	if(player->isDead)
+		world->respawn();
+	// comprova si canvias de nivell
+	if(world->current_scene != player->current_scene)
+		world->changeScene(player->current_scene);
+
 	Scene* scene = world->scenes[world->current_scene];
 	float speed = player->Speed; // obtenim el valor de speed per alterarlo
 	float timestop;
 	DinamicObject* object;
 
-	timestop;
+	timestop = 0;
 
 	for (int i = 0; i < scene->dinamic_objects.size(); i++)
 	{ 
@@ -210,7 +218,6 @@ void PlayStage::Update(double elapsed_time)
 			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && !player->isFalling) {
 				player->physic->Jump();
 			} 
-			if (Input::wasKeyPressed(SDL_SCANCODE_Q)) timestop = 3;
 
 			player->move(dir, elapsed_time, scene->static_objects, scene->dinamic_objects);
 
@@ -305,7 +312,17 @@ void PlayStage::addBlockInFront(eObjectName type)
 	EntityMesh* mesh = world->searchMesh(type);
 
 	// creem el Block
-	Block* block = new Block(mesh, pos, type);
+	Block* block;
+	switch (type)
+	{
+	case JEWEL:
+		block = new Jewel(mesh, pos, DEFAULTSCENE);
+		break;
+	default:
+		block = new Block(mesh, pos, type);
+		break;
+	}
+
 	// si no existia la mesh guardem la nova mesh en la llista
 	if (mesh == NULL) {
 		world->meshs.push_back(block->mesh);
@@ -319,11 +336,12 @@ void PlayStage::addBlockInFront(eObjectName type)
 // events
 void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 {
-	switch (idmode) {
+	switch (idmode) 
+	{
 		case GAMEPLAY: {
 			switch (event.keysym.sym) {
 				case SDLK_3: idmode = EDIT; break;
-				case SDLK_4: world->changeScene(eScene( (world->current_scene+1) % world->scenes.size() )); break;
+				case SDLK_4: world->player->current_scene = (eScene( (world->current_scene+1) % world->scenes.size() )); break;
 			}
 			break;
 		}
@@ -337,11 +355,19 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 						world->player->LeaveBox();
 					break;
 				case SDLK_3: idmode = GAMEPLAY; break;
-				case SDLK_4: world->changeScene(eScene( (world->current_scene+1) % world->scenes.size() )); break;
+				case SDLK_4: world->player->current_scene = (eScene( (world->current_scene+1) % world->scenes.size() )); break;
 				case SDLK_5: addBlockInFront(BLOCKLARGE); break;
 				case SDLK_6: addBlockInFront(BLOCKLONG); break;
 				case SDLK_7: addBlockInFront(BLOCKUNIT); break;
 				case SDLK_8: world->editMap(); break;
+				case SDLK_0: {
+					if(world->BlockPicked->oName != JEWEL)
+						break;
+					Jewel* jewel = (Jewel*) world->BlockPicked;
+					jewel->next_scene = (eScene( (jewel->next_scene+1) % SIZEOFSCENE ));
+					std::cout << " the level of Jewel is \"" << TableSceneNames[jewel->next_scene].cName << "\"" << std::endl;
+					break;
+				}
 				case SDLK_z: addBlockInFront(JEWEL); break;
 				case SDLK_x: addBlockInFront(MUSHROOM); break;
 				case SDLK_c: addBlockInFront(ROCK); break;

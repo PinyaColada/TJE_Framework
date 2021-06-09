@@ -90,14 +90,27 @@ public:
 };
 
 // ----------------------------------------- class: Block -------------------------------
-
 class Block : public Object
 {
 public:
     // Atributos
 
     // Metodos
+    Block(){};
     Block(EntityMesh* m, Vector3 pos, eObjectName type);
+
+    void Init(EntityMesh* m, Vector3 pos, eObjectName type);
+};
+
+// ----------------------------------------- class: Jewel -------------------------------
+class Jewel : public Block
+{
+public:
+    // Atributos
+    eScene next_scene;
+
+    // Metodos
+    Jewel(EntityMesh* m, Vector3 pos, eScene ns = DEFAULTSCENE);
 };
 
 // ----------------------------------------- class: DinamicObject -------------------------------------
@@ -154,6 +167,9 @@ public:
     float Speed;
 
     DinamicObject* boxPicked = NULL;
+
+    bool isDead = false;
+    eScene current_scene = DEFAULTSCENE;
     
     // Metodos
     Player(); 

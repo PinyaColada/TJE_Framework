@@ -124,6 +124,11 @@ Floor::Floor()
 // ----------------------------------------- class: Block -------------------------------
 Block::Block(EntityMesh* m, Vector3 pos, eObjectName type)
 {
+    Init(m, pos, type);
+}
+
+void Block::Init(EntityMesh* m, Vector3 pos, eObjectName type)
+{
     eName = OBJECT;
     oName = type; 
     model.setTranslation(pos);
@@ -142,6 +147,13 @@ Block::Block(EntityMesh* m, Vector3 pos, eObjectName type)
 
     // si no existeix la mesh
     mesh = new EntityMesh(oName, cfgM);
+}
+
+// ----------------------------------------- class: Jewel -------------------------------
+Jewel::Jewel(EntityMesh* m, Vector3 pos, eScene ns)
+{
+    Init(m, pos, JEWEL);
+    next_scene = ns;
 }
 
 // ----------------------------------------- class: DinamicObject -------------------------------------
@@ -402,28 +414,53 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
     float speed = elapsed_time * Speed;
     Vector3 target = position + dir * speed;
 
+    // comprovem si esta per sota de la altura minim
+    if(target.y < cfgD->dead_y){
+        isDead = true;
+        return;
+    }
+
     // calculamos las coliciones
     Object* object;
     isFalling = true;
     float minim_y = -1000;
+    bool next = false;
+    eScene scene;
 
     // for para static_objects
-    for (int i = 0; i < static_objects.size(); i++)
+    for (int i = 0; !next && i < static_objects.size(); i++)
     {
         object = static_objects[i];
         if (!hasCollition(object->oName))
             continue;
         if(onCollision(object, position, speed, target))
+        {
+            // switch per comprobar xocs amb objectes amb especific
+            switch (object->oName)
+            {
+                case JEWEL:
+                    scene = ((Jewel*)object)->next_scene;
+
+                    // descartem casos invalits
+                    if(scene == DEFAULTSCENE)
+                        break;
+                        
+                    next = true;
+                    current_scene = ((Jewel*)object)->next_scene;
+                    break;
+                default:
+                    break;
+            }
             continue;
+        }
         if(hasGround(object, position)){
             isFalling = false;
             continue;
         }
         minim_y = minimHeight(object, position, minim_y);
     }
-
     // for para dinamic_objects
-    for (int i = 0; i < dinamic_objects.size(); i++)
+    for (int i = 0; !next && i < dinamic_objects.size(); i++)
     {
         object = dinamic_objects[i];
         if(onCollision(object, position, speed, target))
@@ -433,12 +470,6 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
             continue;
         }
         minim_y = minimHeight(object, position, minim_y);
-    }
-
-    // comprovem si esta per sota de la altura minim
-    if(target.y < cfgD->dead_y){
-        respawn();
-        return;
     }
 
     // donem el valor minim

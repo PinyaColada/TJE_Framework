@@ -2,6 +2,8 @@
 #include "world.h"
 #include "entity.h"
 
+#define h_spawn 120
+
 // ----------------------------------------- class: Scene -----------------------------------------
 Scene::Scene(eScene n, bool hasInfo, Vector3 sp) 
 {
@@ -51,6 +53,7 @@ World::World( int window_width, int window_height )
     current_scene = DEMO;
 
     player = new Player();
+    player->current_scene = current_scene;
     changeScene(current_scene);
 }
 
@@ -147,6 +150,11 @@ void World::editMap()
 
 void World::changeScene(eScene nextScene)
 {
+    if(nextScene >= scenes.size())
+    {
+        player->current_scene = current_scene;
+        return;
+    }
     // canviar el spawn del player
     player->spawn = scenes[nextScene]->spawn;
 
@@ -161,6 +169,7 @@ void World::respawn()
 {
     // deixar box
     player->LeaveBox();
+    BlockPicked = NULL;
 
     // respawn player
     player->respawn();
@@ -173,27 +182,24 @@ void World::respawn()
 		object = scene->dinamic_objects[i];
 		object->respawn();
 	}
-}
 
-// guardar i carregar Scenes
-NameLevel TableSceneNames[SIZEOFSCENE] = {
-    {"DEMO",DEMO},
-    {"NIVELDELAVA",NIVELDELAVA}
-};
+    player->isDead = false;
+    player->current_scene = current_scene;
+}
 
 Level* World::SaveScene()
 {
-    // crea level + nom per defecte
-    Level* level = new Level{"DEMO"};
-
     Scene* scene = scenes[current_scene];
+
+    // crea level + nom del nivell actual
+    Level* level = new Level{ TableSceneNames[scene->name].cName };
 
     // Skybox
     cfgMesh* cfgSB = cfgSkyboxCreat(scene->skybox->texture->filename.c_str());
     level->Skybox = *cfgSB;
 
     // Player
-    DinamicObj* sPlayer = new DinamicObj{PLAYER, player->getPosition() + Vector3(0,120,0)};
+    DinamicObj* sPlayer = new DinamicObj{PLAYER, player->getPosition() + Vector3(0,h_spawn,0)};
     level->player = *sPlayer;
 
     Object* object;
@@ -207,6 +213,8 @@ Level* World::SaveScene()
 
         // afegir el elemnt a la llista
         level->sObjs[id] = *(new StaticObj{object->oName, object->getPosition(), object->getPosition()}); // falta la rotacio
+        if(object->oName == JEWEL)
+            level->sObjs[id].scene = ((Jewel*)object)->next_scene;
         max++;
     }
     level->numSObj = max;
@@ -219,7 +227,7 @@ Level* World::SaveScene()
         object = scene->dinamic_objects[id];
         
         // afegir el elemnt a la llista
-        level->dObjs[id] = *(new DinamicObj{object->oName, object->getPosition() + Vector3(0,120,0)});
+        level->dObjs[id] = *(new DinamicObj{object->oName, object->getPosition() + Vector3(0,h_spawn,0)});
         max++;
     }
     level->numDObj = max;
@@ -283,11 +291,22 @@ void World::LoadScene(Level* level)
     {
         sobj = level->sObjs[i];
         if(!hasBlock(sobj.type))
+        {
+            std::cout << "Error: " << TableObj2str[sobj.type].name << " has not Block" << std::endl;
             continue;
+        }
         
         m = searchMesh(sobj.type);
-        objb = new Block(m, sobj.pos, sobj.type); // falta la rotacio implemetar en el constructor
 
+        switch (sobj.type)
+        {
+            case JEWEL:
+                objb = new Jewel(m, sobj.pos, sobj.scene); // falta la rotacio implemetar en el constructor
+                break;
+            default:
+                objb = new Block(m, sobj.pos, sobj.type); // falta la rotacio implemetar en el constructor
+                break;
+        }
         // afeges la mesh del obj si no estaba
         if( m == NULL )
         {
@@ -304,29 +323,31 @@ void World::LoadScene(Level* level)
     for(int i = 0; i < level->numDObj; i++)
     {
         dobj = level->dObjs[i];
+        if(!hasBlock(sobj.type))
+        {
+            std::cout << "Error: " << TableObj2str[sobj.type].name << " has not Dinamic" << std::endl;
+            continue;
+        }
+
+        m = searchMesh(dobj.type);
+
         switch (dobj.type)
         {
             case BOX:
-            {
-                m = searchMesh(dobj.type);
                 objd = new Box(m, dobj.pos);
-
-                // afeges la mesh del obj si no estaba
-                if( m == NULL )
-                {
-		            meshs.push_back(objd->mesh);
-	            }
-                
-                // afegim la Box a la llista de objectes
-                objd->idList = scene->dinamic_objects.size();
-                scene->dinamic_objects.push_back(objd);
-
                 break;
-            }
             default:
-                std::cout << "Error: " << TableObj2str[sobj.type].name << " has not Dinamic" << std::endl;
                 break;
         }
+        // afeges la mesh del obj si no estaba
+        if( m == NULL )
+        {
+            meshs.push_back(objd->mesh);
+        }
+        
+        // afegim la Box a la llista de objectes
+        objd->idList = scene->dinamic_objects.size();
+        scene->dinamic_objects.push_back(objd);
     }
     std::cout << " + Level Loaded" << std::endl; 
 }

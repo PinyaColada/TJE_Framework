@@ -3,19 +3,6 @@
 
 #include "entity.h"
 
-enum eScene{
-    DEMO,
-    NIVELDELAVA,
-
-    SIZEOFSCENE,
-    DEFAULTSCENE = -1
-};
-
-struct NameLevel{
-    const char* cName;
-    eScene eName;
-};
-
 // ----------------------------------------- class: Scene -----------------------------------------
 class Scene
 {

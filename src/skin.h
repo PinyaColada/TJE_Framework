@@ -5,6 +5,7 @@
 
 #define MAXOBJ 100
 
+// enum de Entity
 enum eEntityName {
     ENTITY,
     MESH,
@@ -12,6 +13,7 @@ enum eEntityName {
     OBJECT
 };
 
+// enum de Objectes
 enum eObjectName {
     PLAYER,
     BOX,
@@ -28,14 +30,31 @@ enum eObjectName {
     SIZEOFOBJ
 };
 
+// enum de Scene
+enum eScene{
+    DEMO,
+    NIVELDELAVA,
+
+    SIZEOFSCENE,
+    DEFAULTSCENE = -1
+};
+
+// --- Strucks ---
 struct Object2str {
     const char* name;
     eObjectName type;
 };
+struct NameLevel{
+    const char* cName;
+    eScene eName;
+};
 
+// --- externs ---
 extern Object2str TableObj2str[SIZEOFOBJ];
+extern NameLevel TableSceneNames[SIZEOFSCENE];
 extern bool hasBlock(eObjectName type);
 extern bool hasCollition(eObjectName type);
+extern bool hasDinamic(eObjectName type);
 
 // ---------- carregar Meshs ----------
 struct cfgMesh
@@ -58,6 +77,7 @@ struct StaticObj
 
     Vector3 pos;
     Vector3 rot;
+    eScene scene;
 };
 
 struct DinamicObj
