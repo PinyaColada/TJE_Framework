@@ -39,7 +39,7 @@ void EntityMesh::render(Camera* camera)
     // enable shader and pass uniforms	
     Vector3 ambient_light(0.5411, 0.7607, 0.9019);
     Vector3 light_color(1, 1, 1);
-    float intensity = 1;
+    float intensity = 0.25f;
 
     shader->enable();
     shader->setUniform("u_color", color);
@@ -51,6 +51,7 @@ void EntityMesh::render(Camera* camera)
     shader->setUniform("u_light_intensity", intensity);
 
     shader->setUniform("u_ambient_light", ambient_light);
+    shader->setUniform("u_is_time_stopped", isTimeStopped);
 
     // render the mesh using the shader	
     mesh->render(GL_TRIANGLES);
@@ -76,6 +77,7 @@ void EntityMesh::render(Camera* camera, std::vector<EntityLight*> lights)
     shader->setUniform("u_light_intensity", lights[0]->intensity);
 
     shader->setUniform("u_ambient_light", ambient_light);
+    shader->setUniform("u_is_time_stopped", isTimeStopped);
 
     // render the mesh using the shader	
     mesh->render(GL_TRIANGLES);

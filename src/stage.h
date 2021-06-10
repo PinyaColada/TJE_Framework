@@ -82,6 +82,9 @@ public:
 
     PlayStage();
 
+    float timeCounter = 0.0f;
+    float coolDownCounter = 0.0f;
+
     void Render();
 
     void Update(double elapsed_time);

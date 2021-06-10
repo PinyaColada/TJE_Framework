@@ -15,6 +15,8 @@ Object2str TableObj2str[SIZEOFOBJ] = {
     {"WEED", WEED}
 };
 
+bool isTimeStopped = false;
+
 // llista de Scenes amb str
 NameLevel TableSceneNames[SIZEOFSCENE] = {
     {"DEMO",DEMO},

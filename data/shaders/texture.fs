@@ -19,6 +19,9 @@ uniform bool u_has_light;
 
 uniform float u_light_intensity;
 
+uniform bool u_is_time_stopped;
+
+
 void main()
 {
 	vec2 uv = v_uv;
@@ -36,6 +39,12 @@ void main()
 	light += NdotL * u_light_intensity * u_light_color + u_ambient_light; 
 
 	color.xyz *= light;
+	
+	if (!u_is_time_stopped)
+		gl_FragColor = color;
+	else{
 
-	gl_FragColor = color;
+		float average = (color.x + color.y + color.z) * 0.33;
+		gl_FragColor = vec4(average, average, average, 1.0);
+	}	
 }

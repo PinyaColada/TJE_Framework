@@ -166,15 +166,18 @@ void PlayStage::Update(double elapsed_time)
 
 	Scene* scene = world->scenes[world->current_scene];
 	float speed = player->Speed; // obtenim el valor de speed per alterarlo
-	float timestop;
-	DinamicObject* object;
 
-	timestop = 0;
+	timeCounter -= elapsed_time;
+	coolDownCounter -= elapsed_time;
+
+	isTimeStopped = timeCounter > 0 ? true : false;
+
+	DinamicObject* object;
 
 	for (int i = 0; i < scene->dinamic_objects.size(); i++)
 	{ 
 		object = scene->dinamic_objects[i];
-		if(!object->isCatch)
+		if(!object->isCatch && !isTimeStopped)
 			object->move(Vector3(), elapsed_time, scene->static_objects, scene->dinamic_objects);
 	}
 
@@ -218,6 +221,10 @@ void PlayStage::Update(double elapsed_time)
 			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && !player->isFalling) {
 				player->physic->Jump();
 			} 
+			if (Input::wasKeyPressed(SDL_SCANCODE_Q) && (coolDownCounter < 0)) {
+				timeCounter = 2;
+				coolDownCounter = 4;
+			}
 
 			player->move(dir, elapsed_time, scene->static_objects, scene->dinamic_objects);
 

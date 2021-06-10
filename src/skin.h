@@ -52,9 +52,11 @@ struct NameLevel{
 // --- externs ---
 extern Object2str TableObj2str[SIZEOFOBJ];
 extern NameLevel TableSceneNames[SIZEOFSCENE];
+
 extern bool hasBlock(eObjectName type);
 extern bool hasCollition(eObjectName type);
 extern bool hasDinamic(eObjectName type);
+extern bool isTimeStopped;
 
 // ---------- carregar Meshs ----------
 struct cfgMesh
