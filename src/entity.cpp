@@ -155,8 +155,28 @@ void Block::Init(EntityMesh* m, Vector3 pos, eObjectName type)
 Jewel::Jewel(EntityMesh* m, Vector3 pos, eScene ns)
 {
     Init(m, pos, JEWEL);
+
     next_scene = ns;
+    idMask = 1<<numJewels;
+    numJewels++;
 }
+
+void Jewel::render(Camera* camera, std::vector<EntityLight*> lights)
+{
+    if (mesh == NULL) return;
+    mesh->color = colorJewel(next_scene);
+    mesh->model = this->model;
+    mesh->render(camera, lights);
+}
+
+void Jewel::render(Camera* camera)
+{
+    if(mesh == NULL) return;
+    mesh->color = colorJewel(next_scene);
+    mesh->model = this->model;
+    mesh->render(camera);
+}
+
 
 // ----------------------------------------- class: DinamicObject -------------------------------------
 void DinamicObject::setCfgD(eType type)
@@ -398,6 +418,8 @@ Player::Player()
     eName = OBJECT;
     oName = PLAYER;
 
+    pickedJewel = 0;
+
     // Busca la configuracio
     cfgGeneric* cfg = getCfg(player);
 
@@ -427,7 +449,6 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
     isFalling = true;
     float minim_y = -1000;
     bool next = false;
-    eScene scene;
 
     // for para static_objects
     for (int i = 0; !next && i < static_objects.size(); i++)
@@ -441,15 +462,25 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
             switch (object->oName)
             {
                 case JEWEL:
-                    scene = ((Jewel*)object)->next_scene;
+                {
+                    Jewel* jwl = (Jewel*)object;
 
                     // descartem casos invalits
-                    if(scene == DEFAULTSCENE)
+                    if(jwl->next_scene == DEFAULTSCENE)
                         break;
-                        
+                    // cas de WIN
+                    else if(jwl->next_scene == WIN)
+                    {
+                        pickedJewel |= jwl->idMask;
+                        current_scene = DEMO;
+                    }
+                    // resta de casos
+                    else
+                        current_scene = jwl->next_scene;
+
                     next = true;
-                    current_scene = ((Jewel*)object)->next_scene;
                     break;
+                }
                 default:
                     break;
             }

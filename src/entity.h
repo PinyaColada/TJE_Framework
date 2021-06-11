@@ -109,8 +109,13 @@ public:
     // Atributos
     eScene next_scene;
 
+    JewelMask idMask;
+
     // Metodos
     Jewel(EntityMesh* m, Vector3 pos, eScene ns = DEFAULTSCENE);
+
+    void render(Camera* camera, std::vector<EntityLight*> lights);
+    void render(Camera* camera);
 };
 
 // ----------------------------------------- class: DinamicObject -------------------------------------
@@ -170,6 +175,8 @@ public:
 
     bool isDead = false;
     eScene current_scene = DEFAULTSCENE;
+
+    JewelMask pickedJewel;
     
     // Metodos
     Player(); 

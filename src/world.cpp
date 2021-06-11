@@ -187,6 +187,14 @@ void World::respawn()
     player->current_scene = current_scene;
 }
 
+bool World::hasWin()
+{
+    if(JewelsWin != 0 && (JewelsWin & player->pickedJewel) == JewelsWin)
+        return true;
+    else
+        return false;
+}
+
 Level* World::SaveScene()
 {
     Scene* scene = scenes[current_scene];
@@ -302,6 +310,8 @@ void World::LoadScene(Level* level)
         {
             case JEWEL:
                 objb = new Jewel(m, sobj.pos, sobj.scene); // falta la rotacio implemetar en el constructor
+                if(sobj.scene == WIN) // inicia la maskara per saber quan guanyas
+                    JewelsWin |= ((Jewel*)objb)->idMask;
                 break;
             default:
                 objb = new Block(m, sobj.pos, sobj.type); // falta la rotacio implemetar en el constructor

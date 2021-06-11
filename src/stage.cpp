@@ -130,12 +130,20 @@ void PlayStage::Render()
 	{
 		//for para static_objects	
 		object = scene->static_objects[id];
-		object->render(camera, scene->lights);
+		switch( object->oName ){
+			case JEWEL:
+				((Jewel*)object)->render(camera, scene->lights);
+				break;
+			default:
+				object->render(camera, scene->lights);
+				break;
+		}
+		
 	}
 
 	for (int id = 0; id < scene->dinamic_objects.size(); id++)
 	{
-		//for para static_objects	
+		//for para dinamics_objects	
 		object = scene->dinamic_objects[id];
 		object->render(camera, scene->lights);
 	}
@@ -154,6 +162,14 @@ void PlayStage::Render()
 
 void PlayStage::Update(double elapsed_time) 
 {
+	if(world->hasWin())
+	{
+		isComplite = true;
+		world->player->pickedJewel = 0;
+		world->changeScene(DEMO);
+		return;
+	}
+
     Camera* camera = world->camera;
 	Player* player = world->player;
 
@@ -368,10 +384,20 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 				case SDLK_7: addBlockInFront(BLOCKUNIT); break;
 				case SDLK_8: world->editMap(); break;
 				case SDLK_0: {
-					if(world->BlockPicked->oName != JEWEL)
+					if(world->BlockPicked == NULL || world->BlockPicked->oName != JEWEL)
 						break;
 					Jewel* jewel = (Jewel*) world->BlockPicked;
+
+					// if per treure la jewel de la llista de win
+					if(jewel->next_scene == WIN) 
+						world->JewelsWin &= ~jewel->idMask;
+					
+					// cambiar de next_scene
 					jewel->next_scene = (eScene( (jewel->next_scene+1) % SIZEOFSCENE ));
+
+					// if per ficar la jewel de la llista de win
+					if(jewel->next_scene == WIN) 
+						world->JewelsWin |= jewel->idMask;
 					std::cout << " the level of Jewel is \"" << TableSceneNames[jewel->next_scene].cName << "\"" << std::endl;
 					break;
 				}

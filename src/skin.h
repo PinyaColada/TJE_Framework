@@ -4,6 +4,7 @@
 #include "framework.h"
 
 #define MAXOBJ 100
+typedef unsigned long JewelMask;
 
 // enum de Entity
 enum eEntityName {
@@ -34,6 +35,7 @@ enum eObjectName {
 enum eScene{
     DEMO,
     NIVELDELAVA,
+    WIN,
 
     SIZEOFSCENE,
     DEFAULTSCENE = -1
@@ -53,10 +55,12 @@ struct NameLevel{
 extern Object2str TableObj2str[SIZEOFOBJ];
 extern NameLevel TableSceneNames[SIZEOFSCENE];
 
+extern bool isTimeStopped;
+extern int numJewels;
+
 extern bool hasBlock(eObjectName type);
 extern bool hasCollition(eObjectName type);
 extern bool hasDinamic(eObjectName type);
-extern bool isTimeStopped;
 
 // ---------- carregar Meshs ----------
 struct cfgMesh
@@ -108,5 +112,6 @@ struct Level
 extern void InitCfgMesh();
 extern cfgMesh* getCfgMesh(eObjectName name);
 extern cfgMesh* cfgSkyboxCreat(const char* texture);
+extern Vector4 colorJewel(eScene level);
 
 #endif 

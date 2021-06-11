@@ -43,6 +43,8 @@ public:
     DinamicObject* boxPicked = NULL;
     Object* BlockPicked = NULL;
 
+    JewelMask JewelsWin = 0;
+
     // Metodos
     World( int window_width, int window_height );
 
@@ -54,6 +56,7 @@ public:
 
     void changeScene(eScene nextScene);
     void respawn();
+    bool hasWin();
 
     // guardar i carregar Scenes
     Level* SaveScene();

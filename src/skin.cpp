@@ -15,13 +15,15 @@ Object2str TableObj2str[SIZEOFOBJ] = {
     {"WEED", WEED}
 };
 
-bool isTimeStopped = false;
-
 // llista de Scenes amb str
 NameLevel TableSceneNames[SIZEOFSCENE] = {
     {"DEMO",DEMO},
-    {"NIVELDELAVA",NIVELDELAVA}
+    {"NIVELDELAVA",NIVELDELAVA},
+    {"WIN",WIN}
 };
+
+bool isTimeStopped = false;
+int numJewels = 0;
 
 bool hasBlock(eObjectName type)
 {
@@ -71,13 +73,13 @@ bool hasDinamic(eObjectName type)
 // ---------- carregar Meshs ----------
 cfgMesh* cfgTableMesh[SIZEOFOBJ];
 
-void cfgMeshCreat(   cfgMesh* cfg,
-                        const char* texture,
-	                    const char* mesh,
-                        const char* bounding,
-                        const char* vsf = "data/shaders/basic.vs",
-                        const char* psf = "data/shaders/texture.fs",
-                        Vector4 color = Vector4(1,1,1,1)    )
+void cfgMeshCreat(  cfgMesh* cfg,
+                    const char* texture,
+	                const char* mesh,
+                    const char* bounding,
+                    const char* vsf = "data/shaders/basic.vs",
+                    const char* psf = "data/shaders/texture.fs",
+                    Vector4 color = Vector4(1,1,1,1)    )
 {
     cfg->texture=texture;
     cfg->mesh=mesh;
@@ -163,4 +165,15 @@ cfgMesh* cfgSkyboxCreat(const char* texture)
                     "");                        // bounding
 
     return cfg;
+}
+
+Vector4 colorJewel(eScene level)
+{
+    switch(level){
+        case DEMO: return Vector4(0,0,1,1);         // blau
+        case NIVELDELAVA: return Vector4(1,0,0,1);  // vermell
+        case WIN: return Vector4(1,1,0,1);          // groc
+
+        default: return Vector4(0.5,0.5,0.5,1);     // gris
+    }
 }
