@@ -220,7 +220,7 @@ Level* World::SaveScene()
         object = scene->static_objects[id];
 
         // afegir el elemnt a la llista
-        level->sObjs[id] = *(new StaticObj{object->oName, object->getPosition(), object->getPosition()}); // falta la rotacio
+        level->sObjs[id] = *(new StaticObj{object->oName, object->getPosition(), object->getDir()}); // falta la rotacio
         if(object->oName == JEWEL)
             level->sObjs[id].scene = ((Jewel*)object)->next_scene;
         max++;
@@ -309,12 +309,12 @@ void World::LoadScene(Level* level)
         switch (sobj.type)
         {
             case JEWEL:
-                objb = new Jewel(m, sobj.pos, sobj.scene); // falta la rotacio implemetar en el constructor
+                objb = new Jewel(m, sobj.pos, sobj.scene, sobj.rot); // falta la rotacio implemetar en el constructor
                 if(sobj.scene == WIN) // inicia la maskara per saber quan guanyas
                     JewelsWin |= ((Jewel*)objb)->idMask;
                 break;
             default:
-                objb = new Block(m, sobj.pos, sobj.type); // falta la rotacio implemetar en el constructor
+                objb = new Block(m, sobj.pos, sobj.type, sobj.rot); // falta la rotacio implemetar en el constructor
                 break;
         }
         // afeges la mesh del obj si no estaba

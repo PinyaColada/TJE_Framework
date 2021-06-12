@@ -124,16 +124,17 @@ Floor::Floor()
 }
 
 // ----------------------------------------- class: Block -------------------------------
-Block::Block(EntityMesh* m, Vector3 pos, eObjectName type)
+Block::Block(EntityMesh* m, Vector3 pos, eObjectName type, Vector3 front)
 {
-    Init(m, pos, type);
+    Init(m, pos, type, front);
 }
 
-void Block::Init(EntityMesh* m, Vector3 pos, eObjectName type)
+void Block::Init(EntityMesh* m, Vector3 pos, eObjectName type, Vector3 front)
 {
     eName = OBJECT;
     oName = type; 
     model.setTranslation(pos);
+    model.setFrontAndOrthonormalize(front);
 
     // si existeix la mesh
     if (m != NULL) {
@@ -152,9 +153,9 @@ void Block::Init(EntityMesh* m, Vector3 pos, eObjectName type)
 }
 
 // ----------------------------------------- class: Jewel -------------------------------
-Jewel::Jewel(EntityMesh* m, Vector3 pos, eScene ns)
+Jewel::Jewel(EntityMesh* m, Vector3 pos, eScene ns, Vector3 front)
 {
-    Init(m, pos, JEWEL);
+    Init(m, pos, JEWEL, front);
 
     next_scene = ns;
     idMask = 1<<numJewels;

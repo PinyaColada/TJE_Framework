@@ -46,7 +46,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	world = new World(window_width,window_height);
 
 	// load levels
-	world->LoadScene(LoadLevel("data/Levels/NewLevel.txt"));
+	world->LoadScene(LoadLevel("data/Levels/Prueva.txt"));
 	
 	//Create Stages
 	idCS = eStageID::INTRO;

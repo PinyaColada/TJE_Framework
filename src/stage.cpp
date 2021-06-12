@@ -276,7 +276,7 @@ void PlayStage::Update(double elapsed_time)
 				if (Input::isKeyPressed(SDL_SCANCODE_J)) BlockPicked->model.translate(Vector3(0, 0, 1));
 				if (Input::isKeyPressed(SDL_SCANCODE_K)) BlockPicked->model.translate(Vector3(-1, 0, 0));
 				if (Input::isKeyPressed(SDL_SCANCODE_L)) BlockPicked->model.translate(Vector3(0, 0, -1));
-				if (Input::isKeyPressed(SDL_SCANCODE_N)) BlockPicked->model.rotate(0.01f, Vector3(0, 1, 0));
+				if (Input::isKeyPressed(SDL_SCANCODE_N)) BlockPicked->model.rotate(0.01f, Vector3(0, 1, 0)); 
 				if (Input::isKeyPressed(SDL_SCANCODE_M)) BlockPicked->model.rotate(-0.01f, Vector3(0, 1, 0));
 			}
 

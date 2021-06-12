@@ -1,28 +1,16 @@
-﻿  entity.cpp
+﻿  game.cpp
 D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(389,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
 D:\TJE DEFINITIVE EDITION\TJE_Framework\src\config.h(56,18): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(40,50): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(66,50): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(274,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(289,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(327,52): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(327,13): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(356,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(362,100): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(368,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(374,100): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(380,26): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(433,32): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(465,32): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\game.cpp(134,49): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
 LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\box_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 8 y 20 bytes
 LINK : warning C4743: 'Box::`RTTI Base Class Array'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\box_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 5 y 17 bytes
 LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\coldet_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 8 y 20 bytes
 LINK : warning C4743: 'Box::`RTTI Base Class Array'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\coldet_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 5 y 17 bytes
 LINK : warning LNK4098: la biblioteca predeterminada'LIBCMT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
   Generando código
-  4 of 2299 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    12 functions had inline decision re-evaluated but remain unchanged
+  2 of 2303 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    11 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
 glew32s.lib(glew.obj) : warning LNK4099: no se encontró PDB 'vc120.pdb' con 'glew32s.lib(glew.obj)' o en 'D:\TJE DEFINITIVE EDITION\TJE_Framework\vc120.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
   visualstudio.vcxproj -> D:\TJE DEFINITIVE EDITION\TJE_Framework\game.exe

@@ -97,9 +97,9 @@ public:
 
     // Metodos
     Block(){};
-    Block(EntityMesh* m, Vector3 pos, eObjectName type);
+    Block(EntityMesh* m, Vector3 pos, eObjectName type, Vector3 front = Vector3(0, 0, 1));
 
-    void Init(EntityMesh* m, Vector3 pos, eObjectName type);
+    void Init(EntityMesh* m, Vector3 pos, eObjectName type, Vector3 front);
 };
 
 // ----------------------------------------- class: Jewel -------------------------------
@@ -112,7 +112,7 @@ public:
     JewelMask idMask;
 
     // Metodos
-    Jewel(EntityMesh* m, Vector3 pos, eScene ns = DEFAULTSCENE);
+    Jewel(EntityMesh* m, Vector3 pos, eScene ns = DEFAULTSCENE, Vector3 front = Vector3(0, 0, 1));
 
     void render(Camera* camera, std::vector<EntityLight*> lights);
     void render(Camera* camera);
