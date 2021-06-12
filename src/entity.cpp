@@ -178,7 +178,6 @@ void Jewel::render(Camera* camera)
     mesh->render(camera);
 }
 
-
 // ----------------------------------------- class: DinamicObject -------------------------------------
 void DinamicObject::setCfgD(eType type)
 {
@@ -238,7 +237,9 @@ float DinamicObject::minimHeight(Object* object, Vector3 position, float lastMin
 void DinamicObject::respawn()
 {
     model.setTranslation(spawn);
-    physic->vel.y = 0;
+    // si existeix fisica la resetegem la velecitat
+    if(physic != NULL)
+        physic->vel.y = 0;
 }
 
 // ----------------------------------------- class: Box -------------------------------
@@ -276,7 +277,7 @@ Box::Box(EntityMesh* m, Vector3 pos)
     mesh = new EntityMesh(BOX, cfgM);
 }
 
-void Box::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
+void Box::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
     // calculem la posicio
     Vector3 position = getPosition();
@@ -411,6 +412,53 @@ void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
 
 }
 
+// ----------------------------------------- class: Saw -------------------------------
+Saw::Saw(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
+{
+    eName = OBJECT;
+    oName = SAW;
+    spawn = pos;
+
+    model.setTranslation(pos);
+    model.setFrontAndOrthonormalize(front);
+
+    center = pos;
+    direction = front.normalize();
+    rad = dis;
+    speed = vel;
+
+    // si existeix la mesh
+    if (m != NULL) {
+        mesh = m;
+        return;
+    }
+
+    cfgMesh* cfgM = getCfgMesh(SAW);
+
+    // prova de errors
+    if (cfgM == NULL)
+        std::cout << "Error: Config not found" << std::endl;
+
+    // si no existeix la mesh
+    mesh = new EntityMesh(SAW, cfgM);
+}
+
+void Saw::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
+{
+    // calcula la nova posicio
+    Vector3 pos = getPosition();
+    pos = pos + direction * speed * elapsed_time;
+    
+    // mirem que estigui entre el marges
+    if ((center-pos).length() > rad)
+    {
+        pos = center + direction * rad;
+        direction = -1*direction;
+    }
+    // guarda la posicio
+    model.setTranslation(pos);
+}
+
 // ----------------------------------------- class: Player -------------------------------
 Player::Player()
 {
@@ -432,7 +480,7 @@ Player::Player()
     Speed = cfgP->minSpeed;
 }
 
-void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
+void Player::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
     // calculamos el target idial
     Vector3 position = getPosition();
@@ -474,6 +522,7 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
                     {
                         pickedJewel |= jwl->idMask;
                         current_scene = STARTLEVEL;
+                        isDead = true;
                     }
                     // resta de casos
                     else
@@ -498,14 +547,31 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
     {
         object = dinamic_objects[i];
         if(onCollision(object, position, speed, target))
+        {
+            // switch per comprobar xocs amb objectes amb especific
+            switch (object->oName)
+            {
+                case SAW:
+                {
+                    isDead = true;
+                    next = true;
+                    break;
+                }
+                default:
+                    break;
+            }
             continue;
+        }
         if(hasGround(object, position)){
             isFalling = false;
             continue;
         }
         minim_y = minimHeight(object, position, minim_y);
     }
-
+    // sortim si em de canviar de canviar de nivell o mort
+    if(next)
+        return;
+    
     // donem el valor minim
     physic->min_y = minim_y;
 
@@ -518,6 +584,7 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
     // mover la boxPicked
     if(boxPicked != NULL)
         boxPicked->movePicked(model, static_objects, dinamic_objects);
+
 }
 
 void Player::SelectBox(DinamicObject* picked)

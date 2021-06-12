@@ -89,7 +89,7 @@ public:
 
     void Update(double elapsed_time);
 
-    void AddBoxInFront();
+    void addDinamicInFront(eObjectName type);
     void addBlockInFront(eObjectName type);
 
     // events

@@ -4,6 +4,7 @@
 Object2str TableObj2str[SIZEOFOBJ] = {
     {"PLAYER", PLAYER},
     {"BOX", BOX},
+    {"SAW", SAW},
     {"FLOOR", FLOOR},
     {"SKYBOX", SKYBOX},
     {"BLOCKLARGE", BLOCKLARGE},
@@ -19,6 +20,7 @@ Object2str TableObj2str[SIZEOFOBJ] = {
 NameLevel TableSceneNames[SIZEOFSCENE] = {
     {"DEMO",DEMO,""},
     {"NIVELDELAVA",NIVELDELAVA,"data/Levels/Prueva.txt"},
+    {"NEW",NEW,"data/Levels/NewLevel.txt"},
     {"WIN",WIN,""}
 };
 
@@ -63,6 +65,7 @@ bool hasDinamic(eObjectName type)
     switch (type)
     {
         case BOX:
+        case SAW:
             return true;
         
         default:
@@ -110,8 +113,12 @@ void InitCfgMesh()
     cfgMeshCreat(   cfgTableMesh[BOX], 
                     "data/Box/MetalBox.png",
                     "data/Box/MetalBox.obj", 
-                    "data/Box/ColissionBox.obj");                    
-
+                    "data/Box/ColissionBox.obj");
+                    
+    cfgMeshCreat(   cfgTableMesh[SAW],
+                    "data/Blocks/saw.png",
+                    "data/Blocks/saw.obj",
+                    "");
     cfgMeshCreat(   cfgTableMesh[BLOCKLARGE], 
                     "data/Blocks/Large.png",
                     "data/Blocks/Large.obj", 

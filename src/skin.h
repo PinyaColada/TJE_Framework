@@ -19,6 +19,7 @@ enum eEntityName {
 enum eObjectName {
     PLAYER,
     BOX,
+    SAW,
     FLOOR,
     SKYBOX,
     BLOCKLARGE,
@@ -36,6 +37,7 @@ enum eObjectName {
 enum eScene{
     DEMO,
     NIVELDELAVA,
+    NEW,
     WIN,
 
     SIZEOFSCENE,
@@ -85,6 +87,7 @@ struct StaticObj
 
     Vector3 pos;
     Vector3 rot;
+    // especial per Jewel
     eScene scene;
 };
 
@@ -93,6 +96,10 @@ struct DinamicObj
     eObjectName type;
 
     Vector3 pos;
+    // especial de Saw
+    Vector3 rot;
+    float rad;
+    float vel;
 };
 
 struct Level

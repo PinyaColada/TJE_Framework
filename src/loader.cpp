@@ -51,7 +51,7 @@ void SaveLevel(Level* level)
         fprintf(f,"p: "); sobj.pos.exportVector(f);
         fprintf(f,"r: "); sobj.rot.exportVector(f);
 
-        if (sobj.scene != DEFAULTSCENE)
+        if (sobj.type == JEWEL && sobj.scene != DEFAULTSCENE)
             fprintf(f,"scene: %s\n", TableSceneNames[sobj.scene].cName);
     }
 
@@ -69,6 +69,13 @@ void SaveLevel(Level* level)
         
         fprintf(f,"--- %s\n", TableObj2str[dobj.type].name);
         fprintf(f,"p: "); dobj.pos.exportVector(f);
+
+        if (dobj.type == SAW)
+        {
+            fprintf(f,"r: "); dobj.rot.exportVector(f);
+            fprintf(f,"rad: %f\n", dobj.rad);
+            fprintf(f,"vel: %f\n", dobj.vel);
+        }
     }
 
     fprintf(f,">>>\n\n");
@@ -113,7 +120,7 @@ Level* LoadLevel(const char* filename)
     }
     
     // variables del while
-    float x,y,z;
+    float x,y,z,rad,vel;
     eObjectName type;
     StaticObj* SObj;
     DinamicObj* DObj;
@@ -201,7 +208,7 @@ Level* LoadLevel(const char* filename)
                     
                     SObj->type = type;
                     SObj->pos = Vector3();
-                    SObj->rot = Vector3();
+                    SObj->rot = Vector3(0, 0, 1);
                     SObj->scene = DEFAULTSCENE;
                     id++;
                     level->numSObj = id;
@@ -272,6 +279,9 @@ Level* LoadLevel(const char* filename)
                     
                     DObj->type = type;
                     DObj->pos = Vector3();
+                    DObj->rot = Vector3(0, 0, 1);
+                    DObj->rad = 100;
+                    DObj->vel = 100;
                     id++;
                     level->numDObj = id;
                 }
@@ -281,6 +291,24 @@ Level* LoadLevel(const char* filename)
                     sscanf(pch+2, " (%f,%f,%f)", &x,&y,&z);
 
                     DObj->pos = Vector3(x,y,z);
+                }
+                else if((pch = strstr(line, "r:")) != NULL)
+                {
+                    sscanf(pch+2, " (%f,%f,%f)", &x,&y,&z);
+
+                    DObj->rot = Vector3(x,y,z);
+                }
+                else if((pch = strstr(line, "rad:")) != NULL)
+                {
+                    sscanf(pch+4, " %f", &rad);
+
+                    DObj->rad = rad;
+                }
+                else if((pch = strstr(line, "vel:")) != NULL)
+                {
+                    sscanf(pch+4, " %f", &vel);
+
+                    DObj->vel = vel;
                 }
                 // tag de fi
                 else if((pch = strstr(line, ">>>")) != NULL) 

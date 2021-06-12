@@ -221,7 +221,7 @@ Level* World::SaveScene()
         object = scene->static_objects[id];
 
         // afegir el elemnt a la llista
-        level->sObjs[id] = *(new StaticObj{object->oName, object->getPosition(), object->getDir()}); // falta la rotacio
+        level->sObjs[id] = *(new StaticObj{object->oName, object->getPosition(), object->getDir()}); 
         if(object->oName == JEWEL)
             level->sObjs[id].scene = ((Jewel*)object)->next_scene;
         max++;
@@ -236,8 +236,22 @@ Level* World::SaveScene()
         object = scene->dinamic_objects[id];
         
         // afegir el elemnt a la llista
-        level->dObjs[id] = *(new DinamicObj{object->oName, object->getPosition() + Vector3(0,h_spawn,0)});
-        max++;
+        switch (object->oName)
+        {
+            case BOX:
+                level->dObjs[id] = *(new DinamicObj{object->oName, object->getPosition() + Vector3(0,h_spawn,0)});
+                max++;
+                break;
+            case SAW:
+            {
+                Saw* saw = (Saw*)object;
+                level->dObjs[id] = *(new DinamicObj{object->oName, object->getPosition(), saw->direction, saw->rad, saw->speed});
+                max++;
+            }
+            default:
+                break;
+        }
+        
     }
     level->numDObj = max;
 
@@ -312,12 +326,12 @@ void World::LoadScene(Level* level, eScene nameScene)
         switch (sobj.type)
         {
             case JEWEL:
-                objb = new Jewel(m, sobj.pos, sobj.scene, sobj.rot); // falta la rotacio implemetar en el constructor
+                objb = new Jewel(m, sobj.pos, sobj.scene, sobj.rot); 
                 if(sobj.scene == WIN) // inicia la maskara per saber quan guanyas
                     JewelsWin |= ((Jewel*)objb)->idMask;
                 break;
             default:
-                objb = new Block(m, sobj.pos, sobj.type, sobj.rot); // falta la rotacio implemetar en el constructor
+                objb = new Block(m, sobj.pos, sobj.type, sobj.rot); 
                 break;
         }
         // afeges la mesh del obj si no estaba
@@ -348,6 +362,9 @@ void World::LoadScene(Level* level, eScene nameScene)
         {
             case BOX:
                 objd = new Box(m, dobj.pos);
+                break;
+            case SAW:
+                objd = new Saw(m, dobj.pos, dobj.rot, dobj.rad, dobj.vel);
                 break;
             default:
                 break;

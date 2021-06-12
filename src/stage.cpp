@@ -194,7 +194,7 @@ void PlayStage::Update(double elapsed_time)
 	{ 
 		object = scene->dinamic_objects[i];
 		if(!object->isCatch && !isTimeStopped)
-			object->move(Vector3(), elapsed_time, scene->static_objects, scene->dinamic_objects);
+			object->move(elapsed_time, Vector3(), scene->static_objects, scene->dinamic_objects);
 	}
 
 	// buscar la box que pot ser piked
@@ -241,9 +241,7 @@ void PlayStage::Update(double elapsed_time)
 				timeCounter = 2;
 				coolDownCounter = 4;
 			}
-
-			player->move(dir, elapsed_time, scene->static_objects, scene->dinamic_objects);
-
+			player->move(elapsed_time, dir, scene->static_objects, scene->dinamic_objects);
 
 			// Ho posam lo mes guapo que podem :)
 			Input::centerMouse();
@@ -289,8 +287,13 @@ void PlayStage::Update(double elapsed_time)
 	}
 }
 
-void PlayStage::AddBoxInFront()
+void PlayStage::addDinamicInFront(eObjectName type)
 {
+	if(!hasDinamic(type))
+	{
+		return;
+	}
+
     Camera* camera = world->camera;
 	Scene* scene = world->scenes[world->current_scene];
 
@@ -301,18 +304,31 @@ void PlayStage::AddBoxInFront()
 	Vector3 pos = RayPlaneCollision(Vector3(), up, origin, dir);
 
 	// busque la mesh de la box
-	EntityMesh* mesh = world->searchMesh( BOX );
+	EntityMesh* mesh = world->searchMesh( type );
 
-	// creem la Box
-	Box* box = new Box(mesh, pos + Vector3(0, 1000, 0));
-	// si no existia la mesh guardem la nova mesh en la llista
-	if( mesh == NULL ){
-		world->meshs.push_back(box->mesh);
+	// creem el objecte dinamic
+	DinamicObject* dinamic;
+	switch (type)
+	{
+	case BOX:
+		dinamic = new Box(mesh, pos + Vector3(0, 1000, 0));
+		break;
+	case SAW:
+		dinamic = new Saw(mesh, pos);
+		break;
+	default:
+		std::cout << " the object \"" << TableObj2str[type].name << "\" is not a dinamic object" << std::endl;
+		break;
 	}
 
-	// afegim la Box a la llista de objectes
-	box->idList = scene->dinamic_objects.size();
-    scene->dinamic_objects.push_back(box);
+	// si no existia la mesh guardem la nova mesh en la llista
+	if( mesh == NULL ){
+		world->meshs.push_back(dinamic->mesh);
+	}
+
+	// afegim el dinamic a la llista de objectes
+	dinamic->idList = scene->dinamic_objects.size();
+    scene->dinamic_objects.push_back(dinamic);
 }
 
 void PlayStage::addBlockInFront(eObjectName type)
@@ -370,7 +386,7 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 		}
 		case EDIT: {
 			switch (event.keysym.sym) {
-				case SDLK_1: AddBoxInFront(); break;
+				case SDLK_1: addDinamicInFront(BOX); break;
 				case SDLK_2:
 					if (world->player->boxPicked == NULL)
 						world->player->SelectBox(world->boxPicked);
@@ -383,6 +399,7 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 				case SDLK_6: addBlockInFront(BLOCKLONG); break;
 				case SDLK_7: addBlockInFront(BLOCKUNIT); break;
 				case SDLK_8: world->editMap(); break;
+				case SDLK_9: addDinamicInFront(SAW); break;
 				case SDLK_0: {
 					if(world->BlockPicked == NULL || world->BlockPicked->oName != JEWEL)
 						break;
@@ -405,6 +422,7 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 				case SDLK_x: addBlockInFront(MUSHROOM); break;
 				case SDLK_c: addBlockInFront(ROCK); break;
 				case SDLK_v: addBlockInFront(WEED); break;
+				case SDLK_b: addBlockInFront(SAW); break;
 				case SDLK_F3: isComplite = true; break;
 				case SDLK_F4: SaveLevel(world->SaveScene()); break;
 			}
