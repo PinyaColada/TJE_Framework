@@ -46,7 +46,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	world = new World(window_width,window_height);
 
 	// load levels
-	world->LoadScene(LoadLevel("data/Levels/Prueva.txt"));
+	LoadLeveols();
 	
 	//Create Stages
 	idCS = eStageID::INTRO;
@@ -145,3 +145,12 @@ void Game::onResize(int width, int height)
 	world->window_height = window_height;
 }
 
+void Game::LoadLeveols()
+{
+	for(int i = 0; i < SIZEOFSCENE; i++)
+	{
+		if(strlen(TableSceneNames[i].filename) == 0)
+			continue;
+		world->LoadScene(LoadLevel(TableSceneNames[i].filename), (eScene)i);
+	}
+}

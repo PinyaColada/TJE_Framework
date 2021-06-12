@@ -473,7 +473,7 @@ void Player::move(Vector3 dir, float elapsed_time, std::vector<Object*> static_o
                     else if(jwl->next_scene == WIN)
                     {
                         pickedJewel |= jwl->idMask;
-                        current_scene = DEMO;
+                        current_scene = STARTLEVEL;
                     }
                     // resta de casos
                     else

@@ -47,10 +47,11 @@ World::World( int window_width, int window_height )
 
     setCamera(window_width, window_height); 
 
-    Scene* scene = new Scene(DEMO);
+    // craer la scene on inicias per si no existeix
+    Scene* scene = new Scene(STARTLEVEL);
     scenes.push_back(scene);
 
-    current_scene = DEMO;
+    current_scene = STARTLEVEL;
 
     player = new Player();
     player->current_scene = current_scene;
@@ -243,25 +244,27 @@ Level* World::SaveScene()
     return level;
 }
 
-void World::LoadScene(Level* level)
+void World::LoadScene(Level* level, eScene nameScene)
 {
     if(level == NULL)
     {
         return;
     }
-    // Nom del nivell
-    eScene nameScene = DEFAULTSCENE;
-    for (int i = 0; nameScene == DEFAULTSCENE && i < SIZEOFSCENE; i++)
-    {
-        // si es el element
-        if(strstr(level->name, TableSceneNames[i].cName) != NULL) 
-            nameScene = TableSceneNames[i].eName;
-    }
-    // Nom del nivell no trobat
+    // Nom del nivell si no es passat per parametre
     if(nameScene == DEFAULTSCENE)
     {
-        std::cout << "Error: Name of level not found" << std::endl;
-        return;
+        for (int i = 0; nameScene == DEFAULTSCENE && i < SIZEOFSCENE; i++)
+        {
+            // si es el element
+            if(strstr(level->name, TableSceneNames[i].cName) != NULL) 
+                nameScene = TableSceneNames[i].eName;
+        }
+        // Nom del nivell no trobat
+        if(nameScene == DEFAULTSCENE)
+        {
+            std::cout << "Error: Name of level not found" << std::endl;
+            return;
+        }
     }
 
     // player spawn

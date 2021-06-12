@@ -166,7 +166,7 @@ void PlayStage::Update(double elapsed_time)
 	{
 		isComplite = true;
 		world->player->pickedJewel = 0;
-		world->changeScene(DEMO);
+		world->changeScene(STARTLEVEL);
 		return;
 	}
 

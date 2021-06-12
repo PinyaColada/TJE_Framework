@@ -4,6 +4,7 @@
 #include "framework.h"
 
 #define MAXOBJ 100
+#define STARTLEVEL DEMO
 typedef unsigned long JewelMask;
 
 // enum de Entity
@@ -49,6 +50,7 @@ struct Object2str {
 struct NameLevel{
     const char* cName;
     eScene eName;
+    const char* filename;
 };
 
 // --- externs ---

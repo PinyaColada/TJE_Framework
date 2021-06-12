@@ -60,7 +60,7 @@ public:
 
     // guardar i carregar Scenes
     Level* SaveScene();
-    void LoadScene(Level* level);
+    void LoadScene(Level* level, eScene nameScene = DEFAULTSCENE);
 };
 
 

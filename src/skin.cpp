@@ -17,9 +17,9 @@ Object2str TableObj2str[SIZEOFOBJ] = {
 
 // llista de Scenes amb str
 NameLevel TableSceneNames[SIZEOFSCENE] = {
-    {"DEMO",DEMO},
-    {"NIVELDELAVA",NIVELDELAVA},
-    {"WIN",WIN}
+    {"DEMO",DEMO,""},
+    {"NIVELDELAVA",NIVELDELAVA,"data/Levels/Prueva.txt"},
+    {"WIN",WIN,""}
 };
 
 bool isTimeStopped = false;
