@@ -170,6 +170,8 @@ public:
     // Atributos
     Vector3 center;
     Vector3 direction;
+
+    float rotationVelocity;
     float rad;
     float speed;
 

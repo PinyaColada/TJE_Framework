@@ -423,9 +423,10 @@ Saw::Saw(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
     model.setFrontAndOrthonormalize(front);
 
     center = pos;
-    direction = front.normalize();
+    direction = model.rightVector();
     rad = dis;
     speed = vel;
+    rotationVelocity = 15.0f;
 
     // si existeix la mesh
     if (m != NULL) {
@@ -448,12 +449,13 @@ void Saw::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_obje
     // calcula la nova posicio
     Vector3 pos = getPosition();
     pos = pos + direction * speed * elapsed_time;
+    model.rotate(rotationVelocity, model.frontVector());
     
     // mirem que estigui entre el marges
     if ((center-pos).length() > rad)
     {
         pos = center + direction * rad;
-        direction = -1*direction;
+        direction = -1 * direction;
     }
     // guarda la posicio
     model.setTranslation(pos);

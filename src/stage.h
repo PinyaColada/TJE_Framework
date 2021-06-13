@@ -92,6 +92,9 @@ public:
     void addDinamicInFront(eObjectName type);
     void addBlockInFront(eObjectName type);
 
+    void editBlocks(Object* BlockPicked);
+    void editSaw(Saw* SawPicked);
+
     // events
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );

@@ -216,8 +216,8 @@ void PlayStage::Update(double elapsed_time)
 	
 			// apliquem els efectes de la camera i speed
 			bool isShift = Input::isKeyPressed(SDL_SCANCODE_LSHIFT); // si tenim el Shift pulsat
-			camera->fov += isShift? 1 : -0.5;  // actualitzem el fov
-			speed *= isShift? 1.1 : 0.9;       // actualitzem la speed
+			camera->fov += isShift ? 1 : -0.5;  // actualitzem el fov
+			speed *= isShift ? 1.1 : 0.9;       // actualitzem la speed
 			
 			cfgPlayer* cfgP = player->cfgP;
 			// fem clamps del valors
@@ -268,15 +268,14 @@ void PlayStage::Update(double elapsed_time)
 			Object* BlockPicked = world->BlockPicked;
 
 			if (BlockPicked != NULL) {
-				if (Input::isKeyPressed(SDL_SCANCODE_U)) BlockPicked->model.translate(Vector3(0, 1, 0));
-				if (Input::isKeyPressed(SDL_SCANCODE_I)) BlockPicked->model.translate(Vector3(1, 0, 0));
-				if (Input::isKeyPressed(SDL_SCANCODE_O)) BlockPicked->model.translate(Vector3(0, -1, 0));
-				if (Input::isKeyPressed(SDL_SCANCODE_J)) BlockPicked->model.translate(Vector3(0, 0, 1));
-				if (Input::isKeyPressed(SDL_SCANCODE_K)) BlockPicked->model.translate(Vector3(-1, 0, 0));
-				if (Input::isKeyPressed(SDL_SCANCODE_L)) BlockPicked->model.translate(Vector3(0, 0, -1));
-				if (Input::isKeyPressed(SDL_SCANCODE_N)) BlockPicked->model.rotate(0.01f, Vector3(0, 1, 0)); 
-				if (Input::isKeyPressed(SDL_SCANCODE_M)) BlockPicked->model.rotate(-0.01f, Vector3(0, 1, 0));
+				if (BlockPicked->oName != SAW)
+					editBlocks(BlockPicked);
+				else {
+					Saw* sawPicked = (Saw*)BlockPicked;
+					editSaw(sawPicked);
+				}
 			}
+
 
 			if (mouse_locked)
 				Input::centerMouse();
@@ -448,6 +447,34 @@ void PlayStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 				player->LeaveBox();
 			break;
 	}
+}
+
+void PlayStage::editBlocks(Object* BlockPicked) {
+	if (Input::isKeyPressed(SDL_SCANCODE_U)) BlockPicked->model.translate(Vector3(0, 1, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_I)) BlockPicked->model.translate(Vector3(1, 0, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_O)) BlockPicked->model.translate(Vector3(0, -1, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_J)) BlockPicked->model.translate(Vector3(0, 0, 1));
+	if (Input::isKeyPressed(SDL_SCANCODE_K)) BlockPicked->model.translate(Vector3(-1, 0, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_L)) BlockPicked->model.translate(Vector3(0, 0, -1));
+	if (Input::isKeyPressed(SDL_SCANCODE_N)) BlockPicked->model.rotate(0.01f, Vector3(0, 1, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_M)) BlockPicked->model.rotate(-0.01f, Vector3(0, 1, 0));
+}
+
+void PlayStage::editSaw(Saw* SawPicked) {
+	//if (Input::isKeyPressed(SDL_SCANCODE_U)) BlockPicked->model.translate(Vector3(0, 1, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_I)) {
+		//SawPicked->model.translate(Vector3(1, 0, 0));
+		SawPicked->center = SawPicked->center + Vector3(1, 0, 0);
+	}
+	//if (Input::isKeyPressed(SDL_SCANCODE_O)) BlockPicked->model.translate(Vector3(0, -1, 0));
+	////if (Input::isKeyPressed(SDL_SCANCODE_J)) BlockPicked->model.translate(Vector3(0, 0, 1));
+	if (Input::isKeyPressed(SDL_SCANCODE_K)) {
+		//SawPicked->model.translate(Vector3(-1, 0, 0));
+		SawPicked->center = SawPicked->center + Vector3(-1, 0, 0);
+	}
+	//if (Input::isKeyPressed(SDL_SCANCODE_L)) BlockPicked->model.translate(Vector3(0, 0, -1));
+	//if (Input::isKeyPressed(SDL_SCANCODE_N)) BlockPicked->model.rotate(0.01f, Vector3(0, 1, 0));
+	//if (Input::isKeyPressed(SDL_SCANCODE_M)) BlockPicked->model.rotate(-0.01f, Vector3(0, 1, 0));
 }
 
 // ------------------------------------ class: EndStage  ----------------------------------

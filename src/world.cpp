@@ -147,6 +147,22 @@ void World::editMap()
 
         break;
     }
+
+    for (int ç = 0; ç < scene->dinamic_objects.size(); ç++)
+    {
+        object = scene->dinamic_objects[ç];
+
+        if (object->mesh == NULL) continue;
+
+        mesh = object->mesh->mesh;
+
+        if (!mesh->testRayCollision(object->model, origin, dir, col, normal))
+            continue;
+
+        BlockPicked = object;
+
+        break;
+    }
 }
 
 void World::changeScene(eScene nextScene)
