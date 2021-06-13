@@ -139,7 +139,7 @@ class DinamicObject : public Object
 
     virtual void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
 
-    virtual void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
+    virtual bool movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
 
     bool onCollision(Object* object, Vector3 position, float speed, Vector3& target);
     bool hasGround(Object* object, Vector3 position);
@@ -160,7 +160,7 @@ public:
 
     void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
-    void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
+    bool movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 };
 
 // ----------------------------------------- class: Saw -------------------------------
@@ -172,7 +172,8 @@ public:
 
     int direction;
 
-    float rotationVelocity;
+    cfgSaw* cfgS;
+
     float rad;
     float speed;
 
@@ -180,11 +181,11 @@ public:
 
     // Metodos
     //Saw(EntityMesh* m, Vector3 pos, Vector3 front = Vector3(0, 0, 1), float dis = 100, float vel = 100);
-    void Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel);
+    void Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel, eObjectName type);
 
     virtual void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
 
-    void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) {};
+    bool movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) {};
     void renderLimits(Camera* camera);
 };
 
@@ -232,7 +233,7 @@ public:
 
     void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
-    void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects){};
+    bool movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects){};
 
     void SelectBox(DinamicObject* picked);
     void LeaveBox();

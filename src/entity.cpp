@@ -308,17 +308,25 @@ void Box::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_obje
     }
 
     // for para dinamic_objects
-    for (int i = 0; i < dinamic_objects.size(); i++)
+    bool kill = false;
+    Vector3 coll, norm;
+    Vector3 centre = position + Vector3(0,cfgD->radius,0);
+    for (int i = 0; !kill && i < dinamic_objects.size(); i++)
     {
         object = dinamic_objects[i];
-        if(!isFalling)
-            break;
+        if(hasSaw(object->oName) && object->mesh->mesh->testSphereBoundingCollision( object->model, getPosition(), cfgD->radius, coll, norm)){
+            kill = true;
+        }
         if(idList == object->idList)
             continue;
         if(hasGround(object, position)){
             isFalling = false;model.setTranslation(target);
         }
         minim_y = minimHeight(object, position, minim_y);
+    }
+    if(kill){
+        respawn();
+        return;
     }
 
     // donem el valor minim
@@ -338,7 +346,7 @@ void Box::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_obje
     model.setTranslation(target);
 }
 
-void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
+bool Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
 {
     Vector3 pos = getPosition();
     Vector3 playerPos = player.getTranslation();
@@ -363,7 +371,7 @@ void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
     {
         model.setTranslation(target);
         model.setFrontAndOrthonormalize(rot);
-        return;
+        return false;
     }
 
     // calcul de variables pels fors
@@ -387,9 +395,13 @@ void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
         modul = (coll-center).length() - rad;
     }
     // for para dinamic_objects
-    for (int i = 0; i < dinamic_objects.size() && modul != 0; i++)
+    bool kill = false;
+    for (int i = 0; !kill && i < dinamic_objects.size() && modul != 0; i++)
     {
         object = dinamic_objects[i];
+        if(hasSaw(object->oName) && object->mesh->mesh->testSphereBoundingCollision( object->model, getPosition(), cfgD->radius, coll, norm)){
+            kill = true;
+        }
         if(object->idList == idList)
             continue;
         minim_y = minimHeight(object, pos, minim_y);
@@ -398,6 +410,11 @@ void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
 
         modul = (coll-center).length() - rad;
     }
+    if(kill){
+        respawn();
+        return true;
+    }
+
     // calcula la minima y
     target = pos + dir * modul;
     target.clampY(minim_y, 1000);
@@ -410,13 +427,14 @@ void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
     model.setTranslation(target);
     model.setFrontAndOrthonormalize(rot);
 
+    return false;
 }
 
 // ----------------------------------------- class: Saw -------------------------------
-void Saw::Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
+void Saw::Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel, eObjectName type)
 {
     eName = OBJECT;
-    oName = SAW;
+    oName = type;
     spawn = pos;
 
     model.setTranslation(pos);
@@ -429,7 +447,14 @@ void Saw::Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
     direction = 1;
     rad = dis;
     speed = vel;
-    rotationVelocity = 0.13f;
+
+    // Busca la configuracio
+    cfgGeneric* cfg = getCfg(saw);
+
+    if (cfg != NULL && ((cfgGeneric*)cfg)->type == saw)
+        cfgS = (cfgSaw*) cfg;
+    else
+        cfgS = new cfgSaw();
 
     // si existeix la mesh
     if (m != NULL) {
@@ -437,7 +462,7 @@ void Saw::Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
         return;
     }
 
-    cfgMesh* cfgM = getCfgMesh(SAW);
+    cfgMesh* cfgM = getCfgMesh(type);
 
     // prova de errors
     if (cfgM == NULL)
@@ -466,7 +491,7 @@ void Saw::renderLimits(Camera* camera)
 // ----------------------------------------- class: SawBasic -------------------------------
 SawBasic::SawBasic(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
-    Init(m, pos, front, dis, vel);
+    Init(m, pos, front, dis, vel, SAW);
 }
 
 void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -475,7 +500,7 @@ void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static
     Vector3 pos = getPosition();
     Vector3 celerity = model_position.rightVector();
     pos = pos + direction * celerity * speed * elapsed_time;
-    model.rotate(rotationVelocity, model.frontVector());
+    model.rotate(cfgS->vr, model.frontVector());
 
     // mirem que estigui entre el marges
     if ((center - pos).length() > rad)
@@ -491,7 +516,7 @@ void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static
 // ----------------------------------------- class: SawHunter -------------------------------
 SawHunter::SawHunter(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
-    Init(m, pos, front, dis, vel);
+    Init(m, pos, front, dis, vel, SAWHUNTER);
 }
 
 void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -509,7 +534,7 @@ void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*>
     else{
         pos = pos_move;
     }
-    model.rotate(rotationVelocity, model.frontVector());
+    model.rotate(cfgS->vr, model.frontVector());
 
     // mirem que estigui entre el marges
     if ((center - pos).length() > rad)
@@ -520,6 +545,7 @@ void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*>
     model.setTranslation(pos);
     model.setFrontAndOrthonormalize(model_position.frontVector());
 }
+
 // ----------------------------------------- class: Player -------------------------------
 Player::Player()
 {
@@ -613,6 +639,7 @@ void Player::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_o
             switch (object->oName)
             {
                 case SAW:
+                case SAWHUNTER:
                 {
                     isDead = true;
                     next = true;
@@ -644,7 +671,8 @@ void Player::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_o
 
     // mover la boxPicked
     if(boxPicked != NULL)
-        boxPicked->movePicked(model, static_objects, dinamic_objects);
+        if(boxPicked->movePicked(model, static_objects, dinamic_objects))
+            LeaveBox();
 
 }
 

@@ -9,6 +9,7 @@ strNameCfg namesCfg[SIZEOFCFG] = {
     {"dinamicsPlayer",dinamicsPlayer},
     {"player",player},
     {"box",box},
+    {"saw",saw},
     {"physicsBox",physicsBox},
     {"physicsPlayer",physicsPlayer},
 };
@@ -173,6 +174,34 @@ void cfgBox::ReadCfg(FILE* f)
     }
 }
 
+// ---------- class: cfgSaw ----------
+cfgSaw::cfgSaw(eType name)
+{
+    type = name;
+
+    // valors per defecte
+    vr = 0.1;
+}
+
+void cfgSaw::ReadCfg(FILE* f)
+{
+        // per cada linea
+    char line[100];
+
+    while (feof(f) == 0)
+    {
+        fgets(line, 100, f);
+
+        // set parametres
+        if (setFloat( vr, line, "vr:", 3)) {}
+        // tag fin
+        else if(strstr(line, ">>>") != NULL) 
+            break;
+        else if (strlen(line) > 1)
+            std::cout << "Line error: \"" << line << "\""<< std::endl;
+    }
+}
+
 // funcions que es criden desde fora
 void InitCfg()
 {
@@ -199,6 +228,12 @@ void InitCfg()
             case box:
             {
                 cfgBox* cfg = new cfgBox(name);
+                cfgTable[name] = cfg;
+                break;
+            }
+            case saw:
+            {
+                cfgSaw* cfg = new cfgSaw(name);
                 cfgTable[name] = cfg;
                 break;
             }

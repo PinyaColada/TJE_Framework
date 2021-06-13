@@ -5,6 +5,7 @@ Object2str TableObj2str[SIZEOFOBJ] = {
     {"PLAYER", PLAYER},
     {"BOX", BOX},
     {"SAW", SAW},
+    {"SAWHUNTER", SAWHUNTER},
     {"FLOOR", FLOOR},
     {"SKYBOX", SKYBOX},
     {"BLOCKLARGE", BLOCKLARGE},
@@ -66,6 +67,20 @@ bool hasDinamic(eObjectName type)
     {
         case BOX:
         case SAW:
+        case SAWHUNTER:
+            return true;
+        
+        default:
+            return false;
+    }
+}
+
+bool hasSaw(eObjectName type)
+{
+    switch (type)
+    {
+        case SAW:
+        case SAWHUNTER:
             return true;
         
         default:
@@ -116,6 +131,10 @@ void InitCfgMesh()
                     "data/Box/ColissionBox.obj");
                     
     cfgMeshCreat(   cfgTableMesh[SAW],
+                    "data/Blocks/Saw.png",
+                    "data/Blocks/Saw.obj",
+                    "");
+    cfgMeshCreat(   cfgTableMesh[SAWHUNTER],
                     "data/Blocks/GoldenSaw.png",
                     "data/Blocks/Saw.obj",
                     "");

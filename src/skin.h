@@ -20,6 +20,7 @@ enum eObjectName {
     PLAYER,
     BOX,
     SAW,
+    SAWHUNTER,
     FLOOR,
     SKYBOX,
     BLOCKLARGE,
@@ -65,6 +66,7 @@ extern int numJewels;
 extern bool hasBlock(eObjectName type);
 extern bool hasCollition(eObjectName type);
 extern bool hasDinamic(eObjectName type);
+extern bool hasSaw(eObjectName type);
 
 // ---------- carregar Meshs ----------
 struct cfgMesh

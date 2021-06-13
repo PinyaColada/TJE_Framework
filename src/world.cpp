@@ -382,6 +382,9 @@ void World::LoadScene(Level* level, eScene nameScene)
             case SAW:
                 objd = new SawBasic(m, dobj.pos, dobj.rot, dobj.rad, dobj.vel);
                 break;
+            case SAWHUNTER:
+                objd = new SawHunter(m, dobj.pos, dobj.rot, dobj.rad, dobj.vel);
+                break;
             default:
                 break;
         }

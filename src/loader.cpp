@@ -70,7 +70,7 @@ void SaveLevel(Level* level)
         fprintf(f,"--- %s\n", TableObj2str[dobj.type].name);
         fprintf(f,"p: "); dobj.pos.exportVector(f);
 
-        if (dobj.type == SAW)
+        if (hasSaw(dobj.type))
         {
             fprintf(f,"r: "); dobj.rot.exportVector(f);
             fprintf(f,"rad: %f\n", dobj.rad);

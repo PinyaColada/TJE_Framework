@@ -159,7 +159,7 @@ void PlayStage::Render()
 
 	if (BlockPic != NULL) {
 		BlockPic->mesh->mesh->bounding->renderBounding(BlockPic->model);
-		if (BlockPic->oName == SAW) {
+		if (hasSaw(BlockPic->oName)) {
 			((Saw*)BlockPic)->renderLimits(camera);
 		}
 	}
@@ -277,7 +277,7 @@ void PlayStage::Update(double elapsed_time)
 			Object* BlockPicked = world->BlockPicked;
 
 			if (BlockPicked != NULL) {
-				if (BlockPicked->oName != SAW)
+				if (!hasSaw(BlockPicked->oName))
 					editBlocks(BlockPicked);
 				else {
 					Saw* sawPicked = (Saw*)BlockPicked;
@@ -322,6 +322,9 @@ void PlayStage::addDinamicInFront(eObjectName type)
 		dinamic = new Box(mesh, pos + Vector3(0, 1000, 0));
 		break;
 	case SAW:
+		dinamic = new SawBasic(mesh, pos);
+		break;
+	case SAWHUNTER:
 		dinamic = new SawHunter(mesh, pos);
 		break;
 	default:
@@ -407,7 +410,7 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 				case SDLK_6: addBlockInFront(BLOCKLONG); break;
 				case SDLK_7: addBlockInFront(BLOCKUNIT); break;
 				case SDLK_8: world->editMap(); break;
-				case SDLK_9: addDinamicInFront(SAW); break;
+				case SDLK_9: addDinamicInFront(SAWHUNTER); break;
 				case SDLK_0: {
 					if(world->BlockPicked == NULL || world->BlockPicked->oName != JEWEL)
 						break;
@@ -430,7 +433,7 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 				case SDLK_x: addBlockInFront(MUSHROOM); break;
 				case SDLK_c: addBlockInFront(ROCK); break;
 				case SDLK_v: addBlockInFront(WEED); break;
-				case SDLK_b: addBlockInFront(SAW); break;
+				case SDLK_b: addDinamicInFront(SAW); break;
 				case SDLK_F3: isComplite = true; break;
 				case SDLK_F4: SaveLevel(world->SaveScene()); break;
 			}

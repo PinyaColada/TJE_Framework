@@ -29,3 +29,14 @@ min_h: 0
 distPicked: 50
 
 >>>
+
+<<< type: dinamicsBox
+>>>
+<<< type: dinamicsPlayer
+>>>
+
+<<< type: saw
+
+vr: 0.1
+
+>>>

@@ -9,6 +9,7 @@ enum eType {
     dinamicsPlayer,
     player,
     box,
+    saw,
     physicsBox,
     physicsPlayer,
 
@@ -52,9 +53,9 @@ class cfgDinamic : public cfgGeneric
 {
 public:
     // Atributs
-    float radius = 3;
-    float margen = 0.1;
-    float dead_y = -200;
+    float radius;
+    float margen;
+    float dead_y;
 
     // Metodes
     cfgDinamic(eType name = DEFAULT);
@@ -88,6 +89,19 @@ public:
 
     // Metodes
     cfgBox(eType name = DEFAULT);
+
+    void ReadCfg(FILE* f);
+};
+
+// ---------- class: cfgSaw ----------
+class cfgSaw : public cfgGeneric 
+{
+public:
+    // Atributs
+    float vr;
+
+    // Metodes
+    cfgSaw(eType name = DEFAULT);
 
     void ReadCfg(FILE* f);
 };
