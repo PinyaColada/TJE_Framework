@@ -203,7 +203,7 @@ void PlayStage::Update(double elapsed_time)
 	{ 
 		object = scene->dinamic_objects[i];
 		if(!object->isCatch && !isTimeStopped)
-			object->move(elapsed_time, Vector3(), scene->static_objects, scene->dinamic_objects);
+			object->move(elapsed_time, player->getPosition(), scene->static_objects, scene->dinamic_objects);
 	}
 
 	// buscar la box que pot ser piked

@@ -116,7 +116,7 @@ void InitCfgMesh()
                     "data/Box/ColissionBox.obj");
                     
     cfgMeshCreat(   cfgTableMesh[SAW],
-                    "data/Blocks/Saw.png",
+                    "data/Blocks/GoldenSaw.png",
                     "data/Blocks/Saw.obj",
                     "");
     cfgMeshCreat(   cfgTableMesh[BLOCKLARGE], 

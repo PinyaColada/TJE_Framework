@@ -429,7 +429,7 @@ void Saw::Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
     direction = 1;
     rad = dis;
     speed = vel;
-    rotationVelocity = 17.0f;
+    rotationVelocity = 0.13f;
 
     // si existeix la mesh
     if (m != NULL) {
@@ -501,9 +501,14 @@ void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*>
     Vector3 celerity = model_position.rightVector();
     float dis = celerity.dot(playerPos - center);
     direction = (dis > 0) ? 1 : -1;
-    pos = pos + direction * celerity * speed * elapsed_time;
-    if ((pos - center).length() > dis)
-        pos = celerity * dis;
+    Vector3 pos_move = pos + direction * celerity * speed * elapsed_time;
+    Vector3 pos_final = center + celerity * dis;
+    if ((pos_move - pos).length() > (pos_final - pos).length()){
+        pos = pos_final;
+    }
+    else{
+        pos = pos_move;
+    }
     model.rotate(rotationVelocity, model.frontVector());
 
     // mirem que estigui entre el marges

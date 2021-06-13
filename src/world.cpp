@@ -148,9 +148,9 @@ void World::editMap()
         break;
     }
 
-    for (int ç = 0; ç < scene->dinamic_objects.size(); ç++)
+    for (int i = 0; i < scene->dinamic_objects.size(); i++)
     {
-        object = scene->dinamic_objects[ç];
+        object = scene->dinamic_objects[i];
 
         if (object->mesh == NULL) continue;
 
