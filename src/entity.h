@@ -169,11 +169,14 @@ class Saw : public DinamicObject
 public:
     // Atributos
     Vector3 center;
-    Vector3 direction;
+
+    int direction;
 
     float rotationVelocity;
     float rad;
     float speed;
+
+    Matrix44 model_position;
 
     // Metodos
     Saw(EntityMesh* m, Vector3 pos, Vector3 front = Vector3(0, 0, 1), float dis = 100, float vel = 100);
@@ -181,6 +184,7 @@ public:
     void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
     void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects){};
+    void renderLimits(Camera* camera);
 };
 
 // ----------------------------------------- class: Player -------------------------------

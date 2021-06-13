@@ -422,11 +422,14 @@ Saw::Saw(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
     model.setTranslation(pos);
     model.setFrontAndOrthonormalize(front);
 
+    model_position.setTranslation(pos);
+    model_position.setFrontAndOrthonormalize(front);
+
     center = pos;
-    direction = model.rightVector();
+    direction = 1;
     rad = dis;
     speed = vel;
-    rotationVelocity = 15.0f;
+    rotationVelocity = 17.0f;
 
     // si existeix la mesh
     if (m != NULL) {
@@ -448,19 +451,36 @@ void Saw::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_obje
 {
     // calcula la nova posicio
     Vector3 pos = getPosition();
-    pos = pos + direction * speed * elapsed_time;
+    Vector3 celerity = model_position.rightVector();
+    pos = pos + direction * celerity * speed * elapsed_time;
     model.rotate(rotationVelocity, model.frontVector());
     
     // mirem que estigui entre el marges
     if ((center-pos).length() > rad)
     {
-        pos = center + direction * rad;
-        direction = -1 * direction;
+        pos = center + direction * celerity * rad;
+        direction *= -1;
     }
     // guarda la posicio
     model.setTranslation(pos);
+    model.setFrontAndOrthonormalize(model_position.frontVector());
 }
 
+void Saw::renderLimits(Camera* camera)
+{
+    Vector3 pos = getPosition();
+
+    model.setTranslation(center);
+    render(camera);
+
+    model.setTranslation(center + model_position.rightVector() * rad);
+    render(camera);
+
+    model.setTranslation(center - model_position.rightVector() * rad);
+    render(camera);
+
+    model.setTranslation(pos);
+}
 // ----------------------------------------- class: Player -------------------------------
 Player::Player()
 {

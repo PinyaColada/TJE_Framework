@@ -149,12 +149,21 @@ void PlayStage::Render()
 	}
 
 	DinamicObject* picked = world->boxPicked;
-	if (picked != NULL)
+
+	if (picked != NULL) {
 		picked->mesh->mesh->bounding->renderBounding(picked->model);
+	}
+
 
 	Object* BlockPic = world->BlockPicked;
-	if (BlockPic != NULL)
+
+	if (BlockPic != NULL) {
 		BlockPic->mesh->mesh->bounding->renderBounding(BlockPic->model);
+		if (BlockPic->oName == SAW) {
+			((Saw*)BlockPic)->renderLimits(camera);
+		}
+	}
+
 
 	//Draw the floor grid	
 	//drawGrid();
@@ -461,20 +470,14 @@ void PlayStage::editBlocks(Object* BlockPicked) {
 }
 
 void PlayStage::editSaw(Saw* SawPicked) {
-	//if (Input::isKeyPressed(SDL_SCANCODE_U)) BlockPicked->model.translate(Vector3(0, 1, 0));
-	if (Input::isKeyPressed(SDL_SCANCODE_I)) {
-		//SawPicked->model.translate(Vector3(1, 0, 0));
-		SawPicked->center = SawPicked->center + Vector3(1, 0, 0);
-	}
-	//if (Input::isKeyPressed(SDL_SCANCODE_O)) BlockPicked->model.translate(Vector3(0, -1, 0));
-	////if (Input::isKeyPressed(SDL_SCANCODE_J)) BlockPicked->model.translate(Vector3(0, 0, 1));
-	if (Input::isKeyPressed(SDL_SCANCODE_K)) {
-		//SawPicked->model.translate(Vector3(-1, 0, 0));
-		SawPicked->center = SawPicked->center + Vector3(-1, 0, 0);
-	}
-	//if (Input::isKeyPressed(SDL_SCANCODE_L)) BlockPicked->model.translate(Vector3(0, 0, -1));
-	//if (Input::isKeyPressed(SDL_SCANCODE_N)) BlockPicked->model.rotate(0.01f, Vector3(0, 1, 0));
-	//if (Input::isKeyPressed(SDL_SCANCODE_M)) BlockPicked->model.rotate(-0.01f, Vector3(0, 1, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_U)) SawPicked->center = SawPicked->center + Vector3(0, 1, 0);
+	if (Input::isKeyPressed(SDL_SCANCODE_I)) SawPicked->center = SawPicked->center + Vector3(1, 0, 0);
+	if (Input::isKeyPressed(SDL_SCANCODE_O)) SawPicked->center = SawPicked->center + Vector3(0, -1, 0);
+	if (Input::isKeyPressed(SDL_SCANCODE_J)) SawPicked->center = SawPicked->center + Vector3(0, 0, 1);
+	if (Input::isKeyPressed(SDL_SCANCODE_K)) SawPicked->center = SawPicked->center + Vector3(-1, 0, 0);
+	if (Input::isKeyPressed(SDL_SCANCODE_L)) SawPicked->center = SawPicked->center + Vector3(0, 0, -1);
+	if (Input::isKeyPressed(SDL_SCANCODE_N)) SawPicked->model_position.rotate(0.01f, SawPicked->model_position.topVector());
+	if (Input::isKeyPressed(SDL_SCANCODE_M)) SawPicked->model_position.rotate(-0.01f, SawPicked->model_position.topVector());
 }
 
 // ------------------------------------ class: EndStage  ----------------------------------

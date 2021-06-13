@@ -261,7 +261,7 @@ Level* World::SaveScene()
             case SAW:
             {
                 Saw* saw = (Saw*)object;
-                level->dObjs[id] = *(new DinamicObj{object->oName, object->getPosition(), saw->direction, saw->rad, saw->speed});
+                level->dObjs[id] = *(new DinamicObj{object->oName, object->getPosition(), saw->getDir(), saw->rad, saw->speed});
                 max++;
             }
             default:
