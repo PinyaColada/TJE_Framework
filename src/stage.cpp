@@ -322,7 +322,7 @@ void PlayStage::addDinamicInFront(eObjectName type)
 		dinamic = new Box(mesh, pos + Vector3(0, 1000, 0));
 		break;
 	case SAW:
-		dinamic = new Saw(mesh, pos);
+		dinamic = new SawHunter(mesh, pos);
 		break;
 	default:
 		std::cout << " the object \"" << TableObj2str[type].name << "\" is not a dinamic object" << std::endl;

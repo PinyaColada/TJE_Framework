@@ -380,7 +380,7 @@ void World::LoadScene(Level* level, eScene nameScene)
                 objd = new Box(m, dobj.pos);
                 break;
             case SAW:
-                objd = new Saw(m, dobj.pos, dobj.rot, dobj.rad, dobj.vel);
+                objd = new SawBasic(m, dobj.pos, dobj.rot, dobj.rad, dobj.vel);
                 break;
             default:
                 break;

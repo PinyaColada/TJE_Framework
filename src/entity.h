@@ -179,12 +179,37 @@ public:
     Matrix44 model_position;
 
     // Metodos
-    Saw(EntityMesh* m, Vector3 pos, Vector3 front = Vector3(0, 0, 1), float dis = 100, float vel = 100);
+    //Saw(EntityMesh* m, Vector3 pos, Vector3 front = Vector3(0, 0, 1), float dis = 100, float vel = 100);
+    void Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel);
+
+    virtual void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
+
+    void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) {};
+    void renderLimits(Camera* camera);
+};
+
+// ----------------------------------------- class: SawBasic -------------------------------
+class SawBasic : public Saw
+{
+public:
+    // Atributos
+
+    // Metodos
+    SawBasic(EntityMesh* m, Vector3 pos, Vector3 front = Vector3(0, 0, 1), float dis = 100, float vel = 100);
 
     void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
+};
 
-    void movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects){};
-    void renderLimits(Camera* camera);
+// ----------------------------------------- class: SawHunter -------------------------------
+class SawHunter : public Saw
+{
+public:
+    // Atributos
+
+    // Metodos
+    SawHunter(EntityMesh* m, Vector3 pos, Vector3 front = Vector3(0, 0, 1), float dis = 100, float vel = 100);
+
+    void move(float elapsed_time, Vector3 playerPos, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 };
 
 // ----------------------------------------- class: Player -------------------------------

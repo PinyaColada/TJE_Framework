@@ -413,7 +413,7 @@ void Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
 }
 
 // ----------------------------------------- class: Saw -------------------------------
-Saw::Saw(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
+void Saw::Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
     eName = OBJECT;
     oName = SAW;
@@ -447,25 +447,6 @@ Saw::Saw(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
     mesh = new EntityMesh(SAW, cfgM);
 }
 
-void Saw::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
-{
-    // calcula la nova posicio
-    Vector3 pos = getPosition();
-    Vector3 celerity = model_position.rightVector();
-    pos = pos + direction * celerity * speed * elapsed_time;
-    model.rotate(rotationVelocity, model.frontVector());
-    
-    // mirem que estigui entre el marges
-    if ((center-pos).length() > rad)
-    {
-        pos = center + direction * celerity * rad;
-        direction *= -1;
-    }
-    // guarda la posicio
-    model.setTranslation(pos);
-    model.setFrontAndOrthonormalize(model_position.frontVector());
-}
-
 void Saw::renderLimits(Camera* camera)
 {
     Vector3 pos = getPosition();
@@ -480,6 +461,59 @@ void Saw::renderLimits(Camera* camera)
     render(camera);
 
     model.setTranslation(pos);
+}
+
+// ----------------------------------------- class: SawBasic -------------------------------
+SawBasic::SawBasic(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
+{
+    Init(m, pos, front, dis, vel);
+}
+
+void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
+{
+    // calcula la nova posicio
+    Vector3 pos = getPosition();
+    Vector3 celerity = model_position.rightVector();
+    pos = pos + direction * celerity * speed * elapsed_time;
+    model.rotate(rotationVelocity, model.frontVector());
+
+    // mirem que estigui entre el marges
+    if ((center - pos).length() > rad)
+    {
+        pos = center + direction * celerity * rad;
+        direction *= -1;
+    }
+    // guarda la posicio
+    model.setTranslation(pos);
+    model.setFrontAndOrthonormalize(model_position.frontVector());
+}
+
+// ----------------------------------------- class: SawHunter -------------------------------
+SawHunter::SawHunter(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
+{
+    Init(m, pos, front, dis, vel);
+}
+
+void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
+{
+    // calcula la nova posicio
+    Vector3 pos = getPosition();
+    Vector3 celerity = model_position.rightVector();
+    float dis = celerity.dot(playerPos - center);
+    direction = (dis > 0) ? 1 : -1;
+    pos = pos + direction * celerity * speed * elapsed_time;
+    if ((pos - center).length() > dis)
+        pos = celerity * dis;
+    model.rotate(rotationVelocity, model.frontVector());
+
+    // mirem que estigui entre el marges
+    if ((center - pos).length() > rad)
+    {
+        pos = center + direction * celerity * rad;
+    }
+    // guarda la posicio
+    model.setTranslation(pos);
+    model.setFrontAndOrthonormalize(model_position.frontVector());
 }
 // ----------------------------------------- class: Player -------------------------------
 Player::Player()
