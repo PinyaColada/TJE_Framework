@@ -171,8 +171,7 @@ void PlayStage::Render()
 
 void PlayStage::Update(double elapsed_time) 
 {
-	if(world->hasWin())
-	{
+	if(world->hasWin()) {
 		isComplite = true;
 		world->player->pickedJewel = 0;
 		world->changeScene(STARTLEVEL);
@@ -204,6 +203,8 @@ void PlayStage::Update(double elapsed_time)
 		object = scene->dinamic_objects[i];
 		if(!object->isCatch && !isTimeStopped)
 			object->move(elapsed_time, player->getPosition(), scene->static_objects, scene->dinamic_objects);
+		if (object->oName == SAW || object->oName == SAWHUNTER)
+			object->model.rotate(elapsed_time, object->model.frontVector());
 	}
 
 	// buscar la box que pot ser piked
@@ -436,6 +437,7 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 				case SDLK_b: addDinamicInFront(SAW); break;
 				case SDLK_F3: isComplite = true; break;
 				case SDLK_F4: SaveLevel(world->SaveScene()); break;
+				case SDLK_F5: deleteBlock(); break;
 			}
 			break;
 		}
@@ -479,8 +481,23 @@ void PlayStage::editSaw(Saw* SawPicked) {
 	if (Input::isKeyPressed(SDL_SCANCODE_J)) SawPicked->center = SawPicked->center + Vector3(0, 0, 1);
 	if (Input::isKeyPressed(SDL_SCANCODE_K)) SawPicked->center = SawPicked->center + Vector3(-1, 0, 0);
 	if (Input::isKeyPressed(SDL_SCANCODE_L)) SawPicked->center = SawPicked->center + Vector3(0, 0, -1);
+	if (Input::isKeyPressed(SDL_SCANCODE_Y)) SawPicked->rad += 10;
+	if (Input::isKeyPressed(SDL_SCANCODE_H)) SawPicked->rad -= 10;
 	if (Input::isKeyPressed(SDL_SCANCODE_N)) SawPicked->model_position.rotate(0.01f, SawPicked->model_position.topVector());
 	if (Input::isKeyPressed(SDL_SCANCODE_M)) SawPicked->model_position.rotate(-0.01f, SawPicked->model_position.topVector());
+}
+
+void PlayStage::deleteBlock()
+{
+	Scene* scene = world->scenes[world->current_scene];
+	for (int i = 0; i < scene->static_objects.size(); i++) {
+		if (world->BlockPicked == scene->static_objects[i])
+			scene->static_objects.erase(scene->static_objects.begin() + i);
+	}
+	for (int i = 0; i < scene->dinamic_objects.size(); i++) {
+		if (world->BlockPicked == scene->dinamic_objects[i])
+			scene->dinamic_objects.erase(scene->dinamic_objects.begin() + i);
+	}
 }
 
 // ------------------------------------ class: EndStage  ----------------------------------

@@ -21,7 +21,7 @@ Object2str TableObj2str[SIZEOFOBJ] = {
 NameLevel TableSceneNames[SIZEOFSCENE] = {
     {"DEMO",DEMO,""},
     {"NIVELDELAVA",NIVELDELAVA,"data/Levels/Prueva.txt"},
-    {"NEW",NEW,"data/Levels/NewLevel.txt"},
+    {"NEW",NEW,"data/Levels/FirstLevel.txt"},
     {"WIN",WIN,""}
 };
 

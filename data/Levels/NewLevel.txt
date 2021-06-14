@@ -1,0 +1,16 @@
+### DEMO
+
+<<< SKYBOX
+tex: data/Skybox/Night.png
+>>>
+
+<<< PLAYER
+p: (0.000000,240.000000,0.000000)
+>>>
+
+<<< LStatics
+>>>
+
+<<< LDinamics
+>>>
+

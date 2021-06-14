@@ -185,7 +185,7 @@ public:
 
     virtual void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
 
-    bool movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) {};
+    bool movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) { return false; };
     void renderLimits(Camera* camera);
 };
 
@@ -233,7 +233,7 @@ public:
 
     void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
-    bool movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects){};
+    bool movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) { return false; };
 
     void SelectBox(DinamicObject* picked);
     void LeaveBox();

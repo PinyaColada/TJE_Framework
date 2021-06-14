@@ -366,6 +366,7 @@ bool Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
     Vector3 target = playerPos + Vector3(0,h,0) + cfgB->distPicked * dir;
     dir = target - pos;
     double modul = dir.length();
+
     // proba de errors
     if(modul == 0)
     {
@@ -376,11 +377,14 @@ bool Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
 
     // calcul de variables pels fors
     dir = dir.normalize();
+
     Object* object;
-    Vector3 coll, norm;
+
     float rad = cfgD->radius;
-    Vector3 center = pos + Vector3(0,rad,0);
     float minim_y = cfgB->min_h + playerPos.y;
+
+    Vector3 coll, norm;
+    Vector3 center = pos + Vector3(0, rad, 0);
 
     // for para static_objects
     for (int i = 0; i < static_objects.size() && modul != 0; i++)
@@ -396,6 +400,7 @@ bool Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
     }
     // for para dinamic_objects
     bool kill = false;
+
     for (int i = 0; !kill && i < dinamic_objects.size() && modul != 0; i++)
     {
         object = dinamic_objects[i];
@@ -410,7 +415,8 @@ bool Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
 
         modul = (coll-center).length() - rad;
     }
-    if(kill){
+
+    if (kill) {
         respawn();
         return true;
     }
@@ -499,12 +505,11 @@ void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static
     // calcula la nova posicio
     Vector3 pos = getPosition();
     Vector3 celerity = model_position.rightVector();
+
     pos = pos + direction * celerity * speed * elapsed_time;
-    model.rotate(cfgS->vr, model.frontVector());
 
     // mirem que estigui entre el marges
-    if ((center - pos).length() > rad)
-    {
+    if ((center - pos).length() > rad){
         pos = center + direction * celerity * rad;
         direction *= -1;
     }
@@ -524,23 +529,22 @@ void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*>
     // calcula la nova posicio
     Vector3 pos = getPosition();
     Vector3 celerity = model_position.rightVector();
+
     float dis = celerity.dot(playerPos - center);
+
     direction = (dis > 0) ? 1 : -1;
+
     Vector3 pos_move = pos + direction * celerity * speed * elapsed_time;
     Vector3 pos_final = center + celerity * dis;
-    if ((pos_move - pos).length() > (pos_final - pos).length()){
-        pos = pos_final;
-    }
-    else{
-        pos = pos_move;
-    }
-    model.rotate(cfgS->vr, model.frontVector());
 
-    // mirem que estigui entre el marges
+    if ((pos_move - pos).length() > (pos_final - pos).length())
+        pos = pos_final;
+    else
+        pos = pos_move;
+
     if ((center - pos).length() > rad)
-    {
         pos = center + direction * celerity * rad;
-    }
+
     // guarda la posicio
     model.setTranslation(pos);
     model.setFrontAndOrthonormalize(model_position.frontVector());

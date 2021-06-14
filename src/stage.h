@@ -92,6 +92,8 @@ public:
     void addDinamicInFront(eObjectName type);
     void addBlockInFront(eObjectName type);
 
+    void deleteBlock();
+
     void editBlocks(Object* BlockPicked);
     void editSaw(Saw* SawPicked);
 
