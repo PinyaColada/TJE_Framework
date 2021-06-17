@@ -10,6 +10,7 @@
 #include "world.h"
 #include "entity.h"
 #include "loader.h"
+#include "extra/bass.h"
 
 #include <cmath>
 
@@ -31,6 +32,12 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	frame = 0;
 	time = 0.0f;
 	elapsed_time = 0.0f;
+
+	if (BASS_Init(-1, 44100, 0, 0, NULL) == false) //-1 significa usar el por defecto del sistema operativo
+	{
+		//error abriendo la tarjeta de sonido...
+	}
+
 
 	//OpenGL flags
 	glEnable( GL_CULL_FACE ); //render both sides of every triangle

@@ -406,7 +406,7 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 						world->player->LeaveBox();
 					break;
 				case SDLK_3: idmode = GAMEPLAY; break;
-				case SDLK_4: world->player->current_scene = (eScene( (world->current_scene+1) % world->scenes.size() )); break;
+				case SDLK_4: world->player->current_scene = (eScene((world->current_scene+1) % world->scenes.size())); break;
 				case SDLK_5: addBlockInFront(BLOCKLARGE); break;
 				case SDLK_6: addBlockInFront(BLOCKLONG); break;
 				case SDLK_7: addBlockInFront(BLOCKUNIT); break;
