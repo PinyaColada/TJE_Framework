@@ -25,6 +25,8 @@ public:
     eStageID idSatge;
     eStageID nextSatge;
     World* world = NULL;
+    Audio audio;
+
     bool mouse_locked = true; // tells if the mouse is locked (not seen)
     bool isComplite = false;
 

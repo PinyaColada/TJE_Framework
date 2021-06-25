@@ -33,7 +33,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	time = 0.0f;
 	elapsed_time = 0.0f;
 
-	if (BASS_Init(-1, 44100, 0, 0, NULL) == false) //-1 significa usar el por defecto del sistema operativo
+	if (BASS_Init(-1, 44100, BASS_DEVICE_3D, 0, NULL) == false) //-1 significa usar el por defecto del sistema operativo
 	{
 		//error abriendo la tarjeta de sonido...
 	}
@@ -160,4 +160,5 @@ void Game::LoadLeveols()
 			continue;
 		world->LoadScene(LoadLevel(TableSceneNames[i].filename), (eScene)i);
 	}
+	world->changeScene(STARTLEVEL);
 }

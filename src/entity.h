@@ -177,6 +177,11 @@ public:
     float rad;
     float speed;
 
+    Audio audio;
+    HCHANNEL channel;
+
+    bool isSawDoingNoise = false;
+
     Matrix44 model_position;
 
     // Metodos

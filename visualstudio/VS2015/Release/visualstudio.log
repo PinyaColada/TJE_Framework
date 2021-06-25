@@ -1,14 +1,46 @@
-﻿  skin.cpp
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(389,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+﻿  stage.cpp
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(393,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(109,130): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(133,22): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(148,22): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(198,29): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(199,33): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(205,20): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(209,17): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(212,26): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(215,72): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(221,31): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(235,56): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(236,56): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(238,62): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(248,37): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(249,32): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(270,53): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(278,57): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(280,56): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(287,17): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(290,51): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(293,51): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(303,25): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(351,116): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(351,95): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(351,86): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(351,61): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(398,116): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(398,95): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(398,86): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(398,61): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(533,20): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(537,20): warning C4018: '<': no coinciden signed/unsigned
 LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\box_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 8 y 20 bytes
 LINK : warning C4743: 'Box::`RTTI Base Class Array'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\box_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 5 y 17 bytes
 LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\coldet_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 8 y 20 bytes
 LINK : warning C4743: 'Box::`RTTI Base Class Array'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\coldet_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 5 y 17 bytes
 LINK : warning LNK4098: la biblioteca predeterminada'LIBCMT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
   Generando código
-  0 of 2343 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  1 of 2349 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    11 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
 glew32s.lib(glew.obj) : warning LNK4099: no se encontró PDB 'vc120.pdb' con 'glew32s.lib(glew.obj)' o en 'D:\TJE DEFINITIVE EDITION\TJE_Framework\vc120.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
   visualstudio.vcxproj -> D:\TJE DEFINITIVE EDITION\TJE_Framework\game.exe

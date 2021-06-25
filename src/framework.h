@@ -11,6 +11,8 @@
 #include <iostream>
 #include <string>
 
+#include "extra/bass.h"
+
 #ifndef PI
 	#define PI 3.14159265359
 #endif
@@ -140,6 +142,8 @@ inline Vector3 operator - (const Vector3& a, const Vector3& b) { return Vector3(
 inline Vector3 operator * (const Vector3& a, const Vector3& b) { return Vector3(a.x * b.x, a.y * b.y, a.z * b.z); }
 inline Vector3 operator * (const Vector3& a, float v) { return Vector3(a.x * v, a.y * v, a.z * v); }
 inline Vector3 operator * (float v, const Vector3& a) { return Vector3(a.x * v, a.y * v, a.z * v); }
+inline bool operator == (const Vector3& b, const Vector3& a) { return ((b.x == a.x) && (b.y == a.y) && (b.z == a.z)); }
+inline bool operator != (const Vector3& b, const Vector3& a) { return ((b.x != a.x) || (b.y != a.y) || (b.z != a.z)); }
 
 class Vector4
 {
@@ -394,5 +398,20 @@ typedef Vector3 vec3;
 typedef Vector4 vec4;
 typedef Matrix44 mat4;
 typedef Quaternion quat;
+
+class Audio {
+public:
+	bool walkingSound = false;
+	bool runningSound = false;
+
+	Audio() {
+	}
+	void playSound(const char* filename, float volume);
+	HCHANNEL playWalking(bool isWalking, float volume);
+	HCHANNEL playSoundLoop(const char* filename, float volume);
+	void set3Daudio(HCHANNEL channel, Vector3 pos, Vector3 ori, Vector3 vel);
+	void set3Dplayer(Vector3 pos, Vector3 vel, Vector3 front, Vector3 top);
+	void stop(HCHANNEL channel);
+};
 
 #endif

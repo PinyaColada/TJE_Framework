@@ -10,7 +10,7 @@ v_jump: 500
 
 g: 1000
 g_jump: 4000
-v_jump: 2000
+v_jump: 750
 
 >>>
 

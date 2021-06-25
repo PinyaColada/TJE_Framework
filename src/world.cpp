@@ -48,10 +48,10 @@ World::World( int window_width, int window_height )
     setCamera(window_width, window_height); 
 
     // craer la scene on inicias per si no existeix
-    Scene* scene = new Scene(STARTLEVEL);
-    scenes.push_back(scene);
+    current_scene = eScene(0);
 
-    current_scene = STARTLEVEL;
+    Scene* scene = new Scene(current_scene);
+    scenes.push_back(scene);
 
     player = new Player();
     player->current_scene = current_scene;
