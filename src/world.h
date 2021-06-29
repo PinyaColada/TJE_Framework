@@ -63,6 +63,8 @@ public:
     void respawn();
     bool hasWin();
 
+    void reset();
+
     // guardar i carregar Scenes
     Level* SaveScene();
     void LoadScene(Level* level, eScene nameScene = DEFAULTSCENE);

@@ -52,7 +52,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	//crear World i Gui
 	world = new World(window_width,window_height);
-	gui = new Gui("data/UI/yryr.png", window_width, window_height);
+	gui = new Gui("data/UI/Buttons.png", window_width, window_height);
 
 	// load levels
 	LoadLeveols();
@@ -61,18 +61,11 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	idCS = eStageID::INTRO;
 
 	stages.reserve(SIZEOFSTAGE);
-	stages.push_back(new IntroStage());
-	stages.push_back(new MenuStage());
-	stages.push_back(new TutorStage());
-	stages.push_back(new PlayStage());
-	stages.push_back(new EndStage());
-
-	stages[eStageID::INTRO]->setWorld(world);
-	stages[eStageID::INTRO]->setGui(gui);
-	stages[eStageID::MENU]->setWorld(world);
-	stages[eStageID::TUTORIAL]->setGui(gui);
-	stages[eStageID::PLAY]->setWorld(world);
-	stages[eStageID::END]->setWorld(world);
+	stages.push_back(new IntroStage(world, gui));
+	stages.push_back(new MenuStage(world, gui));
+	stages.push_back(new TutorStage(NULL, gui));
+	stages.push_back(new PlayStage(world, NULL));
+	stages.push_back(new EndStage(world, NULL));
 }
 
 //what to do when the image has to be draw
@@ -96,6 +89,7 @@ void Game::render(void)
 void Game::update(double seconds_elapsed)
 {
 	idCS = stages[idCS]->passStage();
+	if(idCS == EXIT) must_exit = true;
 	toBlur = (idCS == PLAY)? false : true;
 
 	stages[idCS]->Update(seconds_elapsed);

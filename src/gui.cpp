@@ -4,11 +4,10 @@
 
 // taula amb el flipuvs i el range de cada element
 sRangeGui TableOfRanges[SIZEOFEG] = {
-    {false, Vector4(0.0, 0.0, 0.5, 0.5)},
-    {false, Vector4(0.0, 0.5, 0.5, 0.5)},
-    {false, Vector4(0.5, 0.0, 0.5, 0.5)},
-    {false, Vector4(0.5, 0.5, 0.5, 0.5)},
-    {false, Vector4(0.0, 0.0, 1.0, 1.0)}
+    {false, Vector4(0, 0.0, 0.5, 0.2)},
+    {false, Vector4(0, 0.2, 0.5, 0.2)},
+    {false, Vector4(0, 0.4, 0.5, 0.2)},
+    {false, Vector4(0, 0.0, 1.0, 1.0)}
 };
 
 bool isIn(Vector2 p, float x, float y, float w, float h)
@@ -25,10 +24,9 @@ bool hasButton(eElementsGui type)
 {
     switch (type)
     {
-        case GAME:
-        case LOAD:
-        case EXIT:
-        case SAVE:
+        case CONTINUE:
+        case LEAVE:
+        case START:
             return true;
         
         default:
@@ -87,6 +85,8 @@ bool Gui::renderButton(float x, float y, float w, float h, Vector4 range, bool f
     bool hover = isIn(Input::mouse_position, x, y, w, h);
     bool pressed = Input::isMousePressed(SDL_BUTTON_LEFT); // crec que seria aixi
 
+    range.x = hover? range.x + range.z : range.x;
+
     // actualitza el shader
     shader->enable();
 
@@ -99,11 +99,22 @@ bool Gui::renderButton(float x, float y, float w, float h, Vector4 range, bool f
     quad.render(GL_TRIANGLES);
 
     shader->disable();
-    if(hover) printf("HOVER\n");
     return hover && pressed;
 }
 
 void Gui::setDimCamera(int width, int height)
 {
-    cam.setOrthographic(0, width, height, 0, -1, 1);
+    window_width = width;
+    window_height = height;
+
+    cam.setOrthographic(0, window_width, window_height, 0, -1, 1);
+}
+
+sElementGui Gui::creatElement(eElementsGui type, float x, float y, float w, float h, bool center)
+{
+    if(!center)
+        return {type, Vector2(x, y), Vector2(w, h)};
+    
+    Vector2 pos = Vector2(x + window_width * 0.5, y + window_height * 0.5);
+    return {type, pos, Vector2(w, h)};
 }

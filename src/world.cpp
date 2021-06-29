@@ -297,6 +297,12 @@ bool World::hasWin()
         return false;
 }
 
+void World::reset()
+{
+    changeScene(STARTLEVEL);
+	player->pickedJewel = 0;
+}
+
 Level* World::SaveScene()
 {
     Scene* scene = scenes[current_scene];

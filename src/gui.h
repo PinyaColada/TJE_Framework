@@ -6,10 +6,9 @@
 #include "shader.h"
 
 enum eElementsGui{
-    GAME,
-    LOAD,
-    EXIT,
-    SAVE,
+    CONTINUE,
+    LEAVE,
+    START,
     TEXT,
 
     SIZEOFEG
@@ -35,6 +34,9 @@ public:
     Texture* spells;
     Shader* shader;
 
+    int window_width;
+    int window_height;
+
     // Metodos
     Gui(const char *TexName, int width, int height);
 
@@ -44,6 +46,8 @@ public:
     bool renderButton(float x, float y, float w, float h, Vector4 range, bool flipuvs);
 
     void setDimCamera(int width, int height);
+
+    sElementGui creatElement(eElementsGui type, float x, float y, float w, float h, bool center = true);
 };
 
 #endif 

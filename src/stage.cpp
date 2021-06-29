@@ -4,6 +4,9 @@
 #include "entity.h"
 #include "loader.h"
 
+#define w_gui 190
+#define h_gui 49
+
 float x_rotation;
 float y_rotation;
 
@@ -37,6 +40,17 @@ void Stage::Render()
         glEnable(GL_CULL_FACE);		
         glEnable(GL_DEPTH_TEST);		
 	}		
+}
+
+void Stage::RenderGui()		
+{
+	sElementGui elm;
+    for(int i = 0; i < guiElements.size(); i++)	
+	{
+		elm = guiElements[i];
+		if(gui->render(elm))
+			onPressButton(elm.type);
+	}
 }
 
 void Stage::RenderWorld()
@@ -102,11 +116,22 @@ eStageID Stage::passStage()
 }
 
 // ------------------------------------ class: IntroStage  ----------------------------------
-IntroStage::IntroStage()
+IntroStage::IntroStage(World* w, Gui* g)
 {
 	idSatge = INTRO;
-	nextSatge = TUTORIAL;
+	nextSatge = INTRO;
 	needRender = true;
+
+	if(w != NULL) setWorld(w);
+	if(g != NULL)
+	{
+		setGui(g);
+
+		guiElements.reserve(3);
+		guiElements.push_back(gui->creatElement(START, 0, -56, w_gui, h_gui));
+		guiElements.push_back(gui->creatElement(CONTINUE, 0, 0, w_gui, h_gui));
+		guiElements.push_back(gui->creatElement(LEAVE, 0, 56, w_gui, h_gui));
+	}
 }
 
 void IntroStage::RenderGame()
@@ -114,13 +139,6 @@ void IntroStage::RenderGame()
 	RenderWorld();
 
 	drawText(100, 100, "INTRO", Vector3(1, 1, 1), 10);
-}
-
-void IntroStage::RenderGui()		
-{	
-    sElementGui elm = {SAVE, Vector2(300, 300), Vector2(300, 300)};	
-    if(gui->render(elm))
-        onPressButton(elm.type);	
 }
 
 void IntroStage::Update(double elapsed_time)
@@ -141,7 +159,25 @@ void IntroStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 
 void IntroStage::onPressButton(eElementsGui type)		
 {		
-    printf("CLIK\n");		
+    switch (type)
+	{
+	case CONTINUE:
+		nextSatge = PLAY;
+		isComplite = true;
+		break;
+	case LEAVE:
+		nextSatge = EXIT;
+		isComplite = true;
+		break;
+	case START:
+		nextSatge = TUTORIAL;
+		isComplite = true;
+		world->reset();
+		break;
+	
+	default:
+		break;
+	}
 }
 
 eStageID IntroStage::whatNext()
@@ -152,11 +188,21 @@ eStageID IntroStage::whatNext()
 }
 
 // ------------------------------------ class: MenuStage  ----------------------------------
-MenuStage::MenuStage()
+MenuStage::MenuStage(World* w, Gui* g)
 {
 	idSatge = MENU;
 	nextSatge = PLAY;
 	needRender = true;
+
+	if(w != NULL) setWorld(w);
+	if(g != NULL)
+	{
+		setGui(g);
+
+		guiElements.reserve(2);
+		guiElements.push_back(gui->creatElement(CONTINUE, 0, -28, w_gui, h_gui));
+		guiElements.push_back(gui->creatElement(LEAVE, 0, 28, w_gui, h_gui));
+	}
 }
 
 void MenuStage::RenderGame()
@@ -164,11 +210,6 @@ void MenuStage::RenderGame()
 	RenderWorld();
 
 	drawText(100, 100, "MENU", Vector3(1, 1, 1), 10);
-}
-
-void MenuStage::RenderGui()		
-{		
-		
 }
 
 void MenuStage::Update(double elapsed_time)
@@ -189,20 +230,37 @@ void MenuStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 
 void MenuStage::onPressButton(eElementsGui type)		
 {		
-		
+	switch (type)
+	{
+	case CONTINUE:
+		isComplite = true;
+		break;
+	case LEAVE:
+		nextSatge = EXIT;
+		isComplite = true;
+		break;
+
+	default:
+		break;
+	}
+}
+
+eStageID MenuStage::whatNext()
+{
+	eStageID next = nextSatge;
+	nextSatge = PLAY;
+	return next;
 }
 
 // ------------------------------------ class: TutorStage  ----------------------------------
-TutorStage::TutorStage()
+TutorStage::TutorStage(World* w, Gui* g)
 {
 	idSatge = TUTORIAL;
 	nextSatge = PLAY;
 	needRender = true;
-}
 
-void TutorStage::RenderGui()		
-{		
-	drawText(100, 100, "Tutorial", Vector3(1, 1, 1), 10);
+	if(w != NULL) setWorld(w);
+	if(g != NULL) setGui(g);
 }
 
 // events
@@ -212,11 +270,14 @@ void TutorStage::onKeyDown( SDL_KeyboardEvent event )
 }
 
 // ------------------------------------ class: PlayStage  ------------------------------------
-PlayStage::PlayStage()
+PlayStage::PlayStage(World* w, Gui* g)
 {
     idSatge = PLAY;
 	nextSatge = END;
 	needRender = true;
+
+	if(w != NULL) setWorld(w);
+	if(g != NULL) setGui(g);
 
 	// --- Audio ---
 	#ifdef _WINDOWS_
@@ -261,11 +322,6 @@ void PlayStage::RenderGame()
 
 	//Draw the floor grid	
 	//drawGrid();
-}
-
-void PlayStage::RenderGui()		
-{		
-	
 }
 
 void PlayStage::Update(double elapsed_time) 
@@ -668,11 +724,6 @@ void PlayStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 	}
 }
 
-void PlayStage::onPressButton(eElementsGui type)
-{
-
-}
-
 eStageID PlayStage::whatNext()
 {
 	eStageID next = nextSatge;
@@ -681,11 +732,14 @@ eStageID PlayStage::whatNext()
 }
 
 // ------------------------------------ class: EndStage  ----------------------------------
-EndStage::EndStage()
+EndStage::EndStage(World* w, Gui* g)
 {
 	idSatge = END;
 	nextSatge = INTRO;
 	needRender = true;
+
+	if(w != NULL) setWorld(w);
+	if(g != NULL) setGui(g);
 }
 
 void EndStage::RenderGame()
@@ -693,11 +747,6 @@ void EndStage::RenderGame()
 	RenderWorld();
 
 	drawText(100, 100, "END", Vector3(1, 1, 1), 10);
-}
-
-void EndStage::RenderGui()
-{
-
 }
 
 void EndStage::Update(double elapsed_time)
@@ -712,11 +761,6 @@ void EndStage::onKeyDown( SDL_KeyboardEvent event )
 }
 
 void EndStage::onMouseButtonDown( SDL_MouseButtonEvent event )
-{
-
-}
-
-void EndStage::onPressButton(eElementsGui type)
 {
 
 }

@@ -12,7 +12,8 @@ enum eStageID {
     PLAY,
     END,
 
-    SIZEOFSTAGE
+    SIZEOFSTAGE,
+    EXIT = -1
 };
 
 enum eModeID{
@@ -37,9 +38,11 @@ public:
     bool isWorld = false;		
     bool isGui = false;
 
+    std::vector<sElementGui> guiElements;
+
     void Render();
     virtual void RenderGame() = 0;		
-    virtual void RenderGui() = 0;
+    void RenderGui();
 
     virtual void Update(double elapsed_time) = 0;
 
@@ -66,10 +69,9 @@ class IntroStage : public Stage
 {
 public:
 
-    IntroStage();
+    IntroStage(World* w = NULL, Gui* g = NULL);
 
     void RenderGame();
-    void RenderGui();
 
     void Update(double elapsed_time);
 
@@ -87,10 +89,9 @@ class MenuStage : public Stage
 {
 public:
 
-    MenuStage();
+    MenuStage(World* w = NULL, Gui* g = NULL);
 
     void RenderGame();
-    void RenderGui();
 
     void Update(double elapsed_time);
 
@@ -100,7 +101,7 @@ public:
 
     void onPressButton(eElementsGui type);
 
-    eStageID whatNext() {return nextSatge;};
+    eStageID whatNext();
 };
 
 // ------------------------------------ class: TutorStage  ----------------------------------
@@ -108,10 +109,9 @@ class TutorStage : public Stage
 {
 public:
 
-    TutorStage();
+    TutorStage(World* w = NULL, Gui* g = NULL);
 
-    void RenderGame(){};
-    void RenderGui();
+    void RenderGame(){drawText(100, 100, "Tutorial", Vector3(1, 1, 1), 10);};
 
     void Update(double elapsed_time){};
 
@@ -129,7 +129,7 @@ class PlayStage : public Stage
 {
 public:
 
-    PlayStage();
+    PlayStage(World* w = NULL, Gui* g = NULL);
 
     float timeCounter = 0.0f;
     float coolDownCounter = 0.0f;
@@ -140,7 +140,6 @@ public:
     #endif
 
     void RenderGame();
-    void RenderGui();
 
     void Update(double elapsed_time);
 
@@ -156,7 +155,7 @@ public:
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 
-    void onPressButton(eElementsGui type);
+    void onPressButton(eElementsGui type){};
 
     eStageID whatNext();
 };
@@ -166,10 +165,9 @@ class EndStage : public Stage
 {
 public:
 
-    EndStage();
+    EndStage(World* w = NULL, Gui* g = NULL);
 
     void RenderGame();
-    void RenderGui();
 
     void Update(double elapsed_time);
 
@@ -177,7 +175,7 @@ public:
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 
-    void onPressButton(eElementsGui type);
+    void onPressButton(eElementsGui type){};
 
     eStageID whatNext() {return nextSatge;};
 };
