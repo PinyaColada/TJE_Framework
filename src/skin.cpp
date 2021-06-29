@@ -19,7 +19,7 @@ Object2str TableObj2str[SIZEOFOBJ] = {
 
 // llista de Scenes amb str
 NameLevel TableSceneNames[SIZEOFSCENE] = {
-    {"DEMO",DEMO,"data/Levels/FirstLevel.txt"},
+    {"DEMO",DEMO,"data/Levels/Hub.txt"},
     {"NIVELDELAVA",NIVELDELAVA,"data/Levels/Prueva.txt"},
     {"NEW",NEW,"data/Levels/FirstLevel.txt"},
     {"WIN",WIN,""}
