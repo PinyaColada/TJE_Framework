@@ -2,8 +2,6 @@
 #include "world.h"
 #include "entity.h"
 
-#define h_spawn 120
-
 // ----------------------------------------- class: Scene -----------------------------------------
 Scene::Scene(eScene n, bool hasInfo, Vector3 sp) 
 {

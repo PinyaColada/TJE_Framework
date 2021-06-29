@@ -8,6 +8,7 @@
 enum eStageID {
     INTRO,
     MENU,
+    TUTORIAL,
     PLAY,
     END,
 
@@ -42,6 +43,9 @@ public:
 
     virtual void Update(double elapsed_time) = 0;
 
+    void RenderWorld();
+    void UpdateWorld(double elapsed_time, bool isMove = true);
+
     void setWorld(World* w) { world = w; isWorld = true; };
     void setGui(Gui* g) { gui = g; isGui = true; };
 
@@ -54,6 +58,7 @@ public:
     virtual void onPressButton(eElementsGui type) = 0;
 
     eStageID passStage();
+    virtual eStageID whatNext() = 0;
 };
 
 // ------------------------------------ class: IntroStage  ----------------------------------
@@ -73,6 +78,8 @@ public:
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 
     void onPressButton(eElementsGui type);
+
+    eStageID whatNext();
 };
 
 // ------------------------------------ class: MenuStage  ----------------------------------
@@ -92,6 +99,29 @@ public:
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 
     void onPressButton(eElementsGui type);
+
+    eStageID whatNext() {return nextSatge;};
+};
+
+// ------------------------------------ class: TutorStage  ----------------------------------
+class TutorStage : public Stage
+{
+public:
+
+    TutorStage();
+
+    void RenderGame(){};
+    void RenderGui();
+
+    void Update(double elapsed_time){};
+
+    // events
+    void onKeyDown( SDL_KeyboardEvent event );
+    void onMouseButtonDown( SDL_MouseButtonEvent event ){};
+
+    void onPressButton(eElementsGui type){};
+
+    eStageID whatNext() {return nextSatge;};
 };
 
 // ------------------------------------ class: PlayStage  ----------------------------------
@@ -127,6 +157,8 @@ public:
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 
     void onPressButton(eElementsGui type);
+
+    eStageID whatNext();
 };
 
 // ------------------------------------ class: EndStage  ----------------------------------
@@ -146,6 +178,8 @@ public:
     void onMouseButtonDown( SDL_MouseButtonEvent event );
 
     void onPressButton(eElementsGui type);
+
+    eStageID whatNext() {return nextSatge;};
 };
 
 #endif 

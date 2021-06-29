@@ -63,12 +63,16 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	stages.reserve(SIZEOFSTAGE);
 	stages.push_back(new IntroStage());
 	stages.push_back(new MenuStage());
+	stages.push_back(new TutorStage());
 	stages.push_back(new PlayStage());
 	stages.push_back(new EndStage());
 
 	stages[eStageID::INTRO]->setWorld(world);
 	stages[eStageID::INTRO]->setGui(gui);
+	stages[eStageID::MENU]->setWorld(world);
+	stages[eStageID::TUTORIAL]->setGui(gui);
 	stages[eStageID::PLAY]->setWorld(world);
+	stages[eStageID::END]->setWorld(world);
 }
 
 //what to do when the image has to be draw
@@ -103,9 +107,9 @@ void Game::onKeyDown( SDL_KeyboardEvent event )
 	Stage* stage = stages[idCS];
 	switch(event.keysym.sym)
 	{
-		case SDLK_ESCAPE: //ESC key, kill the app
-			must_exit = true; 
-			break; 
+		// case SDLK_ESCAPE: //ESC key, kill the app
+		// 	must_exit = true; 
+		// 	break; 
 		case SDLK_F1: 
 			Shader::ReloadAll(); 
 			break; 

@@ -38,6 +38,50 @@ void Stage::Render()
         glEnable(GL_DEPTH_TEST);		
 	}		
 }
+
+void Stage::RenderWorld()
+{
+	if(!isWorld)		
+    {		
+        std::cout << "Error: needed World" << std::endl;		
+        return;		
+    }
+	// render de World
+	world->Render();
+}
+
+void Stage::UpdateWorld(double elapsed_time, bool isMove)
+{
+	if(!isWorld)
+    {		
+        std::cout << "Error: needed World" << std::endl;		
+        return;		
+    }
+	// update de World
+	world->Update(elapsed_time);
+
+	Player* player = world->player;
+	Scene* scene = world->scenes[world->current_scene];
+
+	// update del player
+	player->move(elapsed_time, Vector3(), scene->static_objects, scene->dinamic_objects);
+
+	if(!isMove)
+		return;
+
+	// rotem la camera
+	x_rotation += 0.1 * DEG2RAD;
+	y_rotation += Input::mouse_delta.y * 0.005f * DEG2RAD;
+
+	y_rotation = clamp(y_rotation, -20 * DEG2RAD, 20 * DEG2RAD);
+
+	Vector3 dir = Vector3(	sin(x_rotation),
+							sin(y_rotation), 
+							cos(x_rotation) * cos(y_rotation));
+
+	world->player->model.setFrontAndOrthonormalize(dir);
+}
+
 void Stage::updateMouse()
 {
     mouse_locked = !mouse_locked;
@@ -49,7 +93,7 @@ eStageID Stage::passStage()
 	if(isComplite)
 	{
 		isComplite = false;
-		return nextSatge;
+		return whatNext();
 	}
 	else
 	{
@@ -61,19 +105,13 @@ eStageID Stage::passStage()
 IntroStage::IntroStage()
 {
 	idSatge = INTRO;
-	nextSatge = MENU;
+	nextSatge = TUTORIAL;
 	needRender = true;
 }
 
 void IntroStage::RenderGame()
 {
-	if(!isWorld)		
-    {		
-        std::cout << "Error: needed World" << std::endl;		
-        return;		
-    }
-	// render de World
-	world->Render();
+	RenderWorld();
 
 	drawText(100, 100, "INTRO", Vector3(1, 1, 1), 10);
 }
@@ -87,32 +125,7 @@ void IntroStage::RenderGui()
 
 void IntroStage::Update(double elapsed_time)
 {
-	if(!isWorld)		
-    {		
-        std::cout << "Error: needed World" << std::endl;		
-        return;		
-    }
-	// update de World
-	world->Update(elapsed_time);
-
-	Player* player = world->player;
-	Scene* scene = world->scenes[world->current_scene];
-
-	// rotem la camera
-	x_rotation += 0.1 * DEG2RAD;
-	y_rotation += Input::mouse_delta.y * 0.005f * DEG2RAD;
-
-	y_rotation = clamp(y_rotation, -20 * DEG2RAD, 20 * DEG2RAD);
-
-	Vector3 dir = Vector3(	sin(x_rotation),
-							sin(y_rotation), 
-							cos(x_rotation) * cos(y_rotation));
-
-	world->player->model.setFrontAndOrthonormalize(dir);
-
-	// update del player
-	player->move(elapsed_time, Vector3(), scene->static_objects, scene->dinamic_objects);
-	
+	UpdateWorld(elapsed_time);
 }
 
 // events
@@ -131,6 +144,13 @@ void IntroStage::onPressButton(eElementsGui type)
     printf("CLIK\n");		
 }
 
+eStageID IntroStage::whatNext()
+{
+	eStageID next = nextSatge;
+	nextSatge = INTRO;
+	return next;
+}
+
 // ------------------------------------ class: MenuStage  ----------------------------------
 MenuStage::MenuStage()
 {
@@ -141,6 +161,8 @@ MenuStage::MenuStage()
 
 void MenuStage::RenderGame()
 {
+	RenderWorld();
+
 	drawText(100, 100, "MENU", Vector3(1, 1, 1), 10);
 }
 
@@ -151,7 +173,7 @@ void MenuStage::RenderGui()
 
 void MenuStage::Update(double elapsed_time)
 {
-
+	UpdateWorld(elapsed_time, false);
 }
 
 // events
@@ -168,6 +190,25 @@ void MenuStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 void MenuStage::onPressButton(eElementsGui type)		
 {		
 		
+}
+
+// ------------------------------------ class: TutorStage  ----------------------------------
+TutorStage::TutorStage()
+{
+	idSatge = TUTORIAL;
+	nextSatge = PLAY;
+	needRender = true;
+}
+
+void TutorStage::RenderGui()		
+{		
+	drawText(100, 100, "Tutorial", Vector3(1, 1, 1), 10);
+}
+
+// events
+void TutorStage::onKeyDown( SDL_KeyboardEvent event )
+{
+	isComplite = true;
 }
 
 // ------------------------------------ class: PlayStage  ------------------------------------
@@ -439,7 +480,7 @@ void PlayStage::addDinamicInFront(eObjectName type)
 	switch (type)
 	{
 	case BOX:
-		dinamic = new Box(mesh, pos + Vector3(0, 1000, 0));
+		dinamic = new Box(mesh, pos + Vector3(0, h_spawn, 0));
 		break;
 	case SAW:
 		dinamic = new SawBasic(mesh, pos);
@@ -547,6 +588,10 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 	{
 		case GAMEPLAY: {
 			switch (event.keysym.sym) {
+				case SDLK_ESCAPE:
+					nextSatge = MENU;
+					isComplite = true;
+					break;
 				case SDLK_3: idmode = EDIT; break;
 				case SDLK_4: world->player->current_scene = (eScene( (world->current_scene+1) % world->scenes.size() )); break;
 			}
@@ -554,6 +599,10 @@ void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 		}
 		case EDIT: {
 			switch (event.keysym.sym) {
+				case SDLK_ESCAPE:
+					nextSatge = MENU;
+					isComplite = true;
+					break;
 				case SDLK_1: addDinamicInFront(BOX); break;
 				case SDLK_2:
 					if (world->player->boxPicked == NULL)
@@ -624,16 +673,25 @@ void PlayStage::onPressButton(eElementsGui type)
 
 }
 
+eStageID PlayStage::whatNext()
+{
+	eStageID next = nextSatge;
+	nextSatge = END;
+	return next;
+}
+
 // ------------------------------------ class: EndStage  ----------------------------------
 EndStage::EndStage()
 {
 	idSatge = END;
-	nextSatge = MENU;
+	nextSatge = INTRO;
 	needRender = true;
 }
 
 void EndStage::RenderGame()
 {
+	RenderWorld();
+
 	drawText(100, 100, "END", Vector3(1, 1, 1), 10);
 }
 
@@ -644,7 +702,7 @@ void EndStage::RenderGui()
 
 void EndStage::Update(double elapsed_time)
 {
-
+	UpdateWorld(elapsed_time);
 }
 
 // events
