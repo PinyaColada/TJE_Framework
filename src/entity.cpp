@@ -498,6 +498,7 @@ void Saw::renderLimits(Camera* camera)
 SawBasic::SawBasic(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
     Init(m, pos, front, dis, vel, SAW);
+    sawNoise = new Audio("data/Sounds/saw.wav", true);
 }
 
 void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -522,6 +523,7 @@ void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static
 SawHunter::SawHunter(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
     Init(m, pos, front, dis, vel, SAWHUNTER);
+    sawNoise = new Audio("data/Sounds/saw.wav", true);
 }
 
 void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -559,6 +561,13 @@ Player::Player()
     oName = PLAYER;
 
     pickedJewel = 0;
+
+    std::cout << "AAAAAAAAAAAAAAAAAAAAAA" << std::endl;
+
+    runningAudio = new Audio("data/Sounds/Dirt_Running.mp3", true);
+    walkingAudio = new Audio("data/Sounds/Dirt_Jogging.mp3", true);
+    landingAudio = new Audio("data/Sounds/Landing.wav", false);
+    jumpingAudio = new Audio("data/Sounds/Jumping.wav", false);
 
     // Busca la configuracio
     cfgGeneric* cfg = getCfg(player);
@@ -699,4 +708,14 @@ void Player::LeaveBox()
     boxPicked->isCatch = false;
     boxPicked->physic->vel.y = 0;
     boxPicked = NULL;
+}
+
+void Player::doSoundOfWalking()
+{
+    if (runningAudio == NULL || walkingAudio == NULL) {
+        runningAudio = new Audio("data/Sounds/Dirt_Running.mp3", true);
+        walkingAudio = new Audio("data/Sounds/Dirt_Jogging.mp3", true);
+    }
+
+
 }

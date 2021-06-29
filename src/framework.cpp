@@ -1290,91 +1290,30 @@ BoundingBox transformBoundingBox(const Matrix44 m, const BoundingBox& box)
 	return BoundingBox(box_max - halfsize, halfsize );
 }
 
-void Audio::playSound(const char* filename, float volume)
-{
-	HSAMPLE hSample;
-	HCHANNEL hSampleChannel;
+Audio::Audio(const char* filename, bool loop) { // Cargamos las cosas solo una vez
 
-	//Cargamos un sample del disco duro (memoria, filename, offset, length, max, flags)
-	//use BASS_SAMPLE_LOOP in the last param to have a looped sound
-	hSample = BASS_SampleLoad(false, filename, 0, 0, 3, 0);
-	if (hSample == 0)
-		std::cout << "El archivo de audio " << filename << " no se ha encontrado!" << std::endl;
-
-	//Creamos un canal para el sample
-	hSampleChannel = BASS_SampleGetChannel(hSample, false);
-
-	//Lanzamos un sample
-	BASS_ChannelSetAttribute(hSampleChannel, BASS_ATTRIB_VOL, volume);
-	BASS_ChannelPlay(hSampleChannel, true);
-}
-
-HCHANNEL Audio::playSoundLoop(const char* filename, float volume)
-{
-	HSAMPLE hSample;
-	HCHANNEL hSampleChannel;
-
-	//Cargamos un sample del disco duro (memoria, filename, offset, length, max, flags)
-	//use BASS_SAMPLE_LOOP in the last param to have a looped sound
-	hSample = BASS_SampleLoad(false, filename, 0, 0, 3, BASS_SAMPLE_LOOP);
-	if (hSample == 0)
-		std::cout << "El archivo de audio " << filename << " no se ha encontrado!" << std::endl;
-
-	//Creamos un canal para el sample
-	hSampleChannel = BASS_SampleGetChannel(hSample, false);
-
-	//Lanzamos un sample
-	BASS_ChannelSetAttribute(hSampleChannel, BASS_ATTRIB_VOL, volume);
-	BASS_ChannelPlay(hSampleChannel, true);
-
-	return hSampleChannel;
-}
-
-void Audio::set3Daudio(HCHANNEL channel, Vector3 pos, Vector3 ori, Vector3 vel)
-{
-	BASS_3DVECTOR position(pos.x, pos.y, pos.z);
-	BASS_3DVECTOR orientation(ori.x, ori.y, ori.z);
-	BASS_3DVECTOR velocity(vel.x, vel.y, vel.z);
-
-	BASS_ChannelSet3DPosition(channel, &position, &orientation, &velocity);
-	BASS_ChannelSet3DAttributes( channel, BASS_3DMODE_NORMAL, 0, 30, 360, 360, 1);
-}
-
-void Audio::set3Dplayer(Vector3 pos, Vector3 vel, Vector3 front, Vector3 top) {
-	BASS_3DVECTOR position(pos.x, pos.y, pos.z);
-	BASS_3DVECTOR orientation(front.x, front.y, front.z);
-	BASS_3DVECTOR velocity(vel.x, vel.y, vel.z);
-	BASS_3DVECTOR tope(top.x, top.y, top.z);
-
-	BASS_Set3DPosition(&position, &orientation, &velocity, &tope);
-	BASS_SetEAXParameters( EAX_ENVIRONMENT_GENERIC, 0, 0.1, 0 );
-}
-
-HCHANNEL Audio::playWalking(bool isWalking, float volume)
-{
-	HSAMPLE hSample;
-	HCHANNEL hSampleChannel;
-
-	walkingSound = true;
-	//Cargamos un sample del disco duro (memoria, filename, offset, length, max, flags)
-	//use BASS_SAMPLE_LOOP in the last param to have a looped sound
-	if (isWalking)
-		hSample = BASS_SampleLoad(false, "data/Sounds/Dirt_Jogging.mp3", 0, 0, 3, BASS_SAMPLE_LOOP);
+	if (loop)
+		sample = BASS_SampleLoad(false, filename, 0, 0, 3, BASS_SAMPLE_LOOP);
 	else
-		hSample = BASS_SampleLoad(false, "data/Sounds/Dirt_Running.mp3", 0, 0, 3, BASS_SAMPLE_LOOP);
+		sample = BASS_SampleLoad(false, filename, 0, 0, 3, 0);
 
-	//Creamos un canal para el sample
-	hSampleChannel = BASS_SampleGetChannel(hSample, false);
+	channel = BASS_SampleGetChannel(sample, false);
 
-	//Lanzamos un sample
-	BASS_ChannelSetAttribute(hSampleChannel, BASS_ATTRIB_VOL, volume);
-	BASS_ChannelPlay(hSampleChannel, true);
-
-	return hSampleChannel;
+	if (sample)
+		std::cout << "The file in " << filename << " has been loaded" << std::endl;
 }
 
-void Audio::stop(HCHANNEL channel)
-{
+void Audio::play(float volume) { // Ejecutamos con cierto volumen
+	channel = BASS_SampleGetChannel(sample, false);
+
+	BASS_ChannelSetAttribute(channel, BASS_ATTRIB_VOL, volume);
+	BASS_ChannelPlay(channel, true);
+}
+
+void Audio::stop() {
 	BASS_ChannelStop(channel);
-	walkingSound = false;
+}
+
+void Audio::setVolume(float volume) {
+	BASS_ChannelSetAttribute(channel, BASS_ATTRIB_VOL, volume);
 }

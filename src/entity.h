@@ -177,8 +177,7 @@ public:
     float rad;
     float speed;
 
-    Audio audio;
-    HCHANNEL channel;
+    Audio* sawNoise;
 
     bool isSawDoingNoise = false;
 
@@ -228,6 +227,14 @@ public:
 
     DinamicObject* boxPicked = NULL;
 
+    bool isSoundOfRunning = false;
+    bool isSoundOfWalking = false;
+
+    Audio* runningAudio = NULL;
+    Audio* walkingAudio = NULL;
+    Audio* jumpingAudio = NULL;
+    Audio* landingAudio = NULL;
+
     bool isDead = false;
     eScene current_scene = DEFAULTSCENE;
 
@@ -242,5 +249,6 @@ public:
 
     void SelectBox(DinamicObject* picked);
     void LeaveBox();
+    void doSoundOfWalking();
 };
 #endif 

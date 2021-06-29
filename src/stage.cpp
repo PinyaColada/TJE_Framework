@@ -93,6 +93,8 @@ PlayStage::PlayStage()
     idSatge = PLAY;
 	nextSatge = END;
 
+	stopTimeAudio = new Audio("data/Sounds/timestop.wav", false);
+
     // hide the cursor
     mouse_locked = false;
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
@@ -212,7 +214,7 @@ void PlayStage::Update(double elapsed_time)
 				object->model.rotate(elapsed_time, object->model.frontVector());
 			Saw* saw = (Saw*) object;
 			if (saw->isSawDoingNoise == false) {
-				saw->channel = saw->audio.playSoundLoop("data/Sounds/saw.wav", 0.05);
+				saw->sawNoise->play(0.5);
 				saw->isSawDoingNoise = true;
 			}
 			else {
@@ -221,7 +223,7 @@ void PlayStage::Update(double elapsed_time)
 				clamp(distance, 0.001, 0.5);
 				if (isTimeStopped)
 					distance = 0;
-				BASS_ChannelSetAttribute(saw->channel, BASS_ATTRIB_VOL, distance);
+				saw->sawNoise->setVolume(distance);
 			}
 		}
 	}
@@ -265,32 +267,44 @@ void PlayStage::Update(double elapsed_time)
 			if (Input::isKeyPressed(SDL_SCANCODE_D)) dir = dir + aux.perpendicular();
 			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && !player->isFalling) {
 				player->physic->Jump();
+				player->jumpingAudio->play(0.25);
 			} 
 			if (Input::wasKeyPressed(SDL_SCANCODE_Q) && (coolDownCounter < 0)) {
-				audio.playSound("data/Sounds/timestop.wav", 0.05);
+				stopTimeAudio->play(0.05);
 				timeCounter = 9;
 				coolDownCounter = timeCounter + 3;
 			}
 
 			if ((dir != Vector3()) && !player->isFalling) {
-				if (audio.walkingSound == false) {
-					if (isShift)
-						channel_for_walking = audio.playWalking(false, 0.1);
-					else
-						channel_for_walking = audio.playWalking(true, 0.1);
+				if (isShift) {
+					if (!player->isSoundOfRunning) {
+						player->runningAudio->play(0.05);
+						player->walkingAudio->stop();
+						player->isSoundOfRunning = true;
+						player->isSoundOfWalking = false;
+					}
+				}
+				else {
+					if (!player->isSoundOfWalking) {
+						player->walkingAudio->play(0.05);
+						player->runningAudio->stop();
+						player->isSoundOfRunning = false;
+						player->isSoundOfWalking = true;
+					}
 				}
 			} else {
-				if (audio.walkingSound == true || !player->isFalling)
-					audio.stop(channel_for_walking);
+				if (player->isSoundOfWalking || player->isSoundOfRunning) {
+					player->walkingAudio->stop();
+					player->runningAudio->stop();
+					player->isSoundOfRunning = false;
+					player->isSoundOfWalking = false;
+				}
 			}
 
 			player->move(elapsed_time, dir, scene->static_objects, scene->dinamic_objects);
 
-			if (isOnAir == true && player->isFalling == false)
-				audio.playSound("data/Sounds/Landing.wav", 0.1);
-
-			if (isOnAir == false && player->isFalling == true)
-				audio.playSound("data/Sounds/Jumping.wav", 0.1);
+			if (isOnAir && !player->isFalling)
+				player->landingAudio->play(0.25);
 
 			isOnAir = player->isFalling;
 			// Ho posam lo mes guapo que podem :)

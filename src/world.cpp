@@ -54,6 +54,7 @@ World::World( int window_width, int window_height )
     scenes.push_back(scene);
 
     player = new Player();
+
     player->current_scene = current_scene;
     changeScene(current_scene);
 }

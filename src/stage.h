@@ -25,7 +25,6 @@ public:
     eStageID idSatge;
     eStageID nextSatge;
     World* world = NULL;
-    Audio audio;
 
     bool mouse_locked = true; // tells if the mouse is locked (not seen)
     bool isComplite = false;
@@ -86,6 +85,8 @@ public:
 
     float timeCounter = 0.0f;
     float coolDownCounter = 0.0f;
+
+    Audio* stopTimeAudio;
 
     void Render();
 

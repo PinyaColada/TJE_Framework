@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <map>
 
 #include "extra/bass.h"
 
@@ -401,17 +402,14 @@ typedef Quaternion quat;
 
 class Audio {
 public:
-	bool walkingSound = false;
-	bool runningSound = false;
+	HSAMPLE sample; // Es sample de sa canço
+	HCHANNEL channel;
 
-	Audio() {
-	}
-	void playSound(const char* filename, float volume);
-	HCHANNEL playWalking(bool isWalking, float volume);
-	HCHANNEL playSoundLoop(const char* filename, float volume);
-	void set3Daudio(HCHANNEL channel, Vector3 pos, Vector3 ori, Vector3 vel);
-	void set3Dplayer(Vector3 pos, Vector3 vel, Vector3 front, Vector3 top);
-	void stop(HCHANNEL channel);
+	Audio(const char* filename, bool loop);
+
+	void play(float volume); //lanza el audio y retorna el channel donde suena
+	void stop();
+	void setVolume(float volume);
 };
 
 #endif
