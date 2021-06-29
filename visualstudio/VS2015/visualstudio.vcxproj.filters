@@ -82,6 +82,9 @@
     <ClCompile Include="..\..\src\skin.cpp">
       <Filter>gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gui.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\camera.h" />
@@ -160,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\skin.h">
       <Filter>gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\portability.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

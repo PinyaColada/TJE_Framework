@@ -168,6 +168,9 @@ void World::editMap()
 
 void World::changeScene(eScene nextScene)
 {
+    if (nextScene == WIN)
+        nextScene = STARTLEVEL;
+
     if(nextScene >= scenes.size())
     {
         player->current_scene = current_scene;
@@ -262,7 +265,7 @@ Level* World::SaveScene()
             case SAW:
             {
                 Saw* saw = (Saw*)object;
-                level->dObjs[id] = *(new DinamicObj{object->oName, object->getPosition(), saw->getDir(), saw->rad, saw->speed});
+                level->dObjs[id] = *(new DinamicObj{object->oName, saw->center, saw->getDir(), saw->rad, saw->speed});
                 max++;
             }
             default:

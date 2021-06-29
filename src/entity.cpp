@@ -623,16 +623,10 @@ void Player::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_o
                     // descartem casos invalits
                     if(jwl->next_scene == DEFAULTSCENE)
                         break;
-                    // cas de WIN
-                    else if(jwl->next_scene == WIN)
-                    {
-                        pickedJewel |= jwl->idMask;
-                        current_scene = STARTLEVEL;
-                        isDead = true;
-                    }
+
                     // resta de casos
-                    else
-                        current_scene = jwl->next_scene;
+                    current_scene = jwl->next_scene;
+                    pickedJewel |= jwl->idMask;
 
                     next = true;
                     break;

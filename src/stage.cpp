@@ -263,6 +263,11 @@ void PlayStage::Update(double elapsed_time)
 	Scene* scene = world->scenes[world->current_scene];
 	float speed = player->Speed; // obtenim el valor de speed per alterarlo
 
+	if (player->isFalling)
+		player->fallingCounter -= elapsed_time;
+	else
+		player->fallingCounter = player->coyoteJump;
+
 	timeCounter -= elapsed_time;
 	coolDownCounter -= elapsed_time;
 
@@ -335,8 +340,9 @@ void PlayStage::Update(double elapsed_time)
 			if (Input::isKeyPressed(SDL_SCANCODE_S)) dir = dir + -1 * aux;
 			if (Input::isKeyPressed(SDL_SCANCODE_A)) dir = dir + -1 * aux.perpendicular();
 			if (Input::isKeyPressed(SDL_SCANCODE_D)) dir = dir + aux.perpendicular();
-			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && !player->isFalling) {
+			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && (player->fallingCounter > 0) && !player->hasJumped) {
 				player->physic->Jump();
+				player->hasJumped = true;
 
 				// --- Audio ---
 				#ifdef _WINDOWS_
@@ -385,10 +391,14 @@ void PlayStage::Update(double elapsed_time)
 			player->move(elapsed_time, dir, scene->static_objects, scene->dinamic_objects);
 
 			// --- Audio ---
-			#ifdef _WINDOWS_
-			if (isOnAir && !player->isFalling)
+			
+			if (isOnAir && !player->isFalling) {
+				player->hasJumped = false;
+				#ifdef _WINDOWS_
 				player->landingAudio->play(0.25);
-			#endif
+				#endif
+			}
+
 
 			isOnAir = player->isFalling;
 			// Ho posam lo mes guapo que podem :)

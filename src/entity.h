@@ -237,6 +237,10 @@ public:
     Audio* landingAudio = NULL;
     #endif
 
+    bool hasJumped = false;
+    float fallingCounter = 0.0f;
+    const float coyoteJump = 0.25f;
+
     bool isDead = false;
     eScene current_scene = DEFAULTSCENE;
 

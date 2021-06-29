@@ -1,139 +1,44 @@
-﻿  entity.cpp
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(394,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(40,50): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(66,50): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(296,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(314,32): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(357,52): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(357,13): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(390,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(396,100): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(404,32): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(413,100): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(425,26): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(510,17): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(514,24): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(539,30): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(548,24): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(603,32): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\entity.cpp(646,32): warning C4018: '<': no coinciden signed/unsigned
-  game.cpp
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(394,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\game.cpp(138,49): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
-  main.cpp
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(394,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\main.cpp(118,46): warning C4244: '=': conversión de 'Sint32' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\main.cpp(152,24): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-  stage.cpp
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(394,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(111,130): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(135,22): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(150,22): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(200,29): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(201,33): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(207,20): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(211,17): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(214,26): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(223,31): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(237,56): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(238,56): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(240,62): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(250,37): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(251,32): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(273,29): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(281,38): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(289,38): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(304,17): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(317,25): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(365,116): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(365,95): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(365,86): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(365,61): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(412,116): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(412,95): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(412,86): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(412,61): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(547,20): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(551,20): warning C4018: '<': no coinciden signed/unsigned
-  utils.cpp
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(394,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(100,13): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(155,20): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(156,26): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(304,51): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(305,63): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(330,10): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(340,16): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(362,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(364,17): warning C4244: 'argumento': conversión de 'float' a 'const unsigned int'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(377,12): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(386,14): warning C4018: '>=': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(426,20): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(427,59): warning C4244: 'argumento': conversión de '_Ty' a 'unsigned int'; posible pérdida de datos
-          with
-          [
-              _Ty=float
-          ]
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(427,44): warning C4244: 'argumento': conversión de '_Ty' a 'unsigned int'; posible pérdida de datos
-          with
-          [
-              _Ty=float
-          ]
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(427,29): warning C4244: 'argumento': conversión de '_Ty' a 'unsigned int'; posible pérdida de datos
-          with
-          [
-              _Ty=float
-          ]
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(437,20): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(438,74): warning C4244: 'argumento': conversión de '_Ty' a 'uint8'; posible pérdida de datos
-          with
-          [
-              _Ty=float
-          ]
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(438,59): warning C4244: 'argumento': conversión de '_Ty' a 'uint8'; posible pérdida de datos
-          with
-          [
-              _Ty=float
-          ]
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(438,44): warning C4244: 'argumento': conversión de '_Ty' a 'uint8'; posible pérdida de datos
-          with
-          [
-              _Ty=float
-          ]
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\utils.cpp(438,29): warning C4244: 'argumento': conversión de '_Ty' a 'uint8'; posible pérdida de datos
-          with
-          [
-              _Ty=float
-          ]
-  world.cpp
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(394,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(12,99): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(29,57): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(74,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(90,107): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(90,93): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(90,89): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(90,64): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(96,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(131,107): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(131,93): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(131,89): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(131,64): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(136,25): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(152,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(171,18): warning C4018: '>=': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(198,20): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(236,25): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE DEFINITIVE EDITION\TJE_Framework\src\world.cpp(251,25): warning C4018: '<': no coinciden signed/unsigned
-LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\box_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 8 y 20 bytes
+﻿  stage.cpp
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\framework.h(395,105): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(171,130): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(190,22): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(205,22): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(267,41): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(271,29): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(272,33): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(278,20): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(282,17): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(285,26): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(297,31): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(312,56): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(313,56): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(315,62): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(325,37): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(326,32): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(355,29): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(367,38): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(375,38): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(391,17): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(411,25): warning C4244: '*=': conversión de 'double' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(459,116): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(459,95): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(459,86): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(459,61): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(506,116): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(506,95): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(506,86): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(506,61): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(538,20): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE DEFINITIVE EDITION\TJE_Framework\src\stage.cpp(542,20): warning C4018: '<': no coinciden signed/unsigned
+LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\box_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 8 y 16 bytes
 LINK : warning C4743: 'Box::`RTTI Base Class Array'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\box_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 5 y 17 bytes
-LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\coldet_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 8 y 20 bytes
+LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\coldet_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 8 y 16 bytes
 LINK : warning C4743: 'Box::`RTTI Base Class Array'' tiene un tamaño diferente en 'd:\tje definitive edition\tje_framework\src\extra\coldet\coldet_bld.cpp' y 'd:\tje definitive edition\tje_framework\src\entity.cpp': 5 y 17 bytes
 LINK : warning LNK4098: la biblioteca predeterminada'LIBCMT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
   Generando código
-  18 of 2348 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
+  1 of 2388 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    18 functions had inline decision re-evaluated but remain unchanged
+    19 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
 glew32s.lib(glew.obj) : warning LNK4099: no se encontró PDB 'vc120.pdb' con 'glew32s.lib(glew.obj)' o en 'D:\TJE DEFINITIVE EDITION\TJE_Framework\vc120.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
   visualstudio.vcxproj -> D:\TJE DEFINITIVE EDITION\TJE_Framework\game.exe

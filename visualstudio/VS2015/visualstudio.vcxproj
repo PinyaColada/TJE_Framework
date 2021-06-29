@@ -143,6 +143,7 @@
     <ClCompile Include="..\..\src\fbo.cpp" />
     <ClCompile Include="..\..\src\framework.cpp" />
     <ClCompile Include="..\..\src\game.cpp" />
+    <ClCompile Include="..\..\src\gui.cpp" />
     <ClCompile Include="..\..\src\input.cpp" />
     <ClCompile Include="..\..\src\loader.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
@@ -172,11 +173,13 @@
     <ClInclude Include="..\..\src\fbo.h" />
     <ClInclude Include="..\..\src\framework.h" />
     <ClInclude Include="..\..\src\game.h" />
+    <ClInclude Include="..\..\src\gui.h" />
     <ClInclude Include="..\..\src\includes.h" />
     <ClInclude Include="..\..\src\input.h" />
     <ClInclude Include="..\..\src\loader.h" />
     <ClInclude Include="..\..\src\mesh.h" />
     <ClInclude Include="..\..\src\physics.h" />
+    <ClInclude Include="..\..\src\portability.h" />
     <ClInclude Include="..\..\src\rendertotexture.h" />
     <ClInclude Include="..\..\src\shader.h" />
     <ClInclude Include="..\..\src\skin.h" />
