@@ -61,6 +61,7 @@ extern Object2str TableObj2str[SIZEOFOBJ];
 extern NameLevel TableSceneNames[SIZEOFSCENE];
 
 extern bool isTimeStopped;
+extern bool toBlur;
 extern int numJewels;
 
 extern bool hasBlock(eObjectName type);

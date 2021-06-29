@@ -54,6 +54,9 @@ public:
     void SelectBox();
     void editMap();
 
+    void Render(bool CamInPlayer = true);
+    void Update(double elapsed_time);
+
     void changeScene(eScene nextScene);
     void respawn();
     bool hasWin();

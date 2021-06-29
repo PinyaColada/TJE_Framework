@@ -66,6 +66,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	stages.push_back(new PlayStage());
 	stages.push_back(new EndStage());
 
+	stages[eStageID::INTRO]->setWorld(world);
 	stages[eStageID::INTRO]->setGui(gui);
 	stages[eStageID::PLAY]->setWorld(world);
 }
@@ -91,6 +92,7 @@ void Game::render(void)
 void Game::update(double seconds_elapsed)
 {
 	idCS = stages[idCS]->passStage();
+	toBlur = (idCS == PLAY)? false : true;
 
 	stages[idCS]->Update(seconds_elapsed);
 }

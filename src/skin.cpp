@@ -26,6 +26,7 @@ NameLevel TableSceneNames[SIZEOFSCENE] = {
 };
 
 bool isTimeStopped = false;
+bool toBlur = true;
 int numJewels = 0;
 
 bool hasBlock(eObjectName type)

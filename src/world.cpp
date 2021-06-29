@@ -166,6 +166,89 @@ void World::editMap()
     }
 }
 
+void World::Render(bool CamInPlayer)
+{
+	cfgPlayer* cfgP = player->cfgP;
+
+	// moure la camera a la pos del player
+	if(CamInPlayer)
+		camera->lookAt(player->getPosition() +  cfgP->altura, cfgP->altura + player->getPosition() + player->getDir(), Vector3(0,1.01,0));
+    
+    // set the camera as default
+	camera->enable();
+   
+	Scene* scene = scenes[current_scene];
+	Object* object;
+
+	// Skybox
+	EntityMesh* skybox = scene->skybox;
+	if (skybox != NULL){
+		// mover skybox en la pos de player
+		skybox->model.setTranslation(camera->eye);
+
+		// render de skybox
+		skybox->render(camera);
+	}
+
+	// render objectes	
+	for (int id = 0; id < scene->static_objects.size(); id++)
+	{
+		//for para static_objects	
+		object = scene->static_objects[id];
+		switch( object->oName ){
+			case JEWEL:
+				((Jewel*)object)->render(camera, scene->lights);
+				break;
+			default:
+				object->render(camera, scene->lights);
+				break;
+		}
+		
+	}
+
+	for (int id = 0; id < scene->dinamic_objects.size(); id++)
+	{
+		//for para dinamics_objects	
+		object = scene->dinamic_objects[id];
+		object->render(camera, scene->lights);
+	}
+}
+
+void World::Update(double elapsed_time)
+{
+    Scene* scene = scenes[current_scene];
+    
+    // Update de objectes dinamics
+    DinamicObject* object;
+	for (int i = 0; i < scene->dinamic_objects.size(); i++)
+	{ 
+		object = scene->dinamic_objects[i];
+		if(!object->isCatch && !isTimeStopped)
+			object->move(elapsed_time, player->getPosition(), scene->static_objects, scene->dinamic_objects);
+		if (object->oName == SAW || object->oName == SAWHUNTER) {
+			if (!isTimeStopped)
+				object->model.rotate(elapsed_time, object->model.frontVector());
+
+			// --- Audio ---
+			#ifdef _WINDOWS_
+			Saw* saw = (Saw*) object;
+			if (saw->isSawDoingNoise == false) {
+				saw->sawNoise->play(0.5);
+				saw->isSawDoingNoise = true;
+			}
+			else {
+				float distance = player->model.getTranslation().distance(saw->model.getTranslation());
+				distance = 10 / (distance);
+				clamp(distance, 0.001, 0.5);
+				if (isTimeStopped)
+					distance = 0;
+				saw->sawNoise->setVolume(distance);
+			}
+			#endif
+		}
+	}
+}
+
 void World::changeScene(eScene nextScene)
 {
     if (nextScene == WIN)

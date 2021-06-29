@@ -67,6 +67,14 @@ IntroStage::IntroStage()
 
 void IntroStage::RenderGame()
 {
+	if(!isWorld)		
+    {		
+        std::cout << "Error: needed World" << std::endl;		
+        return;		
+    }
+	// render de World
+	world->Render();
+
 	drawText(100, 100, "INTRO", Vector3(1, 1, 1), 10);
 }
 
@@ -79,7 +87,32 @@ void IntroStage::RenderGui()
 
 void IntroStage::Update(double elapsed_time)
 {
+	if(!isWorld)		
+    {		
+        std::cout << "Error: needed World" << std::endl;		
+        return;		
+    }
+	// update de World
+	world->Update(elapsed_time);
 
+	Player* player = world->player;
+	Scene* scene = world->scenes[world->current_scene];
+
+	// rotem la camera
+	x_rotation += 0.1 * DEG2RAD;
+	y_rotation += Input::mouse_delta.y * 0.005f * DEG2RAD;
+
+	y_rotation = clamp(y_rotation, -20 * DEG2RAD, 20 * DEG2RAD);
+
+	Vector3 dir = Vector3(	sin(x_rotation),
+							sin(y_rotation), 
+							cos(x_rotation) * cos(y_rotation));
+
+	world->player->model.setFrontAndOrthonormalize(dir);
+
+	// update del player
+	player->move(elapsed_time, Vector3(), scene->static_objects, scene->dinamic_objects);
+	
 }
 
 // events
@@ -162,60 +195,20 @@ void PlayStage::RenderGame()
         return;		
     }
 
+	// render de World
+	world->Render(idmode == GAMEPLAY);
+
+	// Set parametres
 	Camera* camera = world->camera;
-	Player* player = world->player;
-	cfgPlayer* cfgP = player->cfgP;
 
-	// moure la camera a la pos del player
-	if(idmode == GAMEPLAY)
-		camera->lookAt(player->getPosition() +  cfgP->altura, cfgP->altura + player->getPosition() + player->getDir(), Vector3(0,1.01,0));
-    
-    // set the camera as default
-	camera->enable();
-   
-	Scene* scene = world->scenes[world->current_scene];
-	Object* object;
-
-	// Skybox
-	EntityMesh* skybox = scene->skybox;
-	if (skybox != NULL){
-		// mover skybox en la pos de player
-		skybox->model.setTranslation(camera->eye);
-
-		// render de skybox
-		skybox->render(camera);
-	}
-
-	// render objectes	
-	for (int id = 0; id < scene->static_objects.size(); id++)
-	{
-		//for para static_objects	
-		object = scene->static_objects[id];
-		switch( object->oName ){
-			case JEWEL:
-				((Jewel*)object)->render(camera, scene->lights);
-				break;
-			default:
-				object->render(camera, scene->lights);
-				break;
-		}
-		
-	}
-
-	for (int id = 0; id < scene->dinamic_objects.size(); id++)
-	{
-		//for para dinamics_objects	
-		object = scene->dinamic_objects[id];
-		object->render(camera, scene->lights);
-	}
-
+	// Box seleccionada
 	DinamicObject* picked = world->boxPicked;
 
 	if (picked != NULL) {
 		picked->mesh->mesh->bounding->renderBounding(picked->model);
 	}
 
-
+	// Block seleccionat
 	Object* BlockPic = world->BlockPicked;
 
 	if (BlockPic != NULL) {
@@ -224,7 +217,6 @@ void PlayStage::RenderGame()
 			((Saw*)BlockPic)->renderLimits(camera);
 		}
 	}
-
 
 	//Draw the floor grid	
 	//drawGrid();
@@ -237,12 +229,14 @@ void PlayStage::RenderGui()
 
 void PlayStage::Update(double elapsed_time) 
 {
+	// Error de no tenir World
 	if(!isWorld)		
 	{		
         std::cout << "Error: needed World" << std::endl;		
         return;		
     }
 
+	// Si has completat el joc
 	if(world->hasWin()) {
 		isComplite = true;
 		world->player->pickedJewel = 0;
@@ -250,6 +244,7 @@ void PlayStage::Update(double elapsed_time)
 		return;
 	}
 
+	// Set parametres
     Camera* camera = world->camera;
 	Player* player = world->player;
 
@@ -260,48 +255,24 @@ void PlayStage::Update(double elapsed_time)
 	if(world->current_scene != player->current_scene)
 		world->changeScene(player->current_scene);
 
+	// Set parametres
 	Scene* scene = world->scenes[world->current_scene];
 	float speed = player->Speed; // obtenim el valor de speed per alterarlo
 
+	// Coyote Jump
 	if (player->isFalling)
 		player->fallingCounter -= elapsed_time;
 	else
 		player->fallingCounter = player->coyoteJump;
 
+	// Parar temps
 	timeCounter -= elapsed_time;
 	coolDownCounter -= elapsed_time;
 
 	isTimeStopped = timeCounter > 0 ? true : false;
 
-	DinamicObject* object;
-
-	for (int i = 0; i < scene->dinamic_objects.size(); i++)
-	{ 
-		object = scene->dinamic_objects[i];
-		if(!object->isCatch && !isTimeStopped)
-			object->move(elapsed_time, player->getPosition(), scene->static_objects, scene->dinamic_objects);
-		if (object->oName == SAW || object->oName == SAWHUNTER) {
-			if (!isTimeStopped)
-				object->model.rotate(elapsed_time, object->model.frontVector());
-
-			// --- Audio ---
-			#ifdef _WINDOWS_
-			Saw* saw = (Saw*) object;
-			if (saw->isSawDoingNoise == false) {
-				saw->sawNoise->play(0.5);
-				saw->isSawDoingNoise = true;
-			}
-			else {
-				float distance = player->model.getTranslation().distance(saw->model.getTranslation());
-				distance = 10 / (distance);
-				clamp(distance, 0.001, 0.5);
-				if (isTimeStopped)
-					distance = 0;
-				saw->sawNoise->setVolume(distance);
-			}
-			#endif
-		}
-	}
+	// update de objectes dinamics
+	world->Update(elapsed_time);
 
 	// buscar la box que pot ser piked
 	world->SelectBox();
