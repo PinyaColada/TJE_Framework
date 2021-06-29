@@ -13,6 +13,7 @@
 #include <map>
 
 #include "extra/bass.h"
+#include "portability.h"
 
 #ifndef PI
 	#define PI 3.14159265359
@@ -400,9 +401,11 @@ typedef Vector4 vec4;
 typedef Matrix44 mat4;
 typedef Quaternion quat;
 
+// ------------------------------------ class: Audio  --------------------------------------		
+#ifdef _WINDOWS_
 class Audio {
 public:
-	HSAMPLE sample; // Es sample de sa canço
+	HSAMPLE sample; // Es sample de sa canÃ§o
 	HCHANNEL channel;
 
 	Audio(const char* filename, bool loop);
@@ -411,5 +414,6 @@ public:
 	void stop();
 	void setVolume(float volume);
 };
+#endif
 
 #endif

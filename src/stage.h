@@ -2,6 +2,8 @@
 #define STAGE_H
 
 #include "world.h"
+#include "gui.h"		
+#include "portability.h"
 
 enum eStageID {
     INTRO,
@@ -24,22 +26,32 @@ public:
     eModeID idmode = EDIT;
     eStageID idSatge;
     eStageID nextSatge;
+
     World* world = NULL;
+    Gui* gui = NULL;
 
     bool mouse_locked = true; // tells if the mouse is locked (not seen)
     bool isComplite = false;
+    bool needRender = false;		
+    bool isWorld = false;		
+    bool isGui = false;
 
-    virtual void Render() = 0;
+    void Render();
+    virtual void RenderGame() = 0;		
+    virtual void RenderGui() = 0;
 
     virtual void Update(double elapsed_time) = 0;
 
-    void setWorld(World* w) { world = w; };
+    void setWorld(World* w) { world = w; isWorld = true; };
+    void setGui(Gui* g) { gui = g; isGui = true; };
 
     void updateMouse();
 
     // events
     virtual void onKeyDown( SDL_KeyboardEvent event ) = 0;
     virtual void onMouseButtonDown( SDL_MouseButtonEvent event ) = 0;
+
+    virtual void onPressButton(eElementsGui type) = 0;
 
     eStageID passStage();
 };
@@ -51,13 +63,16 @@ public:
 
     IntroStage();
 
-    void Render();
+    void RenderGame();
+    void RenderGui();
 
     void Update(double elapsed_time);
 
     // events
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
+
+    void onPressButton(eElementsGui type);
 };
 
 // ------------------------------------ class: MenuStage  ----------------------------------
@@ -67,13 +82,16 @@ public:
 
     MenuStage();
 
-    void Render();
+    void RenderGame();
+    void RenderGui();
 
     void Update(double elapsed_time);
 
     // events
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
+
+    void onPressButton(eElementsGui type);
 };
 
 // ------------------------------------ class: PlayStage  ----------------------------------
@@ -86,9 +104,12 @@ public:
     float timeCounter = 0.0f;
     float coolDownCounter = 0.0f;
 
+    #ifdef _WINDOWS_
     Audio* stopTimeAudio;
+    #endif
 
-    void Render();
+    void RenderGame();
+    void RenderGui();
 
     void Update(double elapsed_time);
 
@@ -103,6 +124,8 @@ public:
     // events
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
+
+    void onPressButton(eElementsGui type);
 };
 
 // ------------------------------------ class: EndStage  ----------------------------------
@@ -112,13 +135,16 @@ public:
 
     EndStage();
 
-    void Render();
+    void RenderGame();
+    void RenderGui();
 
     void Update(double elapsed_time);
 
     // events
     void onKeyDown( SDL_KeyboardEvent event );
     void onMouseButtonDown( SDL_MouseButtonEvent event );
+
+    void onPressButton(eElementsGui type);
 };
 
 #endif 

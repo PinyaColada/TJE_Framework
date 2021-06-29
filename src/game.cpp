@@ -11,6 +11,7 @@
 #include "entity.h"
 #include "loader.h"
 #include "extra/bass.h"
+#include "portability.h"
 
 #include <cmath>
 
@@ -33,8 +34,10 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	time = 0.0f;
 	elapsed_time = 0.0f;
 
+	#ifdef _WINDOWS_
 	if (BASS_Init(-1, 44100, 0, 0, NULL) == false) //-1 significa usar el por defecto del sistema operativo
 		std::cout << "Problemes a s'hora de inicialitzar sa llibraria BASS" << std::endl;
+	#endif
 
 	//OpenGL flags
 	glEnable( GL_CULL_FACE ); //render both sides of every triangle
@@ -45,9 +48,10 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	InitCfgMesh();
 	LoadCfg("data/Configuration.txt");
 	printf("\n");
-
-	//crear World
+	
+	//crear World i Gui
 	world = new World(window_width,window_height);
+	gui = new Gui("data/UI/yryr.png", window_width, window_height);
 
 	// load levels
 	LoadLeveols();
@@ -61,6 +65,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	stages.push_back(new PlayStage());
 	stages.push_back(new EndStage());
 
+	stages[eStageID::INTRO]->setGui(gui);
 	stages[eStageID::PLAY]->setWorld(world);
 }
 
@@ -147,6 +152,7 @@ void Game::onResize(int width, int height)
 	world->camera->aspect =  width / (float)height;
 	world->window_width = window_width;
 	world->window_height = window_height;
+	gui->setDimCamera(window_width, window_height);
 }
 
 void Game::LoadLeveols()

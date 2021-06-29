@@ -1290,6 +1290,8 @@ BoundingBox transformBoundingBox(const Matrix44 m, const BoundingBox& box)
 	return BoundingBox(box_max - halfsize, halfsize );
 }
 
+// ------------------------------------ class: Audio  --------------------------------------
+#ifdef _WINDOWS_
 Audio::Audio(const char* filename, bool loop) { // Cargamos las cosas solo una vez
 
 	if (loop)
@@ -1317,3 +1319,4 @@ void Audio::stop() {
 void Audio::setVolume(float volume) {
 	BASS_ChannelSetAttribute(channel, BASS_ATTRIB_VOL, volume);
 }
+#endif

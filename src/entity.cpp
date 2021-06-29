@@ -86,11 +86,6 @@ void EntityMesh::render(Camera* camera, std::vector<EntityLight*> lights)
     shader->disable();
 }
 
-void EntityMesh::update(float dt)
-{
-
-}
-
 // ----------------------------------------- class: Object -------------------------------------
 
 void Object::render(Camera* camera, std::vector<EntityLight*> lights)
@@ -498,7 +493,9 @@ void Saw::renderLimits(Camera* camera)
 SawBasic::SawBasic(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
     Init(m, pos, front, dis, vel, SAW);
+    #ifdef _WINDOWS_
     sawNoise = new Audio("data/Sounds/saw.wav", true);
+    #endif
 }
 
 void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -523,7 +520,9 @@ void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static
 SawHunter::SawHunter(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
     Init(m, pos, front, dis, vel, SAWHUNTER);
+    #ifdef _WINDOWS_
     sawNoise = new Audio("data/Sounds/saw.wav", true);
+    #endif
 }
 
 void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -562,12 +561,14 @@ Player::Player()
 
     pickedJewel = 0;
 
+    #ifdef _WINDOWS_
     std::cout << "AAAAAAAAAAAAAAAAAAAAAA" << std::endl;
 
     runningAudio = new Audio("data/Sounds/Dirt_Running.mp3", true);
     walkingAudio = new Audio("data/Sounds/Dirt_Jogging.mp3", true);
     landingAudio = new Audio("data/Sounds/Landing.wav", false);
     jumpingAudio = new Audio("data/Sounds/Jumping.wav", false);
+    #endif
 
     // Busca la configuracio
     cfgGeneric* cfg = getCfg(player);
@@ -710,12 +711,12 @@ void Player::LeaveBox()
     boxPicked = NULL;
 }
 
+#ifdef _WINDOWS_
 void Player::doSoundOfWalking()
 {
     if (runningAudio == NULL || walkingAudio == NULL) {
         runningAudio = new Audio("data/Sounds/Dirt_Running.mp3", true);
         walkingAudio = new Audio("data/Sounds/Dirt_Jogging.mp3", true);
     }
-
-
 }
+#endif

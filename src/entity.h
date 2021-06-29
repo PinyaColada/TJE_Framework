@@ -21,7 +21,6 @@ public:
     Entity();
   
     virtual void render(Camera* camera) = 0;
-    virtual void update(float elapsed_time) = 0;
 
     Vector3 getPosition(); 
     Vector3 getDir(); 
@@ -39,7 +38,6 @@ public:
     EntityLight(Vector3 pos, Vector3 target, Vector3 color, float intensity);
 
     virtual void render(Camera* camera) { return; }
-    virtual void update(float elapsed_time) { return; }
 };
 
 // ----------------------------------------- class: EntityMesh -------------------------------------
@@ -58,7 +56,6 @@ public:
  
     void render(Camera* camera, std::vector<EntityLight*> lights);
     void render(Camera* camera);
-    void update(float dt);
 };
 
 // ----------------------------------------- class: Object -------------------------------------
@@ -78,7 +75,6 @@ class Object : public Entity
 
     void render(Camera* camera, std::vector<EntityLight*> lights);
     void render(Camera* camera);
-    void update(float dt){};
 };
 
 // ----------------------------------------- class: Floor -------------------------------
@@ -177,7 +173,9 @@ public:
     float rad;
     float speed;
 
+    #ifdef _WINDOWS_
     Audio* sawNoise;
+    #endif
 
     bool isSawDoingNoise = false;
 
@@ -227,6 +225,7 @@ public:
 
     DinamicObject* boxPicked = NULL;
 
+    #ifdef _WINDOWS_
     bool isSoundOfRunning = false;
     bool isSoundOfWalking = false;
 
@@ -234,6 +233,7 @@ public:
     Audio* walkingAudio = NULL;
     Audio* jumpingAudio = NULL;
     Audio* landingAudio = NULL;
+    #endif
 
     bool isDead = false;
     eScene current_scene = DEFAULTSCENE;
@@ -249,6 +249,9 @@ public:
 
     void SelectBox(DinamicObject* picked);
     void LeaveBox();
+    
+    #ifdef _WINDOWS_
     void doSoundOfWalking();
+    #endif
 };
 #endif 

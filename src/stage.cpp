@@ -12,6 +12,32 @@ HCHANNEL channel_for_walking;
 bool isOnAir;
 
 // ------------------------------------ class: Stage  ----------------------------------------
+void Stage::Render()		
+{
+   	// render Game		
+    if(needRender)		
+    {		
+        glDisable(GL_BLEND);		
+        glEnable(GL_DEPTH_TEST);		
+        glDisable(GL_CULL_FACE);		
+
+		RenderGame();		
+	}		
+    // render Gui		
+    if(isGui)		
+    {		
+        glDisable(GL_DEPTH_TEST);		
+        glDisable(GL_CULL_FACE);		
+        glEnable(GL_BLEND);		
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		
+
+        RenderGui();		
+
+        glDisable(GL_BLEND);		
+        glEnable(GL_CULL_FACE);		
+        glEnable(GL_DEPTH_TEST);		
+	}		
+}
 void Stage::updateMouse()
 {
     mouse_locked = !mouse_locked;
@@ -36,11 +62,19 @@ IntroStage::IntroStage()
 {
 	idSatge = INTRO;
 	nextSatge = MENU;
+	needRender = true;
 }
 
-void IntroStage::Render()
+void IntroStage::RenderGame()
 {
 	drawText(100, 100, "INTRO", Vector3(1, 1, 1), 10);
+}
+
+void IntroStage::RenderGui()		
+{	
+    sElementGui elm = {SAVE, Vector2(300, 300), Vector2(300, 300)};	
+    if(gui->render(elm))
+        onPressButton(elm.type);	
 }
 
 void IntroStage::Update(double elapsed_time)
@@ -59,16 +93,27 @@ void IntroStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 
 }
 
+void IntroStage::onPressButton(eElementsGui type)		
+{		
+    printf("CLIK\n");		
+}
+
 // ------------------------------------ class: MenuStage  ----------------------------------
 MenuStage::MenuStage()
 {
 	idSatge = MENU;
 	nextSatge = PLAY;
+	needRender = true;
 }
 
-void MenuStage::Render()
+void MenuStage::RenderGame()
 {
 	drawText(100, 100, "MENU", Vector3(1, 1, 1), 10);
+}
+
+void MenuStage::RenderGui()		
+{		
+		
 }
 
 void MenuStage::Update(double elapsed_time)
@@ -87,21 +132,35 @@ void MenuStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 
 }
 
+void MenuStage::onPressButton(eElementsGui type)		
+{		
+		
+}
+
 // ------------------------------------ class: PlayStage  ------------------------------------
 PlayStage::PlayStage()
 {
     idSatge = PLAY;
 	nextSatge = END;
+	needRender = true;
 
+	#ifdef _WINDOWS_
 	stopTimeAudio = new Audio("data/Sounds/timestop.wav", false);
+	#endif
 
     // hide the cursor
     mouse_locked = false;
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
 }
 
-void PlayStage::Render() 
+void PlayStage::RenderGame()
 {
+	if(!isWorld)		
+    {		
+        std::cout << "Error: needed World" << std::endl;		
+        return;		
+    }
+
 	Camera* camera = world->camera;
 	Player* player = world->player;
 	cfgPlayer* cfgP = player->cfgP;
@@ -112,11 +171,6 @@ void PlayStage::Render()
     
     // set the camera as default
 	camera->enable();
-
-	// set flags
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
    
 	Scene* scene = world->scenes[world->current_scene];
 	Object* object;
@@ -175,8 +229,19 @@ void PlayStage::Render()
 	//drawGrid();
 }
 
+void PlayStage::RenderGui()		
+{		
+	
+}
+
 void PlayStage::Update(double elapsed_time) 
 {
+	if(!isWorld)		
+	{		
+        std::cout << "Error: needed World" << std::endl;		
+        return;		
+    }
+
 	if(world->hasWin()) {
 		isComplite = true;
 		world->player->pickedJewel = 0;
@@ -212,6 +277,7 @@ void PlayStage::Update(double elapsed_time)
 		if (object->oName == SAW || object->oName == SAWHUNTER) {
 			if (!isTimeStopped)
 				object->model.rotate(elapsed_time, object->model.frontVector());
+			#ifdef _WINDOWS_
 			Saw* saw = (Saw*) object;
 			if (saw->isSawDoingNoise == false) {
 				saw->sawNoise->play(0.5);
@@ -225,6 +291,7 @@ void PlayStage::Update(double elapsed_time)
 					distance = 0;
 				saw->sawNoise->setVolume(distance);
 			}
+			#endif
 		}
 	}
 
@@ -267,14 +334,19 @@ void PlayStage::Update(double elapsed_time)
 			if (Input::isKeyPressed(SDL_SCANCODE_D)) dir = dir + aux.perpendicular();
 			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && !player->isFalling) {
 				player->physic->Jump();
+				#ifdef _WINDOWS_
 				player->jumpingAudio->play(0.25);
+				#endif
 			} 
 			if (Input::wasKeyPressed(SDL_SCANCODE_Q) && (coolDownCounter < 0)) {
+				#ifdef _WINDOWS_
 				stopTimeAudio->play(0.05);
+				#endif
 				timeCounter = 9;
 				coolDownCounter = timeCounter + 3;
 			}
 
+			#ifdef _WINDOWS_
 			if ((dir != Vector3()) && !player->isFalling) {
 				if (isShift) {
 					if (!player->isSoundOfRunning) {
@@ -300,11 +372,14 @@ void PlayStage::Update(double elapsed_time)
 					player->isSoundOfWalking = false;
 				}
 			}
+			#endif
 
 			player->move(elapsed_time, dir, scene->static_objects, scene->dinamic_objects);
 
+			#ifdef _WINDOWS_
 			if (isOnAir && !player->isFalling)
 				player->landingAudio->play(0.25);
+			#endif
 
 			isOnAir = player->isFalling;
 			// Ho posam lo mes guapo que podem :)
@@ -517,6 +592,11 @@ void PlayStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 	}
 }
 
+void PlayStage::onPressButton(eElementsGui type)
+{
+
+}
+
 void PlayStage::editBlocks(Object* BlockPicked) {
 	if (Input::isKeyPressed(SDL_SCANCODE_U)) BlockPicked->model.translate(Vector3(0, 1, 0));
 	if (Input::isKeyPressed(SDL_SCANCODE_I)) BlockPicked->model.translate(Vector3(1, 0, 0));
@@ -559,11 +639,17 @@ EndStage::EndStage()
 {
 	idSatge = END;
 	nextSatge = MENU;
+	needRender = true;
 }
 
-void EndStage::Render()
+void EndStage::RenderGame()
 {
 	drawText(100, 100, "END", Vector3(1, 1, 1), 10);
+}
+
+void EndStage::RenderGui()
+{
+
 }
 
 void EndStage::Update(double elapsed_time)
@@ -578,6 +664,11 @@ void EndStage::onKeyDown( SDL_KeyboardEvent event )
 }
 
 void EndStage::onMouseButtonDown( SDL_MouseButtonEvent event )
+{
+
+}
+
+void EndStage::onPressButton(eElementsGui type)
 {
 
 }

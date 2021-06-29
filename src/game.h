@@ -30,6 +30,8 @@ public:
 
 	//some vars
 	World* world;
+	Gui* gui;
+	
 	eStageID idCS; //la id del actual estat
 	std::vector<Stage *> stages; //llista de estats
 
