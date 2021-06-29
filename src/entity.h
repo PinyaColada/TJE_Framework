@@ -173,6 +173,7 @@ public:
     float rad;
     float speed;
 
+    // --- Audio ---
     #ifdef _WINDOWS_
     Audio* sawNoise;
     #endif
@@ -225,6 +226,7 @@ public:
 
     DinamicObject* boxPicked = NULL;
 
+    // --- Audio ---
     #ifdef _WINDOWS_
     bool isSoundOfRunning = false;
     bool isSoundOfWalking = false;
@@ -250,6 +252,7 @@ public:
     void SelectBox(DinamicObject* picked);
     void LeaveBox();
     
+    // --- Audio ---
     #ifdef _WINDOWS_
     void doSoundOfWalking();
     #endif

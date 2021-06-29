@@ -493,6 +493,8 @@ void Saw::renderLimits(Camera* camera)
 SawBasic::SawBasic(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
     Init(m, pos, front, dis, vel, SAW);
+
+    // --- Audio ---
     #ifdef _WINDOWS_
     sawNoise = new Audio("data/Sounds/saw.wav", true);
     #endif
@@ -520,6 +522,8 @@ void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static
 SawHunter::SawHunter(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
     Init(m, pos, front, dis, vel, SAWHUNTER);
+
+    // --- Audio ---
     #ifdef _WINDOWS_
     sawNoise = new Audio("data/Sounds/saw.wav", true);
     #endif
@@ -561,6 +565,7 @@ Player::Player()
 
     pickedJewel = 0;
 
+    // --- Audio ---
     #ifdef _WINDOWS_
     std::cout << "AAAAAAAAAAAAAAAAAAAAAA" << std::endl;
 
@@ -711,6 +716,7 @@ void Player::LeaveBox()
     boxPicked = NULL;
 }
 
+// --- Audio ---
 #ifdef _WINDOWS_
 void Player::doSoundOfWalking()
 {

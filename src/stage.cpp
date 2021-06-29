@@ -144,6 +144,7 @@ PlayStage::PlayStage()
 	nextSatge = END;
 	needRender = true;
 
+	// --- Audio ---
 	#ifdef _WINDOWS_
 	stopTimeAudio = new Audio("data/Sounds/timestop.wav", false);
 	#endif
@@ -277,6 +278,8 @@ void PlayStage::Update(double elapsed_time)
 		if (object->oName == SAW || object->oName == SAWHUNTER) {
 			if (!isTimeStopped)
 				object->model.rotate(elapsed_time, object->model.frontVector());
+
+			// --- Audio ---
 			#ifdef _WINDOWS_
 			Saw* saw = (Saw*) object;
 			if (saw->isSawDoingNoise == false) {
@@ -334,18 +337,23 @@ void PlayStage::Update(double elapsed_time)
 			if (Input::isKeyPressed(SDL_SCANCODE_D)) dir = dir + aux.perpendicular();
 			if (Input::wasKeyPressed(SDL_SCANCODE_SPACE) && !player->isFalling) {
 				player->physic->Jump();
+
+				// --- Audio ---
 				#ifdef _WINDOWS_
 				player->jumpingAudio->play(0.25);
 				#endif
 			} 
 			if (Input::wasKeyPressed(SDL_SCANCODE_Q) && (coolDownCounter < 0)) {
+				// --- Audio ---
 				#ifdef _WINDOWS_
 				stopTimeAudio->play(0.05);
 				#endif
+
 				timeCounter = 9;
 				coolDownCounter = timeCounter + 3;
 			}
 
+			// --- Audio ---
 			#ifdef _WINDOWS_
 			if ((dir != Vector3()) && !player->isFalling) {
 				if (isShift) {
@@ -376,6 +384,7 @@ void PlayStage::Update(double elapsed_time)
 
 			player->move(elapsed_time, dir, scene->static_objects, scene->dinamic_objects);
 
+			// --- Audio ---
 			#ifdef _WINDOWS_
 			if (isOnAir && !player->isFalling)
 				player->landingAudio->play(0.25);
@@ -513,6 +522,43 @@ void PlayStage::addBlockInFront(eObjectName type)
 	scene->static_objects.push_back(block);
 }
 
+void PlayStage::deleteBlock()
+{
+	Scene* scene = world->scenes[world->current_scene];
+	for (int i = 0; i < scene->static_objects.size(); i++) {
+		if (world->BlockPicked == scene->static_objects[i])
+			scene->static_objects.erase(scene->static_objects.begin() + i);
+	}
+	for (int i = 0; i < scene->dinamic_objects.size(); i++) {
+		if (world->BlockPicked == scene->dinamic_objects[i])
+			scene->dinamic_objects.erase(scene->dinamic_objects.begin() + i);
+	}
+}
+
+void PlayStage::editBlocks(Object* BlockPicked) {
+	if (Input::isKeyPressed(SDL_SCANCODE_U)) BlockPicked->model.translate(Vector3(0, 1, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_I)) BlockPicked->model.translate(Vector3(1, 0, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_O)) BlockPicked->model.translate(Vector3(0, -1, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_J)) BlockPicked->model.translate(Vector3(0, 0, 1));
+	if (Input::isKeyPressed(SDL_SCANCODE_K)) BlockPicked->model.translate(Vector3(-1, 0, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_L)) BlockPicked->model.translate(Vector3(0, 0, -1));
+	if (Input::isKeyPressed(SDL_SCANCODE_N)) BlockPicked->model.rotate(0.01f, Vector3(0, 1, 0));
+	if (Input::isKeyPressed(SDL_SCANCODE_M)) BlockPicked->model.rotate(-0.01f, Vector3(0, 1, 0));
+}
+
+void PlayStage::editSaw(Saw* SawPicked) {
+	if (Input::isKeyPressed(SDL_SCANCODE_U)) SawPicked->center = SawPicked->center + Vector3(0, 1, 0);
+	if (Input::isKeyPressed(SDL_SCANCODE_I)) SawPicked->center = SawPicked->center + Vector3(1, 0, 0);
+	if (Input::isKeyPressed(SDL_SCANCODE_O)) SawPicked->center = SawPicked->center + Vector3(0, -1, 0);
+	if (Input::isKeyPressed(SDL_SCANCODE_J)) SawPicked->center = SawPicked->center + Vector3(0, 0, 1);
+	if (Input::isKeyPressed(SDL_SCANCODE_K)) SawPicked->center = SawPicked->center + Vector3(-1, 0, 0);
+	if (Input::isKeyPressed(SDL_SCANCODE_L)) SawPicked->center = SawPicked->center + Vector3(0, 0, -1);
+	if (Input::isKeyPressed(SDL_SCANCODE_Y)) SawPicked->rad += 10;
+	if (Input::isKeyPressed(SDL_SCANCODE_H)) SawPicked->rad -= 10;
+	if (Input::isKeyPressed(SDL_SCANCODE_N)) SawPicked->model_position.rotate(0.01f, SawPicked->model_position.topVector());
+	if (Input::isKeyPressed(SDL_SCANCODE_M)) SawPicked->model_position.rotate(-0.01f, SawPicked->model_position.topVector());
+}
+
 // events
 void PlayStage::onKeyDown( SDL_KeyboardEvent event )
 {
@@ -595,43 +641,6 @@ void PlayStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 void PlayStage::onPressButton(eElementsGui type)
 {
 
-}
-
-void PlayStage::editBlocks(Object* BlockPicked) {
-	if (Input::isKeyPressed(SDL_SCANCODE_U)) BlockPicked->model.translate(Vector3(0, 1, 0));
-	if (Input::isKeyPressed(SDL_SCANCODE_I)) BlockPicked->model.translate(Vector3(1, 0, 0));
-	if (Input::isKeyPressed(SDL_SCANCODE_O)) BlockPicked->model.translate(Vector3(0, -1, 0));
-	if (Input::isKeyPressed(SDL_SCANCODE_J)) BlockPicked->model.translate(Vector3(0, 0, 1));
-	if (Input::isKeyPressed(SDL_SCANCODE_K)) BlockPicked->model.translate(Vector3(-1, 0, 0));
-	if (Input::isKeyPressed(SDL_SCANCODE_L)) BlockPicked->model.translate(Vector3(0, 0, -1));
-	if (Input::isKeyPressed(SDL_SCANCODE_N)) BlockPicked->model.rotate(0.01f, Vector3(0, 1, 0));
-	if (Input::isKeyPressed(SDL_SCANCODE_M)) BlockPicked->model.rotate(-0.01f, Vector3(0, 1, 0));
-}
-
-void PlayStage::editSaw(Saw* SawPicked) {
-	if (Input::isKeyPressed(SDL_SCANCODE_U)) SawPicked->center = SawPicked->center + Vector3(0, 1, 0);
-	if (Input::isKeyPressed(SDL_SCANCODE_I)) SawPicked->center = SawPicked->center + Vector3(1, 0, 0);
-	if (Input::isKeyPressed(SDL_SCANCODE_O)) SawPicked->center = SawPicked->center + Vector3(0, -1, 0);
-	if (Input::isKeyPressed(SDL_SCANCODE_J)) SawPicked->center = SawPicked->center + Vector3(0, 0, 1);
-	if (Input::isKeyPressed(SDL_SCANCODE_K)) SawPicked->center = SawPicked->center + Vector3(-1, 0, 0);
-	if (Input::isKeyPressed(SDL_SCANCODE_L)) SawPicked->center = SawPicked->center + Vector3(0, 0, -1);
-	if (Input::isKeyPressed(SDL_SCANCODE_Y)) SawPicked->rad += 10;
-	if (Input::isKeyPressed(SDL_SCANCODE_H)) SawPicked->rad -= 10;
-	if (Input::isKeyPressed(SDL_SCANCODE_N)) SawPicked->model_position.rotate(0.01f, SawPicked->model_position.topVector());
-	if (Input::isKeyPressed(SDL_SCANCODE_M)) SawPicked->model_position.rotate(-0.01f, SawPicked->model_position.topVector());
-}
-
-void PlayStage::deleteBlock()
-{
-	Scene* scene = world->scenes[world->current_scene];
-	for (int i = 0; i < scene->static_objects.size(); i++) {
-		if (world->BlockPicked == scene->static_objects[i])
-			scene->static_objects.erase(scene->static_objects.begin() + i);
-	}
-	for (int i = 0; i < scene->dinamic_objects.size(); i++) {
-		if (world->BlockPicked == scene->dinamic_objects[i])
-			scene->dinamic_objects.erase(scene->dinamic_objects.begin() + i);
-	}
 }
 
 // ------------------------------------ class: EndStage  ----------------------------------

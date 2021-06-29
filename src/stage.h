@@ -104,6 +104,7 @@ public:
     float timeCounter = 0.0f;
     float coolDownCounter = 0.0f;
 
+    // --- Audio ---
     #ifdef _WINDOWS_
     Audio* stopTimeAudio;
     #endif

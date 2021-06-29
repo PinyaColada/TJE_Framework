@@ -34,6 +34,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	time = 0.0f;
 	elapsed_time = 0.0f;
 
+	// --- Audio ---
 	#ifdef _WINDOWS_
 	if (BASS_Init(-1, 44100, 0, 0, NULL) == false) //-1 significa usar el por defecto del sistema operativo
 		std::cout << "Problemes a s'hora de inicialitzar sa llibraria BASS" << std::endl;
