@@ -291,6 +291,8 @@ void World::changeScene(eScene nextScene)
     if (nextScene == WIN)
         nextScene = STARTLEVEL;
 
+    stopAllSound();
+
     if(nextScene >= scenes.size())
     {
         player->current_scene = current_scene;
@@ -338,6 +340,39 @@ bool World::hasWin()
         return true;
     else
         return false;
+}
+
+void World::stopAllSound()
+{
+    Scene* scene = scenes[current_scene];
+    Object* obj;
+    for (int i = 0; i < scene->dinamic_objects.size(); i++) {
+        obj = scene->dinamic_objects[i];
+        switch (obj->oName) {
+            case BOX:
+            {
+                Box* box = (Box*)obj;
+                box->sound->stop();
+                break;
+            }
+            case SAW:
+            case SAWHUNTER: {
+                Saw* saw = (Saw*)obj;
+                saw->sawNoise->stop();
+                saw->isSawDoingNoise = false;
+                break;
+            }
+        }
+    }
+
+    for (int i = 0; i < scene->static_objects.size(); i++) {
+        obj = scene->static_objects[i];
+        if (obj->oName == JEWEL) {
+            Jewel* je = (Jewel*)obj;
+            je->sound->stop();
+            je->isMakingSounds = false;
+        }
+    }
 }
 
 void World::reset()

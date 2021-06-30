@@ -63,6 +63,8 @@ public:
     void respawn();
     bool hasWin();
 
+    void stopAllSound();
+
     void reset();
 
     // guardar i carregar Scenes

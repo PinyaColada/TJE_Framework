@@ -21,23 +21,24 @@ D:\TJE\TJE_Framework\src\world.cpp(225,20): warning C4018: '<': no coinciden sig
 D:\TJE\TJE_Framework\src\world.cpp(229,17): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
 D:\TJE\TJE_Framework\src\world.cpp(232,26): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
 D:\TJE\TJE_Framework\src\world.cpp(244,42): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE\TJE_Framework\src\world.cpp(256,54): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE\TJE_Framework\src\world.cpp(265,54): warning C4305: 'argumento': truncamiento de 'double' a 'float'
-D:\TJE\TJE_Framework\src\world.cpp(271,23): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE\TJE_Framework\src\world.cpp(282,50): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE\TJE_Framework\src\world.cpp(258,54): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+D:\TJE\TJE_Framework\src\world.cpp(265,23): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE\TJE_Framework\src\world.cpp(279,50): warning C4305: 'argumento': truncamiento de 'double' a 'float'
 D:\TJE\TJE_Framework\src\world.cpp(296,18): warning C4018: '>=': no coinciden signed/unsigned
 D:\TJE\TJE_Framework\src\world.cpp(330,20): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE\TJE_Framework\src\world.cpp(371,25): warning C4018: '<': no coinciden signed/unsigned
-D:\TJE\TJE_Framework\src\world.cpp(386,25): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE\TJE_Framework\src\world.cpp(349,23): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE\TJE_Framework\src\world.cpp(370,23): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE\TJE_Framework\src\world.cpp(406,25): warning C4018: '<': no coinciden signed/unsigned
+D:\TJE\TJE_Framework\src\world.cpp(421,25): warning C4018: '<': no coinciden signed/unsigned
 LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje\tje_framework\src\extra\coldet\box_bld.cpp' y 'd:\tje\tje_framework\src\entity.cpp': 8 y 16 bytes
 LINK : warning C4743: 'Box::`RTTI Base Class Array'' tiene un tamaño diferente en 'd:\tje\tje_framework\src\extra\coldet\box_bld.cpp' y 'd:\tje\tje_framework\src\entity.cpp': 5 y 17 bytes
 LINK : warning C4743: 'const Box::`vftable'' tiene un tamaño diferente en 'd:\tje\tje_framework\src\extra\coldet\coldet_bld.cpp' y 'd:\tje\tje_framework\src\entity.cpp': 8 y 16 bytes
 LINK : warning C4743: 'Box::`RTTI Base Class Array'' tiene un tamaño diferente en 'd:\tje\tje_framework\src\extra\coldet\coldet_bld.cpp' y 'd:\tje\tje_framework\src\entity.cpp': 5 y 17 bytes
 LINK : warning LNK4098: la biblioteca predeterminada'LIBCMT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
   Generando código
-  1 of 2495 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  8 of 2498 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    13 functions had inline decision re-evaluated but remain unchanged
+    22 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
 glew32s.lib(glew.obj) : warning LNK4099: no se encontró PDB 'vc120.pdb' con 'glew32s.lib(glew.obj)' o en 'D:\TJE\TJE_Framework\vc120.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
   visualstudio.vcxproj -> D:\TJE\TJE_Framework\game.exe

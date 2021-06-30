@@ -310,6 +310,7 @@ PlayStage::PlayStage(World* w, Gui* g)
 	// --- Audio ---
 	#ifdef _WINDOWS_
 	stopTimeAudio = new Audio("data/Sounds/timestop.wav", false);
+	windSound = new Audio("data/Sounds/WindSound.wav", true);
 	#endif
 
     // hide the cursor
@@ -360,6 +361,16 @@ void PlayStage::Update(double elapsed_time)
         std::cout << "Error: needed World" << std::endl;		
         return;		
     }
+
+	if (!isWindSounding && !isTimeStopped) {
+		windSound->play(0.05f);
+		isWindSounding = true;
+	}
+
+	if (isTimeStopped) {
+		windSound->stop();
+		isWindSounding = false;
+	}
 
 	// Si has completat el joc
 	if(world->hasWin()) {
@@ -761,6 +772,9 @@ eStageID PlayStage::whatNext()
 	nextSatge = END;
 	SDL_ShowCursor(true);
 
+	windSound->stop();
+	isWindSounding = false;
+	world->stopAllSound(); // Per aturar es canals de tot lo anterior
 	// guarda el progres
 	world->SaveDataGame();
 	return next;
