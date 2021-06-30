@@ -336,7 +336,7 @@ void PlayStage::RenderGame()
 	DinamicObject* picked = world->boxPicked;
 
 	if (picked != NULL) {
-		picked->mesh->mesh->bounding->renderBounding(picked->model);
+		picked->mesh->mesh->bounding->renderBounding(picked->model, false);
 	}
 
 	// Block seleccionat

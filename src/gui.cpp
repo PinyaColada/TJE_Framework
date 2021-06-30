@@ -93,7 +93,7 @@ bool Gui::renderButton(float x, float y, float w, float h, Vector4 range, bool f
 
     // calcul de si esta pulsat
     bool hover = isIn(Input::mouse_position, x, y, w, h);
-    bool pressed = Input::isMousePressed(SDL_BUTTON_LEFT); // crec que seria aixi
+    bool pressed = Input::isMousePressed(SDL_BUTTON_LEFT); 
 
     // --- Audio ---
 	#ifdef _WINDOWS_

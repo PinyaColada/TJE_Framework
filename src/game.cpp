@@ -56,7 +56,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	InitCfg();
 	InitCfgMesh();
 	LoadCfg("data/Configuration.txt");
-	printf("\n");
+	std::cout << std::endl;
 	
 	//crear World i Gui
 	world = new World(window_width,window_height);
