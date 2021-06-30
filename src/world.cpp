@@ -248,6 +248,8 @@ void World::Update(double elapsed_time)
 			}
 			#endif
 		}
+        // --- Audio ---
+		#ifdef _WINDOWS_
         if (object->oName == BOX) {
             Box* boxaux = (Box*) object;
             if (boxaux->hasFallen) {
@@ -266,12 +268,16 @@ void World::Update(double elapsed_time)
                 boxaux->sound->play(distance);
             }
         }
+        #endif
 	}
 
     for (int i = 0; i < scene->static_objects.size(); i++) {
         sobject = scene->static_objects[i];
         if (sobject->oName == JEWEL) {
             Jewel* je = (Jewel*) sobject;
+            je->update(elapsed_time);
+            // --- Audio ---
+			#ifdef _WINDOWS_
             if (je->isMakingSounds == false) {
                 je->sound->play(0);
                 je->isMakingSounds = true;
@@ -284,6 +290,7 @@ void World::Update(double elapsed_time)
                     distance = 0;
                 je->sound->setVolume(distance);
             }
+            #endif
         }
     }
 }

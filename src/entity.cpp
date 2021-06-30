@@ -151,7 +151,11 @@ void Block::Init(EntityMesh* m, Vector3 pos, eObjectName type, Vector3 front)
 Jewel::Jewel(EntityMesh* m, Vector3 pos, eScene ns, Vector3 front)
 {
     Init(m, pos, JEWEL, front);
+
+    // --- Audio ---
+	#ifdef _WINDOWS_
     sound = new Audio("data/Sounds/JewelSound.wav", true);
+    #endif
 
     next_scene = ns;
     idMask = 1 << numJewels;
@@ -172,6 +176,19 @@ void Jewel::render(Camera* camera)
     mesh->color = colorJewel(next_scene);
     mesh->model = this->model;
     mesh->render(camera);
+}
+
+void Jewel::update(double elapsed_time)
+{
+    // rotem la camera
+	Vector2 rot = dir2rotation(getDir());
+	rot.x += 0.2 * DEG2RAD;
+
+	Vector3 dir = Vector3(	cos(rot.y) * sin(rot.x),
+							sin(rot.y), 
+							cos(rot.y) * cos(rot.x));
+
+    model.setFrontAndOrthonormalize(dir);
 }
 
 // ----------------------------------------- class: DinamicObject -------------------------------------
@@ -286,7 +303,11 @@ void DinamicObject::respawn()
 Box::Box(EntityMesh* m, Vector3 pos, Vector3 front)
 {
     Init(BOX, m, pos, front);
+
+    // --- Audio ---
+	#ifdef _WINDOWS_
     sound = new Audio("data/Sounds/BoxLanding.ogg", false);
+    #endif
 
     // Busca la configuracio
     cfgGeneric* cfg = getCfg(box);
@@ -366,7 +387,10 @@ void Box::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_obje
     model.setTranslation(target);
 
     if (isOnAir && !isFalling) {
+        // --- Audio ---
+	    #ifdef _WINDOWS_
         sound->play(0.25f);
+        #endif
         hasFallen = true;
     } else
         hasFallen = false;

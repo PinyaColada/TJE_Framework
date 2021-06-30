@@ -219,3 +219,11 @@ Vector4 colorJewel(eScene level)
             return Vector4(0.5,0.5,0.5,1); // gris
     }
 }
+
+Vector2 dir2rotation(Vector3 dir)
+{
+    float x_rotation = atan2(dir.x,dir.z);
+	float y_rotation = asin(dir.y);
+
+    return Vector2(x_rotation, y_rotation);
+}

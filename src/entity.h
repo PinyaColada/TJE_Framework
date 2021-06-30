@@ -106,7 +106,10 @@ public:
     eScene next_scene;
 
     JewelMask idMask;
+    // --- Audio ---
+	#ifdef _WINDOWS_
     Audio* sound;
+    #endif
 
     bool isMakingSounds = false;
 
@@ -115,6 +118,8 @@ public:
 
     void render(Camera* camera, std::vector<EntityLight*> lights);
     void render(Camera* camera);
+
+    void update(double elapsed_time);
 };
 
 // ----------------------------------------- class: DinamicObject -------------------------------------
@@ -158,7 +163,10 @@ public:
     // Atributos
     cfgBox* cfgB;
 
+    // --- Audio ---
+	#ifdef _WINDOWS_
     Audio* sound;
+    #endif
     bool hasFallen = false;
 
     // Metodos

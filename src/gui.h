@@ -39,7 +39,10 @@ public:
     Texture* spells;
     Shader* shader;
 
+    // --- Audio ---
+	#ifdef _WINDOWS_
     Audio* sound;
+    #endif
 
     int window_width;
     int window_height;

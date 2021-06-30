@@ -7,9 +7,6 @@
 #define w_gui 190
 #define h_gui 49
 
-float x_rotation;
-float y_rotation;
-
 HCHANNEL channel_for_walking;
 
 // ------------------------------------ class: Stage  ----------------------------------------
@@ -82,14 +79,15 @@ void Stage::UpdateWorld(double elapsed_time, bool isMove)
 		return;
 
 	// rotem la camera
-	x_rotation += 0.1 * DEG2RAD;
-	y_rotation += Input::mouse_delta.y * 0.005f * DEG2RAD;
+	Vector2 rot = dir2rotation(player->getDir());
+	rot.x += 0.1 * DEG2RAD;
+	rot.y += Input::mouse_delta.y * 0.005f * DEG2RAD;
 
-	y_rotation = clamp(y_rotation, -20 * DEG2RAD, 20 * DEG2RAD);
+	rot.y = clamp(rot.y, -20 * DEG2RAD, 20 * DEG2RAD);
 
-	Vector3 dir = Vector3(	cos(y_rotation) * sin(x_rotation),
-							sin(y_rotation), 
-							cos(y_rotation) * cos(x_rotation));
+	Vector3 dir = Vector3(	cos(rot.y) * sin(rot.x),
+							sin(rot.y), 
+							cos(rot.y) * cos(rot.x));
 
 	world->player->model.setFrontAndOrthonormalize(dir);
 }
@@ -407,24 +405,17 @@ void PlayStage::Update(double elapsed_time)
 	switch(idmode){
 		case GAMEPLAY: {
 			// rotem la camera
-			// calculem la rotacio actual
-			x_rotation = atan2(player->getDir().x,player->getDir().z);
-			y_rotation = asin(player->getDir().y);
-
-			//x_rotation = asin(player->getDir().x);
-			//y_rotation = asin(player->getDir().y);
-
-			//x_rotation *= (cos(x_rotation) * cos(y_rotation) == player->getDir().z)? 1 : -1;
+			Vector2 rot = dir2rotation(player->getDir());
 
 			// apliquem el moviment del ratoli
-			x_rotation += Input::mouse_delta.x * 0.05f * DEG2RAD;
-			y_rotation += Input::mouse_delta.y * 0.05f * DEG2RAD;
+			rot.x += Input::mouse_delta.x * 0.05f * DEG2RAD;
+			rot.y += Input::mouse_delta.y * 0.05f * DEG2RAD;
 
-			y_rotation = clamp(y_rotation, -70 * DEG2RAD, 70 * DEG2RAD);
+			rot.y = clamp(rot.y, -70 * DEG2RAD, 70 * DEG2RAD);
 
-			Vector3 dir = Vector3(	cos(y_rotation) * sin(x_rotation),
-									sin(y_rotation), 
-									cos(y_rotation) * cos(x_rotation));
+			Vector3 dir = Vector3(	cos(rot.y) * sin(rot.x),
+									sin(rot.y), 
+									cos(rot.y) * cos(rot.x));
 
 			player->model.setFrontAndOrthonormalize(dir);
 	

@@ -138,4 +138,6 @@ extern cfgMesh* getCfgMesh(eObjectName name);
 extern cfgMesh* cfgSkyboxCreat(const char* texture);
 extern Vector4 colorJewel(eScene level);
 
+extern Vector2 dir2rotation(Vector3 dir);
+
 #endif 

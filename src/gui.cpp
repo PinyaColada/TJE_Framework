@@ -42,7 +42,10 @@ Gui::Gui(const char *TexName, int width, int height, bool Save)
     spells = Texture::Get(TexName);
     setDimCamera(width, height);
 
+    // --- Audio ---
+	#ifdef _WINDOWS_
     sound = new Audio("data/Sounds/Switch.ogg", false);
+    #endif
     hasSave = Save;
 }
 
@@ -92,8 +95,11 @@ bool Gui::renderButton(float x, float y, float w, float h, Vector4 range, bool f
     bool hover = isIn(Input::mouse_position, x, y, w, h);
     bool pressed = Input::isMousePressed(SDL_BUTTON_LEFT); // crec que seria aixi
 
+    // --- Audio ---
+	#ifdef _WINDOWS_
     if (pressed)
         sound->play(0.25f);
+    #endif
 
     range.x = (hover || block)? range.x + range.z : range.x;
     Vector4 color = block? Vector4(0.5,0.5,0.5,0.8) : Vector4(1,1,1,1);
