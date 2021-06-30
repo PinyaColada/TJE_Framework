@@ -259,15 +259,6 @@ void World::Update(double elapsed_time)
                 boxaux->sound->play(distance);
             }
         }
-        if (object->oName == BOX) {
-            Box* boxaux = (Box*)object;
-            if (boxaux->hasFallen) {
-                float distance = player->model.getTranslation().distance(boxaux->model.getTranslation());
-                distance = 10 / (distance);
-                distance = clamp(distance, 0.001, 0.3);
-                boxaux->sound->play(distance);
-            }
-        }
         #endif
 	}
 
