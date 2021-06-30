@@ -174,6 +174,49 @@ void Jewel::render(Camera* camera)
 }
 
 // ----------------------------------------- class: DinamicObject -------------------------------------
+void DinamicObject::Init(eObjectName type, EntityMesh* m, Vector3 pos, Vector3 front)
+{
+    eName = OBJECT;
+    oName = type;
+    spawn_pos = pos;
+    spawn_front = front;
+
+    respawn();
+
+    switch (type)
+    {
+        case PLAYER:
+            setCfgD(dinamicsPlayer);
+            physic = new Physics(physicsPlayer);
+            break;
+        case BOX:
+            setCfgD(dinamicsBox);
+            physic = new Physics(physicsBox);
+            break;
+        
+        default:
+            break;
+    }
+
+    if(!hasDinamic(type))
+        return;
+
+    // si existeix la mesh
+    if (m != NULL) {
+        mesh = m;
+        return;
+    }
+
+    cfgMesh* cfgM = getCfgMesh(type);
+
+    // prova de errors
+    if (cfgM == NULL)
+        std::cout << "Error: Config not found" << std::endl;
+
+    // si no existeix la mesh
+    mesh = new EntityMesh(SAW, cfgM);
+}
+
 void DinamicObject::setCfgD(eType type)
 {
     // Busca la configuracio
@@ -231,20 +274,17 @@ float DinamicObject::minimHeight(Object* object, Vector3 position, float lastMin
 
 void DinamicObject::respawn()
 {
-    model.setTranslation(spawn);
+    model.setTranslation(spawn_pos);
+    model.setFrontAndOrthonormalize(spawn_front);
     // si existeix fisica la resetegem la velecitat
     if(physic != NULL)
         physic->vel.y = 0;
 }
 
 // ----------------------------------------- class: Box -------------------------------
-Box::Box(EntityMesh* m, Vector3 pos)
+Box::Box(EntityMesh* m, Vector3 pos, Vector3 front)
 {
-    eName = OBJECT;
-    oName = BOX;
-    spawn = pos;
-    setCfgD(dinamicsBox);
-    physic = new Physics(physicsBox);
+    Init(BOX, m, pos, front);
 
     // Busca la configuracio
     cfgGeneric* cfg = getCfg(box);
@@ -253,23 +293,6 @@ Box::Box(EntityMesh* m, Vector3 pos)
         cfgB = (cfgBox*) cfg;
     else
         cfgB = new cfgBox();
-
-    respawn();
-
-    // si existeix la mesh
-    if( m != NULL ){
-        mesh = m;
-        return;
-    }
-
-    cfgMesh* cfgM = getCfgMesh(BOX);
-
-    // prova de errors
-    if (cfgM == NULL)
-        std::cout << "Error: Config not found" << std::endl;
-
-    // si no existeix la mesh
-    mesh = new EntityMesh(BOX, cfgM);
 }
 
 void Box::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -432,14 +455,9 @@ bool Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::
 }
 
 // ----------------------------------------- class: Saw -------------------------------
-void Saw::Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel, eObjectName type)
+void Saw::InitSaw(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel, eObjectName type)
 {
-    eName = OBJECT;
-    oName = type;
-    spawn = pos;
-
-    model.setTranslation(pos);
-    model.setFrontAndOrthonormalize(front);
+    Init(type, m, pos, front);
 
     model_position.setTranslation(pos);
     model_position.setFrontAndOrthonormalize(front);
@@ -457,20 +475,10 @@ void Saw::Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel, 
     else
         cfgS = new cfgSaw();
 
-    // si existeix la mesh
-    if (m != NULL) {
-        mesh = m;
-        return;
-    }
-
-    cfgMesh* cfgM = getCfgMesh(type);
-
-    // prova de errors
-    if (cfgM == NULL)
-        std::cout << "Error: Config not found" << std::endl;
-
-    // si no existeix la mesh
-    mesh = new EntityMesh(SAW, cfgM);
+    // --- Audio ---
+    #ifdef _WINDOWS_
+    sawNoise = new Audio("data/Sounds/saw.wav", true);
+    #endif
 }
 
 void Saw::renderLimits(Camera* camera)
@@ -492,12 +500,7 @@ void Saw::renderLimits(Camera* camera)
 // ----------------------------------------- class: SawBasic -------------------------------
 SawBasic::SawBasic(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
-    Init(m, pos, front, dis, vel, SAW);
-
-    // --- Audio ---
-    #ifdef _WINDOWS_
-    sawNoise = new Audio("data/Sounds/saw.wav", true);
-    #endif
+    InitSaw(m, pos, front, dis, vel, SAW);
 }
 
 void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -521,12 +524,7 @@ void SawBasic::move(float elapsed_time, Vector3 dir, std::vector<Object*> static
 // ----------------------------------------- class: SawHunter -------------------------------
 SawHunter::SawHunter(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel)
 {
-    Init(m, pos, front, dis, vel, SAWHUNTER);
-
-    // --- Audio ---
-    #ifdef _WINDOWS_
-    sawNoise = new Audio("data/Sounds/saw.wav", true);
-    #endif
+    InitSaw(m, pos, front, dis, vel, SAWHUNTER);
 }
 
 void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -558,10 +556,7 @@ void SawHunter::move(float elapsed_time, Vector3 playerPos, std::vector<Object*>
 // ----------------------------------------- class: Player -------------------------------
 Player::Player()
 {
-    setCfgD(dinamicsPlayer);
-    physic = new Physics(physicsPlayer);
-    eName = OBJECT;
-    oName = PLAYER;
+    Init(PLAYER);
 
     pickedJewel = 0;
 

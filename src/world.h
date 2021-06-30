@@ -3,8 +3,6 @@
 
 #include "entity.h"
 
-#define h_spawn 120
-
 // ----------------------------------------- class: Scene -----------------------------------------
 class Scene
 {
@@ -17,10 +15,11 @@ public:
     std::vector<Object*> static_objects;
 
     EntityMesh* skybox = NULL;
-    Vector3 spawn;
+    Vector3 spawn_pos;
+    Vector3 spawn_front;
 
     // Metodos
-    Scene(eScene n, bool hasInfo = false, Vector3 sp = Vector3(0,120,0));
+    Scene(eScene n, bool hasInfo = false, Vector3 sp_pos = Vector3(0, 120, 0), Vector3 sp_front = Vector3(0, 0, 1));
 
     void getSkybox(const char* fileSkybox, const char* fileSkyboxTex);
 

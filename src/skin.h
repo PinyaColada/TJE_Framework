@@ -4,6 +4,7 @@
 #include "framework.h"
 
 #define MAXOBJ 100
+#define h_spawn 120
 #define STARTLEVEL HUB
 typedef unsigned long JewelMask;
 
@@ -103,8 +104,9 @@ struct DinamicObj
     eObjectName type;
 
     Vector3 pos;
-    // especial de Saw
+    // no es fa servir per Box
     Vector3 rot;
+    // especial de Saw
     float rad;
     float vel;
 };

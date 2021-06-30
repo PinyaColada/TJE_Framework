@@ -32,6 +32,7 @@ void SaveLevel(Level* level)
     {
         fprintf(f,"<<< %s\n", "PLAYER");
         fprintf(f,"p: "); level->player.pos.exportVector(f);
+        fprintf(f,"r: "); level->player.rot.exportVector(f);
         fprintf(f,">>>\n\n");
     }
     else
@@ -157,6 +158,7 @@ Level* LoadLevel(const char* filename)
         // Player
         else if((pch1 = strstr(pch+3, "PLAYER")) != NULL)
         {
+            DinamicObj* sPlayer = new DinamicObj{PLAYER, Vector3(0,h_spawn,0), Vector3(0,0,1)};
             while (feof(f) == 0)
             {
                 fgets(line, 100, f);
@@ -167,8 +169,15 @@ Level* LoadLevel(const char* filename)
                     x = 0; y = 0; z = 0;
                     sscanf(pch+2, " (%f,%f,%f)", &x,&y,&z);
 
-                    DinamicObj* sPlayer = new DinamicObj{PLAYER, Vector3(x,y,z)};
-                    level->player = *sPlayer;
+                    sPlayer->pos = Vector3(x,y,z);
+                }
+                // front
+                else if((pch = strstr(line, "r:")) != NULL)
+                {
+                    x = 0; y = 0; z = 1;
+                    sscanf(pch+2, " (%f,%f,%f)", &x,&y,&z);
+
+                    sPlayer->rot = Vector3(x,y,z);
                 }
                 // tag de fi
                 else if((pch = strstr(line, ">>>")) != NULL) 
@@ -176,6 +185,7 @@ Level* LoadLevel(const char* filename)
                 else if (strlen(line) > 1)
                     std::cout << "Line error: \"" << line << "\""<< std::endl;
             }
+            level->player = *sPlayer;
         }
         // llista Static
         else if((pch1 = strstr(pch+3, "LStatics")) != NULL)

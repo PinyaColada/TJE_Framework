@@ -3,10 +3,11 @@
 #include "entity.h"
 
 // ----------------------------------------- class: Scene -----------------------------------------
-Scene::Scene(eScene n, bool hasInfo, Vector3 sp) 
+Scene::Scene(eScene n, bool hasInfo, Vector3 sp_pos, Vector3 sp_front) 
 {
     name = n;
-    spawn = sp;
+    spawn_pos = sp_pos;
+    spawn_front = sp_front;
     EntityLight* lus = new EntityLight(Vector3(0, 200, 0), Vector3(-0.00785305, -0.472548, 0.88127), Vector3(1, 1, 1), .5);
     lights.push_back(lus);
 
@@ -258,7 +259,8 @@ void World::changeScene(eScene nextScene)
         return;
     }
     // canviar el spawn del player
-    player->spawn = scenes[nextScene]->spawn;
+    player->spawn_pos = scenes[nextScene]->spawn_pos;
+    player->spawn_front = scenes[nextScene]->spawn_front;
 
     // caniar el current
     current_scene = nextScene;
@@ -318,7 +320,7 @@ Level* World::SaveScene()
     level->Skybox = *cfgSB;
 
     // Player
-    DinamicObj* sPlayer = new DinamicObj{PLAYER, player->getPosition() + Vector3(0,h_spawn,0)};
+    DinamicObj* sPlayer = new DinamicObj{PLAYER, player->getPosition() + Vector3(0,h_spawn,0), player->getDir()};
     level->player = *sPlayer;
 
     Object* object;
@@ -401,7 +403,7 @@ void World::LoadScene(Level* level, eScene nameScene)
 
     // trobar i colocar el nivell en la llist on toqui
     int lastid = scenes.size();
-    Scene* scene = new Scene(nameScene, true, level->player.pos);
+    Scene* scene = new Scene(nameScene, true, level->player.pos, level->player.rot);
     if(lastid > nameScene)
         scenes[nameScene] = scene;
     else

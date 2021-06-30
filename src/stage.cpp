@@ -89,9 +89,9 @@ void Stage::UpdateWorld(double elapsed_time, bool isMove)
 
 	y_rotation = clamp(y_rotation, -20 * DEG2RAD, 20 * DEG2RAD);
 
-	Vector3 dir = Vector3(	sin(x_rotation),
+	Vector3 dir = Vector3(	cos(y_rotation) * sin(x_rotation),
 							sin(y_rotation), 
-							cos(x_rotation) * cos(y_rotation));
+							cos(y_rotation) * cos(x_rotation));
 
 	world->player->model.setFrontAndOrthonormalize(dir);
 }
@@ -400,14 +400,24 @@ void PlayStage::Update(double elapsed_time)
 	switch(idmode){
 		case GAMEPLAY: {
 			// rotem la camera
+			// calculem la rotacio actual
+			x_rotation = atan2(player->getDir().x,player->getDir().z);
+			y_rotation = asin(player->getDir().y);
+
+			//x_rotation = asin(player->getDir().x);
+			//y_rotation = asin(player->getDir().y);
+
+			//x_rotation *= (cos(x_rotation) * cos(y_rotation) == player->getDir().z)? 1 : -1;
+
+			// apliquem el moviment del ratoli
 			x_rotation += Input::mouse_delta.x * 0.05f * DEG2RAD;
 			y_rotation += Input::mouse_delta.y * 0.05f * DEG2RAD;
 
 			y_rotation = clamp(y_rotation, -70 * DEG2RAD, 70 * DEG2RAD);
 
-			Vector3 dir = Vector3(	sin(x_rotation),
+			Vector3 dir = Vector3(	cos(y_rotation) * sin(x_rotation),
 									sin(y_rotation), 
-									cos(x_rotation) * cos(y_rotation));
+									cos(y_rotation) * cos(x_rotation));
 
 			player->model.setFrontAndOrthonormalize(dir);
 	

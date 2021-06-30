@@ -126,10 +126,13 @@ class DinamicObject : public Object
 
     cfgDinamic* cfgD;
 
-    Vector3 spawn;
+    Vector3 spawn_pos;
+    Vector3 spawn_front;
 
     // Metodos
     DinamicObject(){};
+
+    void Init(eObjectName type, EntityMesh* m = NULL, Vector3 pos = Vector3(0, 100, 0), Vector3 front = Vector3(0, 0, 1));
 
     void setCfgD(eType type);
 
@@ -152,7 +155,7 @@ public:
     cfgBox* cfgB;
 
     // Metodos
-    Box(EntityMesh* m,  Vector3 pos = Vector3(0,100,0));
+    Box(EntityMesh* m,  Vector3 pos = Vector3(0, 100, 0), Vector3 front = Vector3(0, 0, 1));
 
     void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects);
 
@@ -183,8 +186,7 @@ public:
     Matrix44 model_position;
 
     // Metodos
-    //Saw(EntityMesh* m, Vector3 pos, Vector3 front = Vector3(0, 0, 1), float dis = 100, float vel = 100);
-    void Init(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel, eObjectName type);
+    void InitSaw(EntityMesh* m, Vector3 pos, Vector3 front, float dis, float vel, eObjectName type);
 
     virtual void move(float elapsed_time, Vector3 dir, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects) = 0;
 
