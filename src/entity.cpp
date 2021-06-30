@@ -151,9 +151,10 @@ void Block::Init(EntityMesh* m, Vector3 pos, eObjectName type, Vector3 front)
 Jewel::Jewel(EntityMesh* m, Vector3 pos, eScene ns, Vector3 front)
 {
     Init(m, pos, JEWEL, front);
+    sound = new Audio("data/Sounds/JewelSound.wav", true);
 
     next_scene = ns;
-    idMask = 1<<numJewels;
+    idMask = 1 << numJewels;
     numJewels++;
 }
 
@@ -285,6 +286,7 @@ void DinamicObject::respawn()
 Box::Box(EntityMesh* m, Vector3 pos, Vector3 front)
 {
     Init(BOX, m, pos, front);
+    sound = new Audio("data/Sounds/BoxLanding.ogg", false);
 
     // Busca la configuracio
     cfgGeneric* cfg = getCfg(box);
@@ -362,6 +364,14 @@ void Box::move(float elapsed_time, Vector3 dir, std::vector<Object*> static_obje
 
     // aplicamos el movimiento
     model.setTranslation(target);
+
+    if (isOnAir && !isFalling) {
+        sound->play(0.25f);
+        hasFallen = true;
+    } else
+        hasFallen = false;
+
+    isOnAir = isFalling;
 }
 
 bool Box::movePicked(Matrix44 player, std::vector<Object*> static_objects, std::vector<DinamicObject*> dinamic_objects)
@@ -562,8 +572,6 @@ Player::Player()
 
     // --- Audio ---
     #ifdef _WINDOWS_
-    std::cout << "AAAAAAAAAAAAAAAAAAAAAA" << std::endl;
-
     runningAudio = new Audio("data/Sounds/Dirt_Running.mp3", true);
     walkingAudio = new Audio("data/Sounds/Dirt_Jogging.mp3", true);
     landingAudio = new Audio("data/Sounds/Landing.wav", false);

@@ -221,12 +221,13 @@ void World::Update(double elapsed_time)
     
     // Update de objectes dinamics
     DinamicObject* object;
+    Object* sobject;
 	for (int i = 0; i < scene->dinamic_objects.size(); i++)
 	{ 
 		object = scene->dinamic_objects[i];
 		if(!object->isCatch && !isTimeStopped)
 			object->move(elapsed_time, player->getPosition(), scene->static_objects, scene->dinamic_objects);
-		if (object->oName == SAW || object->oName == SAWHUNTER) {
+		if (hasSaw(object->oName)) {
 			if (!isTimeStopped)
 				object->model.rotate(elapsed_time, object->model.frontVector());
 
@@ -240,14 +241,51 @@ void World::Update(double elapsed_time)
 			else {
 				float distance = player->model.getTranslation().distance(saw->model.getTranslation());
 				distance = 10 / (distance);
-				clamp(distance, 0.001, 0.5);
+				distance = clamp(distance, 0.001, 0.5);
 				if (isTimeStopped)
 					distance = 0;
 				saw->sawNoise->setVolume(distance);
 			}
 			#endif
 		}
+        if (object->oName == BOX) {
+            Box* boxaux = (Box*) object;
+            if (boxaux->hasFallen) {
+                float distance = player->model.getTranslation().distance(boxaux->model.getTranslation());
+                distance = 10 / (distance);
+                distance = clamp(distance, 0.001, 0.3);
+                boxaux->sound->play(distance);
+            }
+        }
+        if (object->oName == BOX) {
+            Box* boxaux = (Box*)object;
+            if (boxaux->hasFallen) {
+                float distance = player->model.getTranslation().distance(boxaux->model.getTranslation());
+                distance = 10 / (distance);
+                distance = clamp(distance, 0.001, 0.3);
+                boxaux->sound->play(distance);
+            }
+        }
 	}
+
+    for (int i = 0; i < scene->static_objects.size(); i++) {
+        sobject = scene->static_objects[i];
+        if (sobject->oName == JEWEL) {
+            Jewel* je = (Jewel*) sobject;
+            if (je->isMakingSounds == false) {
+                je->sound->play(0);
+                je->isMakingSounds = true;
+            }
+            else {
+                float distance = player->model.getTranslation().distance(je->model.getTranslation());
+                distance = 1 / (7 * (distance));
+                distance = clamp(distance, 0, 0.1);
+                if (isTimeStopped)
+                    distance = 0;
+                je->sound->setVolume(distance);
+            }
+        }
+    }
 }
 
 void World::changeScene(eScene nextScene)

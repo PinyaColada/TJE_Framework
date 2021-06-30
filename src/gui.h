@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "texture.h"
 #include "shader.h"
+#include "framework.h"
 
 enum eElementsGui{
     CONTINUE,
@@ -37,6 +38,8 @@ public:
     Camera cam;
     Texture* spells;
     Shader* shader;
+
+    Audio* sound;
 
     int window_width;
     int window_height;

@@ -106,6 +106,9 @@ public:
     eScene next_scene;
 
     JewelMask idMask;
+    Audio* sound;
+
+    bool isMakingSounds = false;
 
     // Metodos
     Jewel(EntityMesh* m, Vector3 pos, eScene ns = DEFAULTSCENE, Vector3 front = Vector3(0, 0, 1));
@@ -123,6 +126,7 @@ class DinamicObject : public Object
 
     bool isCatch = false;
     bool isFalling;
+    bool isOnAir;
 
     cfgDinamic* cfgD;
 
@@ -153,6 +157,9 @@ class Box : public DinamicObject
 public:
     // Atributos
     cfgBox* cfgB;
+
+    Audio* sound;
+    bool hasFallen = false;
 
     // Metodos
     Box(EntityMesh* m,  Vector3 pos = Vector3(0, 100, 0), Vector3 front = Vector3(0, 0, 1));

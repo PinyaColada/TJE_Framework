@@ -12,8 +12,6 @@ float y_rotation;
 
 HCHANNEL channel_for_walking;
 
-bool isOnAir;
-
 // ------------------------------------ class: Stage  ----------------------------------------
 void Stage::Render()		
 {
@@ -502,15 +500,14 @@ void PlayStage::Update(double elapsed_time)
 
 			// --- Audio ---
 			
-			if (isOnAir && !player->isFalling) {
+			if (player->isOnAir && !player->isFalling) {
 				player->hasJumped = false;
 				#ifdef _WINDOWS_
 				player->landingAudio->play(0.25);
 				#endif
 			}
 
-
-			isOnAir = player->isFalling;
+			player->isOnAir = player->isFalling;
 			// Ho posam lo mes guapo que podem :)
 			Input::centerMouse();
 			SDL_ShowCursor(false);
