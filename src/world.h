@@ -45,6 +45,7 @@ public:
     Object* BlockPicked = NULL;
 
     JewelMask JewelsWin = 0;
+    sData dataGame;
 
     // Metodos
     World( int window_width, int window_height );
@@ -67,6 +68,9 @@ public:
     // guardar i carregar Scenes
     Level* SaveScene();
     void LoadScene(Level* level, eScene nameScene = DEFAULTSCENE);
+
+    void SaveDataGame();
+    void LoadDataGame(sData dg);
 };
 
 

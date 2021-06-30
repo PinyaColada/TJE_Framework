@@ -334,3 +334,28 @@ Level* LoadLevel(const char* filename)
     fclose(f);
     return level;
 }
+
+void SaveGame(sData* data)
+{
+    FILE* f = fopen("data/save.dat","wb");
+
+    if(f == NULL)
+        return;
+    
+    fwrite(data, sizeof(sData), 1, f);
+    fclose(f);
+}
+
+bool LoadGame(sData* data)
+{
+    FILE* f = fopen("data/save.dat","rb");
+
+    if(f == NULL)
+        return false;
+
+    if (data!=NULL) 
+        fread(data, sizeof(sData), 1, f);
+    
+    fclose(f);
+    return true;
+}

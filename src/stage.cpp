@@ -132,7 +132,7 @@ IntroStage::IntroStage(World* w, Gui* g)
 	guiElements.reserve(4);
 	guiElements.push_back(gui->creatElement(TITLE, 0, -170, 2 * w_gui, h_gui));
 	guiElements.push_back(gui->creatElement(START, 0, -56, w_gui, h_gui));
-	guiElements.push_back(gui->creatElement(CONTINUE, 0, 0, w_gui, h_gui));
+	guiElements.push_back(gui->creatElement(CONTINUE, 0, 0, w_gui, h_gui, false, true, true));
 	guiElements.push_back(gui->creatElement(LEAVE, 0, 56, w_gui, h_gui));
 
 	// guardem el per altera la pos
@@ -176,11 +176,17 @@ void IntroStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 
 void IntroStage::onPressButton(eElementsGui type)		
 {		
+	sData data;
+
     switch (type)
 	{
 	case CONTINUE:
 		nextSatge = PLAY;
 		isComplite = true;
+
+		// guarda el joc
+		if(LoadGame(&data))
+			world->LoadDataGame(data);
 		break;
 	case LEAVE:
 		nextSatge = EXIT;
@@ -254,6 +260,9 @@ void MenuStage::onPressButton(eElementsGui type)
 	case LEAVE:
 		nextSatge = EXIT;
 		isComplite = true;
+
+		// guarda el joc
+		SaveGame(&world->dataGame);
 		break;
 
 	default:
@@ -759,9 +768,13 @@ void PlayStage::onMouseButtonDown( SDL_MouseButtonEvent event )
 
 eStageID PlayStage::whatNext()
 {
+	// canvia de Stage
 	eStageID next = nextSatge;
 	nextSatge = END;
 	SDL_ShowCursor(true);
+
+	// guarda el progres
+	world->SaveDataGame();
 	return next;
 }
 

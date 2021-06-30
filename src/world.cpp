@@ -44,6 +44,8 @@ World::World( int window_width, int window_height )
     this->window_width = window_width;
 	this->window_height = window_height;
 
+    dataGame = {0, STARTLEVEL};
+
     setCamera(window_width, window_height); 
 
     // craer la scene on inicias per si no existeix
@@ -496,4 +498,18 @@ void World::LoadScene(Level* level, eScene nameScene)
         scene->dinamic_objects.push_back(objd);
     }
     std::cout << " + Level Loaded" << std::endl; 
+}
+
+void World::SaveDataGame()
+{
+    dataGame.pickedJewel = player->pickedJewel;
+    dataGame.current_scene = current_scene;
+}
+
+void World::LoadDataGame(sData dg)
+{
+    dataGame = dg;
+
+    player->pickedJewel = dataGame.pickedJewel;
+    player->current_scene = dataGame.current_scene;
 }

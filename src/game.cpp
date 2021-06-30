@@ -62,7 +62,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	world = new World(window_width,window_height);
 
 	guis.reserve(SIZEOFGUIS);
-	guis.push_back(new Gui("data/UI/Buttons.png", window_width, window_height));
+	guis.push_back(new Gui("data/UI/Buttons.png", window_width, window_height, LoadGame()));
 	guis.push_back(new Gui("data/UI/Tutorial.png", window_width, window_height));
 	guis.push_back(new Gui("data/UI/Final.png", window_width, window_height));
 
@@ -101,7 +101,11 @@ void Game::render(void)
 void Game::update(double seconds_elapsed)
 {
 	idCS = stages[idCS]->passStage();
-	if(idCS == EXIT) must_exit = true;
+	if(idCS == EXIT)
+	{
+		must_exit = true;
+		return;
+	}
 	toBlur = (idCS == PLAY)? false : true;
 
 	stages[idCS]->Update(seconds_elapsed);

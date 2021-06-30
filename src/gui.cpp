@@ -36,11 +36,13 @@ bool hasButton(eElementsGui type)
 }
 
 // ------------------------------------ class: Gui  --------------------------------------
-Gui::Gui(const char *TexName, int width, int height)
+Gui::Gui(const char *TexName, int width, int height, bool Save)
 {
     shader = Shader::Get("data/shaders/basic.vs", "data/shaders/gui.fs");
     spells = Texture::Get(TexName);
     setDimCamera(width, height);
+
+    hasSave = Save;
 }
 
 bool Gui::render(sElementGui elm)
@@ -51,7 +53,7 @@ bool Gui::render(sElementGui elm)
 
     // boto
     if(hasButton(elm.type))
-        return renderButton(pos.x, pos.y, dim.x, dim.y, info.range, info.flipuvs);
+        return renderButton(pos.x, pos.y, dim.x, dim.y, info.range, info.flipuvs, elm.isBlock);
     // no boto
     renderElement(pos.x, pos.y, dim.x, dim.y, info.range, info.flipuvs);
     return false;
@@ -78,7 +80,7 @@ void Gui::renderElement(float x, float y, float w, float h, Vector4 range, bool 
     shader->disable();
 }
 
-bool Gui::renderButton(float x, float y, float w, float h, Vector4 range, bool flipuvs)
+bool Gui::renderButton(float x, float y, float w, float h, Vector4 range, bool flipuvs, bool block)
 {
     // crea el quad
     Mesh quad;
@@ -89,12 +91,13 @@ bool Gui::renderButton(float x, float y, float w, float h, Vector4 range, bool f
     bool hover = isIn(Input::mouse_position, x, y, w, h);
     bool pressed = Input::isMousePressed(SDL_BUTTON_LEFT); // crec que seria aixi
 
-    range.x = hover? range.x + range.z : range.x;
+    range.x = (hover || block)? range.x + range.z : range.x;
+    Vector4 color = block? Vector4(0.5,0.5,0.5,0.8) : Vector4(1,1,1,1);
 
     // actualitza el shader
     shader->enable();
 
-    shader->setUniform("u_color", Vector4(1,1,1,1));
+    shader->setUniform("u_color", color);
     shader->setUniform("u_model", quadModel);
     shader->setUniform("u_viewprojection", cam.viewprojection_matrix);
     shader->setTexture("u_texture", spells, 0);
@@ -103,7 +106,7 @@ bool Gui::renderButton(float x, float y, float w, float h, Vector4 range, bool f
     quad.render(GL_TRIANGLES);
 
     shader->disable();
-    return hover && pressed;
+    return hover && pressed && !block;
 }
 
 void Gui::setDimCamera(int width, int height)
@@ -114,7 +117,7 @@ void Gui::setDimCamera(int width, int height)
     cam.setOrthographic(0, window_width, window_height, 0, -1, 1);
 }
 
-sElementGui Gui::creatElement(eElementsGui type, float x, float y, float w, float h, bool allwindow, bool center)
+sElementGui Gui::creatElement(eElementsGui type, float x, float y, float w, float h, bool allwindow, bool center, bool block)
 {
-    return {type, Vector2(x, y), Vector2(w, h), center, allwindow};
+    return {type, Vector2(x, y), Vector2(w, h), center, allwindow, block && !hasSave};
 }

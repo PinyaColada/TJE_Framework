@@ -126,6 +126,12 @@ struct Level
     DinamicObj dObjs[MAXOBJ];
 };
 
+struct sData
+{
+    JewelMask pickedJewel;
+    eScene current_scene;
+};
+
 // funcions que es criden desde fora
 extern void InitCfgMesh();
 extern cfgMesh* getCfgMesh(eObjectName name);
