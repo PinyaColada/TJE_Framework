@@ -115,7 +115,7 @@ public:
 
     TutorStage(World* w = NULL, Gui* g = NULL);
 
-    void RenderGame(){drawText(100, 100, "Tutorial", Vector3(1, 1, 1), 10);};
+    void RenderGame(){};
 
     void Update(double elapsed_time){};
 
@@ -171,9 +171,9 @@ public:
 
     EndStage(World* w = NULL, Gui* g = NULL);
 
-    void RenderGame();
+    void RenderGame(){};
 
-    void Update(double elapsed_time);
+    void Update(double elapsed_time){};
 
     // events
     void onKeyDown( SDL_KeyboardEvent event );

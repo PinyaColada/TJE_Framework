@@ -783,16 +783,6 @@ EndStage::EndStage(World* w, Gui* g)
 	guiElements.push_back(gui->creatElement(TEXT, 0, 0, w_gui, h_gui, true));
 }
 
-void EndStage::RenderGame()
-{
-	RenderWorld();
-}
-
-void EndStage::Update(double elapsed_time)
-{
-	UpdateWorld(elapsed_time);
-}
-
 // events
 void EndStage::onKeyDown( SDL_KeyboardEvent event )
 {

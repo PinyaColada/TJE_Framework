@@ -77,7 +77,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	stages.push_back(new MenuStage(world,  guis[gButton]));
 	stages.push_back(new TutorStage(NULL,  guis[gTutorial]));
 	stages.push_back(new PlayStage(world, NULL));
-	stages.push_back(new EndStage(world,  guis[gEnd]));
+	stages.push_back(new EndStage(NULL,  guis[gEnd]));
 }
 
 //what to do when the image has to be draw
