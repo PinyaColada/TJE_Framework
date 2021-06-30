@@ -9,6 +9,7 @@ enum eElementsGui{
     CONTINUE,
     LEAVE,
     START,
+    TITLE,
     TEXT,
 
     SIZEOFEG
@@ -19,6 +20,7 @@ struct sElementGui{
     eElementsGui type;
     Vector2 pos;    //[x,y]
     Vector2 dim;    //[w,h]
+    bool isCenter;
 };
 struct sRangeGui{
     bool flipuvs;

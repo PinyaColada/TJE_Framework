@@ -276,6 +276,12 @@ void World::respawn()
     // respawn player
     player->respawn();
 
+    player->isDead = false;
+    player->current_scene = current_scene;
+
+    if(isTimeStopped) 
+        return;
+    
     // respawn objectes dinamics
     Scene* scene = scenes[current_scene];
     DinamicObject* object;
@@ -284,9 +290,6 @@ void World::respawn()
 		object = scene->dinamic_objects[i];
 		object->respawn();
 	}
-
-    player->isDead = false;
-    player->current_scene = current_scene;
 }
 
 bool World::hasWin()
@@ -350,6 +353,7 @@ Level* World::SaveScene()
                 max++;
                 break;
             case SAW:
+            case SAWHUNTER:
             {
                 Saw* saw = (Saw*)object;
                 level->dObjs[id] = *(new DinamicObj{object->oName, saw->center, saw->getDir(), saw->rad, saw->speed});

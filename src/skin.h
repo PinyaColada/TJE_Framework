@@ -4,7 +4,7 @@
 #include "framework.h"
 
 #define MAXOBJ 100
-#define STARTLEVEL DEMO
+#define STARTLEVEL HUB
 typedef unsigned long JewelMask;
 
 // enum de Entity
@@ -19,8 +19,8 @@ enum eEntityName {
 enum eObjectName {
     PLAYER,
     BOX,
-    SAW,
     SAWHUNTER,
+    SAW,
     FLOOR,
     SKYBOX,
     BLOCKLARGE,
@@ -36,9 +36,13 @@ enum eObjectName {
 
 // enum de Scene
 enum eScene{
-    DEMO,
-    NIVELDELAVA,
-    NEW,
+    HUB,
+    HIKE1,
+    HIKE2,
+    JUMP1,
+    JUMP2,
+    SAW1,
+    SAW2,
     WIN,
 
     SIZEOFSCENE,

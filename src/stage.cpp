@@ -123,27 +123,44 @@ IntroStage::IntroStage(World* w, Gui* g)
 	needRender = true;
 
 	if(w != NULL) setWorld(w);
-	if(g != NULL)
-	{
-		setGui(g);
+	if(g == NULL)
+		return;
 
-		guiElements.reserve(3);
-		guiElements.push_back(gui->creatElement(START, 0, -56, w_gui, h_gui));
-		guiElements.push_back(gui->creatElement(CONTINUE, 0, 0, w_gui, h_gui));
-		guiElements.push_back(gui->creatElement(LEAVE, 0, 56, w_gui, h_gui));
-	}
+	setGui(g);
+
+	// creem els diferents elements
+	guiElements.reserve(4);
+	guiElements.push_back(gui->creatElement(TITLE, 0, -170, 2 * w_gui, h_gui));
+	guiElements.push_back(gui->creatElement(START, 0, -56, w_gui, h_gui));
+	guiElements.push_back(gui->creatElement(CONTINUE, 0, 0, w_gui, h_gui));
+	guiElements.push_back(gui->creatElement(LEAVE, 0, 56, w_gui, h_gui));
+
+	// guardem el per altera la pos
+	title = &guiElements[0];
+	center.x = title->pos.x;
+	center.y = title->pos.y;
 }
 
 void IntroStage::RenderGame()
 {
 	RenderWorld();
-
-	drawText(100, 100, "INTRO", Vector3(1, 1, 1), 10);
 }
 
 void IntroStage::Update(double elapsed_time)
 {
 	UpdateWorld(elapsed_time);
+
+	if(gui == NULL)
+		return;
+	
+	time += elapsed_time;
+
+	float A = 30;
+	float vx = 0.7;
+	float vy = 0.8;
+
+	title->pos.x = A * sin(vx * time) + center.x;
+	title->pos.y = A * sin(vy * time) + center.y;
 }
 
 // events
@@ -195,21 +212,20 @@ MenuStage::MenuStage(World* w, Gui* g)
 	needRender = true;
 
 	if(w != NULL) setWorld(w);
-	if(g != NULL)
-	{
-		setGui(g);
+	if(g == NULL)
+		return;
+	
+	setGui(g);
 
-		guiElements.reserve(2);
-		guiElements.push_back(gui->creatElement(CONTINUE, 0, -28, w_gui, h_gui));
-		guiElements.push_back(gui->creatElement(LEAVE, 0, 28, w_gui, h_gui));
-	}
+	// creem els diferents elements
+	guiElements.reserve(2);
+	guiElements.push_back(gui->creatElement(CONTINUE, 0, -28, w_gui, h_gui));
+	guiElements.push_back(gui->creatElement(LEAVE, 0, 28, w_gui, h_gui));
 }
 
 void MenuStage::RenderGame()
 {
 	RenderWorld();
-
-	drawText(100, 100, "MENU", Vector3(1, 1, 1), 10);
 }
 
 void MenuStage::Update(double elapsed_time)
@@ -728,6 +744,7 @@ eStageID PlayStage::whatNext()
 {
 	eStageID next = nextSatge;
 	nextSatge = END;
+	SDL_ShowCursor(true);
 	return next;
 }
 

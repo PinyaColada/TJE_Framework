@@ -4,8 +4,8 @@
 Object2str TableObj2str[SIZEOFOBJ] = {
     {"PLAYER", PLAYER},
     {"BOX", BOX},
-    {"SAW", SAW},
     {"SAWHUNTER", SAWHUNTER},
+    {"SAW", SAW},
     {"FLOOR", FLOOR},
     {"SKYBOX", SKYBOX},
     {"BLOCKLARGE", BLOCKLARGE},
@@ -19,9 +19,13 @@ Object2str TableObj2str[SIZEOFOBJ] = {
 
 // llista de Scenes amb str
 NameLevel TableSceneNames[SIZEOFSCENE] = {
-    {"DEMO",DEMO,"data/Levels/Hub.txt"},
-    {"NIVELDELAVA",NIVELDELAVA,"data/Levels/Prueva.txt"},
-    {"NEW",NEW,"data/Levels/FirstLevel.txt"},
+    {"HUB",HUB,"data/Levels/Hub.txt"},
+    {"HIKE1",HIKE1,"data/Levels/BranchHike_1.txt"},
+    {"HIKE2",HIKE2,"data/Levels/BranchHike_2.txt"},
+    {"JUMP1",JUMP1,"data/Levels/BranchJump_1.txt"},
+    {"JUMP2",JUMP2,"data/Levels/BranchJump_2.txt"},
+    {"SAW1",SAW1,"data/Levels/BranchSaw_1.txt"},
+    {"SAW2",SAW2,"data/Levels/BranchSaw_2.txt"},
     {"WIN",WIN,""}
 };
 
@@ -197,10 +201,21 @@ cfgMesh* cfgSkyboxCreat(const char* texture)
 Vector4 colorJewel(eScene level)
 {
     switch(level){
-        case DEMO: return Vector4(0,0,1,1);         // blau
-        case NIVELDELAVA: return Vector4(1,0,0,1);  // vermell
-        case WIN: return Vector4(1,1,0,1);          // groc
+        case HUB: 
+            return Vector4(0,1,0,1);    // Verd
+        case HIKE1: 
+        case HIKE2: 
+            return Vector4(1,0,1,1);  // Lila
+        case JUMP1:
+        case JUMP2: 
+            return Vector4(1,0,0,1);  // vermell
+        case SAW1:
+        case SAW2: 
+            return Vector4(1,1,1,1);  // blanc
+        case WIN: 
+            return Vector4(1,1,0,1);    // groc
 
-        default: return Vector4(0.5,0.5,0.5,1);     // gris
+        default: 
+            return Vector4(0.5,0.5,0.5,1); // gris
     }
 }

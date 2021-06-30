@@ -25,7 +25,7 @@ enum eModeID{
 class Stage 
 {
 public:
-    eModeID idmode = EDIT;
+    eModeID idmode = GAMEPLAY;
     eStageID idSatge;
     eStageID nextSatge;
 
@@ -70,6 +70,10 @@ class IntroStage : public Stage
 public:
 
     IntroStage(World* w = NULL, Gui* g = NULL);
+
+    sElementGui* title;
+    float time = 0.0f;
+    Vector2 center;
 
     void RenderGame();
 

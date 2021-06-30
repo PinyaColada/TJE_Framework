@@ -7,6 +7,7 @@ sRangeGui TableOfRanges[SIZEOFEG] = {
     {false, Vector4(0, 0.0, 0.5, 0.2)},
     {false, Vector4(0, 0.2, 0.5, 0.2)},
     {false, Vector4(0, 0.4, 0.5, 0.2)},
+    {false, Vector4(0, 0.6, 1.0, 0.2)},
     {false, Vector4(0, 0.0, 1.0, 1.0)}
 };
 
@@ -45,11 +46,13 @@ Gui::Gui(const char *TexName, int width, int height)
 bool Gui::render(sElementGui elm)
 {
     sRangeGui info = TableOfRanges[elm.type];
+    Vector2 pos = elm.pos + Vector2(window_width * 0.5, window_height * 0.5);
+
     // boto
     if(hasButton(elm.type))
-        return renderButton(elm.pos.x, elm.pos.y, elm.dim.x, elm.dim.y, info.range, info.flipuvs);
+        return renderButton(pos.x, pos.y, elm.dim.x, elm.dim.y, info.range, info.flipuvs);
     // no boto
-    renderElement(elm.pos.x, elm.pos.y, elm.dim.x, elm.dim.y, info.range, info.flipuvs);
+    renderElement(pos.x, pos.y, elm.dim.x, elm.dim.y, info.range, info.flipuvs);
     return false;
 }
 
@@ -112,9 +115,5 @@ void Gui::setDimCamera(int width, int height)
 
 sElementGui Gui::creatElement(eElementsGui type, float x, float y, float w, float h, bool center)
 {
-    if(!center)
-        return {type, Vector2(x, y), Vector2(w, h)};
-    
-    Vector2 pos = Vector2(x + window_width * 0.5, y + window_height * 0.5);
-    return {type, pos, Vector2(w, h)};
+        return {type, Vector2(x, y), Vector2(w, h), center};
 }
