@@ -63,7 +63,10 @@ public:
     void respawn();
     bool hasWin();
 
+    // --- Audio ---
+    #ifdef _WINDOWS_
     void stopAllSound();
+    #endif
 
     void reset();
 

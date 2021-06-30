@@ -109,9 +109,8 @@ public:
     // --- Audio ---
 	#ifdef _WINDOWS_
     Audio* sound;
-    #endif
-
     bool isMakingSounds = false;
+    #endif
 
     // Metodos
     Jewel(EntityMesh* m, Vector3 pos, eScene ns = DEFAULTSCENE, Vector3 front = Vector3(0, 0, 1));
@@ -194,9 +193,8 @@ public:
     // --- Audio ---
     #ifdef _WINDOWS_
     Audio* sawNoise;
-    #endif
-
     bool isSawDoingNoise = false;
+    #endif
 
     Matrix44 model_position;
 

@@ -362,6 +362,8 @@ void PlayStage::Update(double elapsed_time)
         return;		
     }
 
+	// --- Audio ---
+    #ifdef _WINDOWS_
 	if (!isWindSounding && !isTimeStopped) {
 		windSound->play(0.05f);
 		isWindSounding = true;
@@ -371,6 +373,7 @@ void PlayStage::Update(double elapsed_time)
 		windSound->stop();
 		isWindSounding = false;
 	}
+	#endif
 
 	// Si has completat el joc
 	if(world->hasWin()) {
@@ -772,9 +775,12 @@ eStageID PlayStage::whatNext()
 	nextSatge = END;
 	SDL_ShowCursor(true);
 
+	// --- Audio ---
+    #ifdef _WINDOWS_
 	windSound->stop();
 	isWindSounding = false;
 	world->stopAllSound(); // Per aturar es canals de tot lo anterior
+	#endif
 	// guarda el progres
 	world->SaveDataGame();
 	return next;

@@ -132,11 +132,6 @@ public:
 class PlayStage : public Stage
 {
 public:
-
-    Audio* windSound;
-
-    bool isWindSounding = false;
-
     PlayStage(World* w = NULL, Gui* g = NULL);
 
     float timeCounter = 0.0f;
@@ -144,7 +139,10 @@ public:
 
     // --- Audio ---
     #ifdef _WINDOWS_
+    Audio* windSound;
     Audio* stopTimeAudio;
+
+    bool isWindSounding = false;
     #endif
 
     void RenderGame();

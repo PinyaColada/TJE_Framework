@@ -291,7 +291,10 @@ void World::changeScene(eScene nextScene)
     if (nextScene == WIN)
         nextScene = STARTLEVEL;
 
+    // --- Audio ---
+    #ifdef _WINDOWS_
     stopAllSound();
+    #endif
 
     if(nextScene >= scenes.size())
     {
@@ -342,6 +345,8 @@ bool World::hasWin()
         return false;
 }
 
+// --- Audio ---
+#ifdef _WINDOWS_
 void World::stopAllSound()
 {
     Scene* scene = scenes[current_scene];
@@ -374,6 +379,7 @@ void World::stopAllSound()
         }
     }
 }
+#endif
 
 void World::reset()
 {
