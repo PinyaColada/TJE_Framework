@@ -21,6 +21,14 @@ FBO* fbo = NULL;
 
 Game* Game::instance = NULL;
 
+enum eGuiID {
+    gButton,
+    gTutorial,
+    gEnd,
+
+    SIZEOFGUIS,
+};
+
 Game::Game(int window_width, int window_height, SDL_Window* window)
 {
 	this->window_width = window_width;
@@ -52,7 +60,11 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	//crear World i Gui
 	world = new World(window_width,window_height);
-	gui = new Gui("data/UI/Buttons.png", window_width, window_height);
+
+	guis.reserve(SIZEOFGUIS);
+	guis.push_back(new Gui("data/UI/Buttons.png", window_width, window_height));
+	guis.push_back(new Gui("data/UI/Tutorial.png", window_width, window_height));
+	guis.push_back(new Gui("data/UI/Final.png", window_width, window_height));
 
 	// load levels
 	LoadLeveols();
@@ -61,11 +73,11 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	idCS = eStageID::INTRO;
 
 	stages.reserve(SIZEOFSTAGE);
-	stages.push_back(new IntroStage(world, gui));
-	stages.push_back(new MenuStage(world, gui));
-	stages.push_back(new TutorStage(NULL, gui));
+	stages.push_back(new IntroStage(world, guis[gButton]));
+	stages.push_back(new MenuStage(world,  guis[gButton]));
+	stages.push_back(new TutorStage(NULL,  guis[gTutorial]));
 	stages.push_back(new PlayStage(world, NULL));
-	stages.push_back(new EndStage(world, NULL));
+	stages.push_back(new EndStage(world,  guis[gEnd]));
 }
 
 //what to do when the image has to be draw
@@ -101,9 +113,6 @@ void Game::onKeyDown( SDL_KeyboardEvent event )
 	Stage* stage = stages[idCS];
 	switch(event.keysym.sym)
 	{
-		// case SDLK_ESCAPE: //ESC key, kill the app
-		// 	must_exit = true; 
-		// 	break; 
 		case SDLK_F1: 
 			Shader::ReloadAll(); 
 			break; 
@@ -147,13 +156,21 @@ void Game::onMouseWheel(SDL_MouseWheelEvent event)
 void Game::onResize(int width, int height)
 {
     std::cout << "window resized: " << width << "," << height << std::endl;
+	// resize Game
 	glViewport( 0,0, width, height );
 	window_width = width;
 	window_height = height;
+	// resize World
 	world->camera->aspect =  width / (float)height;
 	world->window_width = window_width;
 	world->window_height = window_height;
-	gui->setDimCamera(window_width, window_height);
+	// resize Guis
+	Gui* gui;
+	for(int i = 0; i < guis.size(); i++)
+	{
+		gui = guis[i];
+		gui->setDimCamera(window_width, window_height);
+	}
 }
 
 void Game::LoadLeveols()

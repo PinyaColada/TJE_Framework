@@ -21,6 +21,7 @@ struct sElementGui{
     Vector2 pos;    //[x,y]
     Vector2 dim;    //[w,h]
     bool isCenter;
+    bool allWindow;
 };
 struct sRangeGui{
     bool flipuvs;
@@ -49,7 +50,7 @@ public:
 
     void setDimCamera(int width, int height);
 
-    sElementGui creatElement(eElementsGui type, float x, float y, float w, float h, bool center = true);
+    sElementGui creatElement(eElementsGui type, float x, float y, float w, float h, bool allwindow = false, bool center = true);
 };
 
 #endif 

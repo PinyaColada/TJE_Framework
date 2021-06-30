@@ -46,13 +46,14 @@ Gui::Gui(const char *TexName, int width, int height)
 bool Gui::render(sElementGui elm)
 {
     sRangeGui info = TableOfRanges[elm.type];
-    Vector2 pos = elm.pos + Vector2(window_width * 0.5, window_height * 0.5);
+    Vector2 pos = (elm.isCenter)? elm.pos + Vector2(window_width * 0.5, window_height * 0.5) : elm.pos;
+    Vector2 dim = (elm.allWindow)? Vector2(window_width, window_height) : elm.dim;
 
     // boto
     if(hasButton(elm.type))
-        return renderButton(pos.x, pos.y, elm.dim.x, elm.dim.y, info.range, info.flipuvs);
+        return renderButton(pos.x, pos.y, dim.x, dim.y, info.range, info.flipuvs);
     // no boto
-    renderElement(pos.x, pos.y, elm.dim.x, elm.dim.y, info.range, info.flipuvs);
+    renderElement(pos.x, pos.y, dim.x, dim.y, info.range, info.flipuvs);
     return false;
 }
 
@@ -113,7 +114,7 @@ void Gui::setDimCamera(int width, int height)
     cam.setOrthographic(0, window_width, window_height, 0, -1, 1);
 }
 
-sElementGui Gui::creatElement(eElementsGui type, float x, float y, float w, float h, bool center)
+sElementGui Gui::creatElement(eElementsGui type, float x, float y, float w, float h, bool allwindow, bool center)
 {
-        return {type, Vector2(x, y), Vector2(w, h), center};
+    return {type, Vector2(x, y), Vector2(w, h), center, allwindow};
 }

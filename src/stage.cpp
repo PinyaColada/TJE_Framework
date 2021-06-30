@@ -276,7 +276,14 @@ TutorStage::TutorStage(World* w, Gui* g)
 	needRender = true;
 
 	if(w != NULL) setWorld(w);
-	if(g != NULL) setGui(g);
+	if(g == NULL)
+		return;
+	
+	setGui(g);
+
+	// creem els diferents elements
+	guiElements.reserve(1);
+	guiElements.push_back(gui->creatElement(TEXT, 0, 0, w_gui, h_gui, true));
 }
 
 // events
@@ -756,14 +763,19 @@ EndStage::EndStage(World* w, Gui* g)
 	needRender = true;
 
 	if(w != NULL) setWorld(w);
-	if(g != NULL) setGui(g);
+	if(g == NULL)
+		return;
+	
+	setGui(g);
+
+	// creem els diferents elements
+	guiElements.reserve(1);
+	guiElements.push_back(gui->creatElement(TEXT, 0, 0, w_gui, h_gui, true));
 }
 
 void EndStage::RenderGame()
 {
 	RenderWorld();
-
-	drawText(100, 100, "END", Vector3(1, 1, 1), 10);
 }
 
 void EndStage::Update(double elapsed_time)

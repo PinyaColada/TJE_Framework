@@ -30,10 +30,10 @@ public:
 
 	//some vars
 	World* world;
-	Gui* gui;
+	std::vector<Gui*> guis; // llista de guis
 	
 	eStageID idCS; //la id del actual estat
-	std::vector<Stage *> stages; //llista de estats
+	std::vector<Stage*> stages; //llista de estats
 
 	Game( int window_width, int window_height, SDL_Window* window );
 
