@@ -29,10 +29,10 @@ and then just use the makefile:
 
 make
 
-## Feedback
+## Video demostration
 --------
 
-You can write any feedback to javi.agenjo@gmail.com
+You can watch a gameplay here: https://www.youtube.com/watch?v=mWFwHcxLJrQ&t=59s
 
 
 
